@@ -76,7 +76,7 @@ export default function ExploreScreen() {
   };
 
   const handleProductPress = (id: string) => {
-    console.log('Product pressed:', id);
+    router.push(`/product/${id}`);
   };
 
   const handleAddPress = (id: string) => {

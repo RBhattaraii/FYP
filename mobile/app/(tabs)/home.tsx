@@ -82,7 +82,7 @@ export default function HomeScreen() {
   };
 
   const handleProductPress = (productId: string) => {
-    console.log('Item pressed:', productId);
+    router.push(`/product/${productId}`);
   };
 
   const handleSeeAllTrending = () => {
