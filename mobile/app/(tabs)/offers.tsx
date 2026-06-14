@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function WishlistScreen() {
+export default function OffersScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Text>Wishlist Screen</Text>
+      <Text>Offers Screen</Text>
     </SafeAreaView>
   );
 }

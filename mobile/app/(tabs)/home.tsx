@@ -106,6 +106,7 @@ export default function HomeScreen() {
         {/* Scrollable Content */}
         <ScrollView
           style={styles.scrollView}
+          contentContainerStyle={{ paddingBottom: 150 }}
           showsVerticalScrollIndicator={false}
           bounces={true}
           alwaysBounceVertical={true}

@@ -1,14 +1,13 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, typography, dimensions } from '../../constants/theme';
-import CustomTabBar from '../../components/CustomTabBar';
+import { colors } from '../../constants/theme';
 
 export default function TabsLayout() {
   return (
     <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
+        tabBarActiveTintColor: colors.warningOrange,
       }}
     >
       <Tabs.Screen 
@@ -25,12 +24,25 @@ export default function TabsLayout() {
         }} 
       />
       <Tabs.Screen 
-        name="notifications" 
+        name="explore" 
         options={{ 
-          title: 'Barcode',
+          title: 'Explore',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons 
-              name={focused ? 'barcode' : 'barcode-outline'} 
+              name={focused ? 'search' : 'search-outline'} 
+              size={24} 
+              color={color} 
+            />
+          ),
+        }} 
+      />
+      <Tabs.Screen 
+        name="offers" 
+        options={{ 
+          title: 'Offers',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons 
+              name={focused ? 'pricetag' : 'pricetag-outline'} 
               size={24} 
               color={color} 
             />
@@ -40,10 +52,10 @@ export default function TabsLayout() {
       <Tabs.Screen 
         name="wishlist" 
         options={{ 
-          title: 'Saved Deals',
+          title: 'Wishlist',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons 
-              name={focused ? 'bookmark' : 'bookmark-outline'} 
+              name={focused ? 'heart' : 'heart-outline'} 
               size={24} 
               color={color} 
             />

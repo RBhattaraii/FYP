@@ -4,26 +4,42 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, typography, spacing, dimensions } from '../constants/theme';
 
 interface HeaderProps {
-  firstName: string;
+  firstName?: string;
+  title?: string;
+  showBackBtn?: boolean;
+  onBackPress?: () => void;
   hasUnreadNotifications?: boolean;
   onNotificationPress?: () => void;
 }
 
 export default function Header({ 
   firstName, 
+  title,
+  showBackBtn = false,
+  onBackPress,
   hasUnreadNotifications = false,
   onNotificationPress 
 }: HeaderProps) {
   return (
     <View style={styles.container}>
-      {/* Menu Icon */}
-      <TouchableOpacity style={styles.iconButton}>
-        <Ionicons name="grid-outline" size={20} color={colors.gray900} />
-      </TouchableOpacity>
+      {/* Left Icon */}
+      {showBackBtn ? (
+        <TouchableOpacity style={styles.iconButton} onPress={onBackPress}>
+          <Ionicons name="arrow-back-outline" size={20} color={colors.gray900} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.iconButton}>
+          <Ionicons name="grid-outline" size={20} color={colors.gray900} />
+        </TouchableOpacity>
+      )}
       
-      {/* Greeting */}
+      {/* Greeting / Title */}
       <View style={styles.greetingContainer}>
-        <Text style={styles.greeting}>Hello {firstName}!</Text>
+        {title ? (
+          <Text style={styles.title}>{title}</Text>
+        ) : firstName ? (
+          <Text style={styles.greeting}>Hello {firstName}!</Text>
+        ) : null}
       </View>
       
       {/* Right Action Icons */}
@@ -63,6 +79,11 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: typography.fontSize.h2,
     fontWeight: typography.fontWeight.semibold,
+    color: colors.gray900,
+  },
+  title: {
+    fontSize: typography.fontSize.h2,
+    fontWeight: typography.fontWeight.bold,
     color: colors.gray900,
   },
   rightActions: {
