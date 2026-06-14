@@ -7,55 +7,26 @@ import { colors, spacing, typography, borderRadius, shadows } from '../../consta
 
 const { width } = Dimensions.get('window');
 
-// Mock Product Data
-const MOCK_PRODUCT = {
-  id: '1',
-  title: 'Sony WH-1000XM4 Noise Cancelling Wireless Headphones',
-  brand: 'Sony',
-  rating: 4.8,
-  reviewsCount: 1245,
-  price: 249.99,
-  images: [
-    'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=800&q=80',
-    'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=800&q=80',
-    'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=800&q=80',
-  ],
-  variants: ['Black', 'Silver', 'Midnight Blue'],
-  offers: [
-    {
-      id: 'o1',
-      storeName: 'Amazon',
-      price: 249.99,
-      variant: 'Black • New',
-      status: 'In Stock',
-      logo: 'https://logo.clearbit.com/amazon.com',
-    },
-    {
-      id: 'o2',
-      storeName: 'Best Buy',
-      price: 259.00,
-      variant: 'Black • New',
-      status: 'In Stock',
-      logo: 'https://logo.clearbit.com/bestbuy.com',
-    },
-    {
-      id: 'o3',
-      storeName: 'Target',
-      price: 259.99,
-      variant: 'Black • New',
-      status: 'Out of Stock',
-      logo: 'https://logo.clearbit.com/target.com',
-    }
-  ]
-};
+import { ALL_PRODUCTS, MOCK_OFFERS } from '../../data/mockData';
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   
+  // Find product from centralized mock data, or fallback if ID doesn't match
+  const foundProduct = ALL_PRODUCTS.find(p => p.id === id) || ALL_PRODUCTS[0];
+  
+  // Combine product info with dynamic offers (faking varied prices)
+  const productData = {
+    ...foundProduct,
+    offers: MOCK_OFFERS.map((o, idx) => ({
+      ...o,
+      price: foundProduct.price + (idx * 5.99), // Give slight variations to prices
+    }))
+  };
+  
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [selectedVariant, setSelectedVariant] = useState(MOCK_PRODUCT.variants[0]);
 
   const handleScroll = (event: any) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
@@ -98,7 +69,7 @@ export default function ProductDetailScreen() {
             onScroll={handleScroll}
             scrollEventThrottle={16}
           >
-            {MOCK_PRODUCT.images.map((img, index) => (
+            {productData.images.map((img, index) => (
               <View key={index} style={styles.imageContainer}>
                 <Image 
                   source={{ uri: img }} 
@@ -111,7 +82,7 @@ export default function ProductDetailScreen() {
           
           {/* Pagination Indicators */}
           <View style={styles.paginationContainer}>
-            {MOCK_PRODUCT.images.map((_, index) => (
+            {productData.images.map((_, index) => (
               <View 
                 key={index} 
                 style={[
@@ -127,18 +98,18 @@ export default function ProductDetailScreen() {
         <View style={styles.infoBlock}>
           {/* Header & Title Area */}
           <View style={styles.headerRow}>
-            <Text style={styles.brand}>{MOCK_PRODUCT.brand.toUpperCase()}</Text>
+            <Text style={styles.brand}>{productData.brand.toUpperCase()}</Text>
             <View style={styles.ratingContainer}>
               <Ionicons name="star" size={16} color="#FFD700" />
-              <Text style={styles.ratingText}>{MOCK_PRODUCT.rating}</Text>
-              <Text style={styles.reviewsText}>({MOCK_PRODUCT.reviewsCount})</Text>
+              <Text style={styles.ratingText}>{productData.rating}</Text>
+              <Text style={styles.reviewsText}>({productData.reviewsCount})</Text>
             </View>
           </View>
           
-          <Text style={styles.title}>{MOCK_PRODUCT.title}</Text>
+          <Text style={styles.title}>{productData.title}</Text>
           
           <Text style={styles.descriptionText}>
-            Industry-leading noise cancellation, up to 30-hour battery life, and superior sound quality. Experience music the way it was meant to be heard.
+            {productData.description}
           </Text>
 
           {/* Information Tabs */}
@@ -164,7 +135,7 @@ export default function ProductDetailScreen() {
         <View style={styles.offersSection}>
           {/* Header */}
           <View style={styles.offersHeader}>
-            <Text style={styles.offersCount}>{MOCK_PRODUCT.offers.length} Offers</Text>
+            <Text style={styles.offersCount}>{productData.offers.length} Offers</Text>
             <TouchableOpacity>
               <Text style={styles.showAllLink}>Show all</Text>
             </TouchableOpacity>
@@ -172,7 +143,7 @@ export default function ProductDetailScreen() {
 
           {/* Offer Cards List */}
           <View style={styles.offersList}>
-            {MOCK_PRODUCT.offers.map((offer) => (
+            {productData.offers.map((offer) => (
               <View key={offer.id} style={styles.offerCard}>
                 {/* Top Row */}
                 <View style={styles.offerCardTop}>
@@ -205,7 +176,7 @@ export default function ProductDetailScreen() {
       <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, spacing.md) }]}>
         <View style={styles.bottomPriceContainer}>
           <Text style={styles.bottomPriceLabel}>Best Price</Text>
-          <Text style={styles.bottomPriceValue}>${MOCK_PRODUCT.price.toFixed(2)}</Text>
+          <Text style={styles.bottomPriceValue}>${productData.price.toFixed(2)}</Text>
         </View>
         <TouchableOpacity style={styles.primaryButton}>
           <Text style={styles.primaryButtonText}>Buy Now</Text>
@@ -259,7 +230,7 @@ const styles = StyleSheet.create({
   },
   productImage: {
     width: '100%',
-    height: width * 0.75, // Landscape aspect ratio 4:3
+    height: width, // Square aspect ratio 1:1
   },
   paginationContainer: {
     flexDirection: 'row',

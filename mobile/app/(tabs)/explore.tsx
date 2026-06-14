@@ -11,57 +11,17 @@ import { colors, spacing, typography } from '../../constants/theme';
 
 const TABS = ['Popular', 'Latest', 'Best Sellers'];
 
-// Mock data
-const MOCK_PRODUCTS = [
-  {
-    id: '1',
-    name: 'Sony WH-1000XM4 Headphones',
-    price: 249.99,
-    rating: 4.8,
-    imageUrl: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400&h=400&fit=crop',
-    inWishlist: false,
-  },
-  {
-    id: '2',
-    name: 'Apple iPad Air',
-    price: 599.00,
-    rating: 4.9,
-    imageUrl: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop',
-    inWishlist: true,
-  },
-  {
-    id: '3',
-    name: 'Samsung Galaxy S23',
-    price: 799.00,
-    rating: 4.7,
-    imageUrl: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=400&fit=crop',
-    inWishlist: false,
-  },
-  {
-    id: '4',
-    name: 'Nike Air Max 270',
-    price: 129.99,
-    rating: 4.5,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
-    inWishlist: false,
-  },
-  {
-    id: '5',
-    name: 'Dyson V11 Vacuum',
-    price: 449.50,
-    rating: 4.6,
-    imageUrl: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=400&h=400&fit=crop',
-    inWishlist: false,
-  },
-  {
-    id: '6',
-    name: 'Apple Watch Series 8',
-    price: 399.00,
-    rating: 4.8,
-    imageUrl: 'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=400&h=400&fit=crop',
-    inWishlist: true,
-  },
-];
+import { ALL_PRODUCTS } from '../../data/mockData';
+
+// Generate mock products from centralized data to ensure ID mapping works perfectly
+const MOCK_PRODUCTS = ALL_PRODUCTS.map(p => ({
+  id: p.id,
+  name: p.title,
+  price: p.price,
+  rating: p.rating,
+  imageUrl: p.images[0],
+  inWishlist: false,
+}));
 
 export default function ExploreScreen() {
   const router = useRouter();

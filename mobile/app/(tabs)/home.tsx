@@ -20,43 +20,23 @@ const topCategories = [
   { id: 'auto', name: 'Auto', imageUrl: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=200&h=200&fit=crop' },
 ];
 
-// Dummy data for top price drops (formerly trending products)
-const trendingProducts = [
-  {
-    id: '1',
-    title: 'Sony WH-1000XM4 Headphones',
-    subtitle: 'Price dropped by $50',
-    imageUrl: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=800&h=1000&fit=crop',
-  },
-  {
-    id: '2',
-    title: 'Apple iPad Air (5th Gen)',
-    subtitle: 'Lowest price in 30 days',
-    imageUrl: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&h=1000&fit=crop',
-  },
-  {
-    id: '3',
-    title: 'Samsung Galaxy S23',
-    subtitle: 'Compare 5 stores',
-    imageUrl: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800&h=1000&fit=crop',
-  },
-];
+import { ALL_PRODUCTS } from '../../data/mockData';
 
-// Dummy data for recommended comparisons
-const recommendedProducts = [
-  {
-    id: '1',
-    title: 'Nike Air Max 270',
-    subtitle: 'Best deal found at Foot Locker',
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000&h=600&fit=crop',
-  },
-  {
-    id: '2',
-    title: 'Dyson V11 Vacuum',
-    subtitle: 'Price matched at Target',
-    imageUrl: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=1000&h=600&fit=crop',
-  },
-];
+// Map trending products directly from our centralized data source to preserve matching IDs
+const trendingProducts = ALL_PRODUCTS.slice(0, 3).map((p, index) => ({
+  id: p.id,
+  title: p.title,
+  subtitle: index === 0 ? 'Price dropped by $50' : index === 1 ? 'Lowest price in 30 days' : 'Compare 5 stores',
+  imageUrl: p.images[0],
+}));
+
+// Map recommended products directly from our centralized data source to preserve matching IDs
+const recommendedProducts = ALL_PRODUCTS.slice(3, 5).map((p, index) => ({
+  id: p.id,
+  title: p.title,
+  subtitle: index === 0 ? 'Best deal found at Foot Locker' : 'Price matched at Target',
+  imageUrl: p.images[0],
+}));
 
 export default function HomeScreen() {
   const router = useRouter();
