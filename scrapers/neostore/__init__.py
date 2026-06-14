@@ -1,0 +1,1 @@
+# NeoStore scraper module

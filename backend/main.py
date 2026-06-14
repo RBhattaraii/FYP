@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from app.database.postgres import create_pool, close_pool
+from app.database.mongo import connect_mongodb, close_mongodb
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -32,9 +33,16 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 async def startup():
     """
     Called when the FastAPI app starts.
-    Creates the PostgreSQL connection pool.
+    Creates the PostgreSQL connection pool and connects to MongoDB.
     """
+    # Connect to PostgreSQL (async)
     await create_pool()
+    
+    # Connect to MongoDB (synchronous)
+    mongodb_connected = connect_mongodb()
+    if not mongodb_connected:
+        print("⚠️  Warning: MongoDB connection failed, but API will continue")
+    
     print("🚀 PricePilot API started successfully")
 
 # Shutdown event: Close database connection pool
@@ -42,9 +50,10 @@ async def startup():
 async def shutdown():
     """
     Called when the FastAPI app shuts down.
-    Closes the PostgreSQL connection pool.
+    Closes the PostgreSQL connection pool and MongoDB connection.
     """
     await close_pool()
+    close_mongodb()
     print("👋 PricePilot API shut down")
 
 # Configure CORS to allow React Native app to connect
@@ -95,7 +104,8 @@ async def root():
     return {"message": "PricePilot API is working"}
 
 # Import and include routers
-from app.routers import auth
+from app.routers import auth, products
 app.include_router(auth.router)
+app.include_router(products.router)
 
 # Run with: uvicorn main:app --reload

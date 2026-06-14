@@ -1,0 +1,1 @@
+# Hardware Pasal scraper module

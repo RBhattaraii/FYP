@@ -1,0 +1,61 @@
+========================================
+PRICEPILOT - READY TO FIX & TEST
+========================================
+
+WHAT I FIXED:
+  ✅ mobile/app/index.tsx - Now checks if you're logged in
+  ✅ Proper auth flow: Login → Home Screen
+  ✅ Auto IP detection (adjusts to DHCP changes)
+
+FOLLOW THESE 5 STEPS:
+
+1. Clear Expo cache:
+   cd mobile
+   npx expo start -c
+   (Press Ctrl+C after it starts)
+
+2. Fix firewall (RIGHT-CLICK PowerShell → Run as Admin):
+   cd "C:\Users\NITOR 5\Desktop\FYP"
+   .\fix-firewall.ps1
+
+3. Test network (in same Admin PowerShell):
+   .\test-network.ps1
+
+4. Start backend (new PowerShell, normal):
+   cd backend
+   venv\Scripts\activate
+   uvicorn main:app --host 0.0.0.0 --reload
+
+5. Start mobile (another PowerShell):
+   cd mobile
+   npx expo start
+
+LOGIN CREDENTIALS:
+  Email: testuser@pricepilot.com
+  Password: testpass123
+
+AFTER LOGIN YOU'LL SEE:
+  ✨ Beautiful home screen with iOS-style design
+  ✨ Header with "Hello, Alex" and notification bell
+  ✨ Search bar with voice icon
+  ✨ 7 category pills (horizontal scroll)
+  ✨ 8 trending products
+  ✨ 8 recommended products with discounts
+  ✨ Smooth scrolling and spring animations
+
+========================================
+READ START_HERE.md FOR DETAILED GUIDE
+========================================
+
+FILES CREATED:
+  - START_HERE.md (Quick 5-step guide)
+  - NETWORK_FIX_GUIDE.md (Detailed troubleshooting)
+  - CURRENT_STATUS.md (Complete project status)
+  - test-network.ps1 (Test if everything works)
+  - fix-firewall.ps1 (Already exists, adds firewall rules)
+
+IF STILL NOT WORKING:
+  1. Test backend in browser: http://192.168.1.92:8000/docs
+  2. Temporarily disable Windows Firewall to test
+  3. Check IP with: ipconfig | findstr IPv4
+  4. Run test-network.ps1 to diagnose

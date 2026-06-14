@@ -1,0 +1,1 @@
+# Better Appliances scraper module

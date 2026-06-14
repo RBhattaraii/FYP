@@ -1,0 +1,1 @@
+# UFO Nepal scraper module

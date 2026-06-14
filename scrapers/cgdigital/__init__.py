@@ -1,0 +1,1 @@
+# CG Digital scraper module

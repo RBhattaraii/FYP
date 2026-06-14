@@ -35,11 +35,13 @@ async def create_pool():
     # Create connection pool
     # min_size: minimum number of connections to keep open
     # max_size: maximum number of connections allowed
+    # statement_cache_size: 0 for Supabase Transaction Pooler compatibility
     pool = await asyncpg.create_pool(
         database_url,
         min_size=2,      # Keep at least 2 connections open
         max_size=10,     # Allow up to 10 concurrent connections
-        command_timeout=60  # Timeout for queries (60 seconds)
+        command_timeout=60,  # Timeout for queries (60 seconds)
+        statement_cache_size=0  # Disable prepared statements for pgbouncer compatibility
     )
     
     print("✅ PostgreSQL connection pool created successfully")

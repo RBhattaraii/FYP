@@ -1,0 +1,25 @@
+Total div[data-aplus-ae]: 40
+
+=== CARD 1 (first 800 chars) ===
+<div class="Bm3ON" data-qa-locator="product-item" data-tracking="product-card" data-sku-simple="455994853_NP-2020993173" data-item-id="455994853" data-listno="0" data-utlogmap="{&quot;listno&quot;:0,&quot;pageIndex&quot;:1,&quot;pvid&quot;:&quot;c224d8a0ae49515d7990f37ea3efff49&quot;,&quot;query&quot;:&quot;samsung s24&quot;,&quot;style&quot;:&quot;wf&quot;,&quot;x_item_ids&quot;:&quot;455994853&quot;,&quot;x_object_id&quot;:&quot;455994853&quot;,&quot;x_object_type&quot;:&quot;item&quot;}" data-aplus-ae="x1_57662318" data-spm-anchor-id="a2a0e.searchlist.list.i0.31073b6eurq6Ig" data-aplus-clk="x1_57662318"><div class="Ms6aG"><div class="qmXQo"><div class="ICdUp"><div class="_95X4G"><a href="//www.daraz.com.np/products/magnetic-car-mount-camera-protector-case-with-built-in-kickstand-for-sam
+
+=== CARD 2 (first 800 chars) ===
+<div class="Bm3ON" data-qa-locator="product-item" data-tracking="product-card" data-sku-simple="481006901_NP-2161297551" data-item-id="481006901" data-listno="1" data-utlogmap="{&quot;listno&quot;:1,&quot;pageIndex&quot;:1,&quot;pvid&quot;:&quot;c224d8a0ae49515d7990f37ea3efff49&quot;,&quot;query&quot;:&quot;samsung s24&quot;,&quot;style&quot;:&quot;wf&quot;,&quot;x_item_ids&quot;:&quot;481006901&quot;,&quot;x_object_id&quot;:&quot;481006901&quot;,&quot;x_object_type&quot;:&quot;item&quot;}" data-aplus-ae="x2_a58130a" data-spm-anchor-id="a2a0e.searchlist.list.i1.31073b6eurq6Ig" data-aplus-clk="x2_a58130a"><div class="Ms6aG"><div class="qmXQo"><div class="ICdUp"><div class="_95X4G"><a href="//www.daraz.com.np/products/luxury-shockproof-clear-phone-case-for-ultra-fe-plus-a56-a55-a36-a54-a15-a
+
+=== CARD 3 (first 800 chars) ===
+<div class="Bm3ON" data-qa-locator="product-item" data-tracking="product-card" data-sku-simple="154197673_NP-1207895574" data-item-id="154197673" data-listno="2" data-utlogmap="{&quot;listno&quot;:2,&quot;pageIndex&quot;:1,&quot;pvid&quot;:&quot;c224d8a0ae49515d7990f37ea3efff49&quot;,&quot;query&quot;:&quot;samsung s24&quot;,&quot;style&quot;:&quot;wf&quot;,&quot;x_item_ids&quot;:&quot;154197673&quot;,&quot;x_object_id&quot;:&quot;154197673&quot;,&quot;x_object_type&quot;:&quot;item&quot;}" data-aplus-ae="x3_3fd9ea6b" data-spm-anchor-id="a2a0e.searchlist.list.i2.31073b6eurq6Ig" data-aplus-clk="x3_3fd9ea6b"><div class="Ms6aG"><div class="qmXQo"><div class="ICdUp"><div class="_95X4G"><a href="//www.daraz.com.np/products/hodon-shockproof-armor-slide-camera-protection-phone-case-for-samsung-ga
+
+
+=== Ms6aG CARD ===
+<div class="Ms6aG"><div class="qmXQo"><div class="ICdUp"><div class="_95X4G"><a href="//www.daraz.com.np/products/magnetic-car-mount-camera-protector-case-with-built-in-kickstand-for-samsungs24s23s21s22ultrafea54a15a14a05a05s-i455994853.html"><div class="picture-wrapper jBwCF "><img type="product" alt="Slide Camera Protection Magnetic Stand Phone Case for Samsung S25 Edge S24 S23 Plus S21 S22 Ultra FE A54 A15 A14 A05 A05S Cover" src="https://img.drz.lazcdn.com/static/np/p/053d4e683dda515d396ea43a691d51fa.jpg_200x200q80.avif" style="object-fit: fill;"></div></a></div></div><div class="buTCk"><div class="ajfs+"></div><div class="RfADt"><a href="//www.daraz.com.np/products/magnetic-car-mount-camera-protector-case-with-built-in-kickstand-for-samsungs24s23s21s22ultrafea54a15a14a05a05s-i45599485
+
+=== PRODUCT LINKS: 80 ===
+
+Link parent:
+<div class="_17mcb" data-qa-locator="general-products" data-spm="list"><div class="Bm3ON" data-qa-locator="product-item" data-tracking="product-card" data-sku-simple="455994853_NP-2020993173" data-item-id="455994853" data-listno="0" data-utlogmap="{&quot;listno&quot;:0,&quot;pageIndex&quot;:1,&quot;pvid&quot;:&quot;c224d8a0ae49515d7990f37ea3efff49&quot;,&quot;query&quot;:&quot;samsung s24&quot;,&quot;style&quot;:&quot;wf&quot;,&quot;x_item_ids&quot;:&quot;455994853&quot;,&quot;x_object_id&quot;:
+
+Link parent:
+<div class="_17mcb" data-qa-locator="general-products" data-spm="list"><div class="Bm3ON" data-qa-locator="product-item" data-tracking="product-card" data-sku-simple="455994853_NP-2020993173" data-item-id="455994853" data-listno="0" data-utlogmap="{&quot;listno&quot;:0,&quot;pageIndex&quot;:1,&quot;pvid&quot;:&quot;c224d8a0ae49515d7990f37ea3efff49&quot;,&quot;query&quot;:&quot;samsung s24&quot;,&quot;style&quot;:&quot;wf&quot;,&quot;x_item_ids&quot;:&quot;455994853&quot;,&quot;x_object_id&quot;:
+
+Link parent:
+<div class="_17mcb" data-qa-locator="general-products" data-spm="list"><div class="Bm3ON" data-qa-locator="product-item" data-tracking="product-card" data-sku-simple="455994853_NP-2020993173" data-item-id="455994853" data-listno="0" data-utlogmap="{&quot;listno&quot;:0,&quot;pageIndex&quot;:1,&quot;pvid&quot;:&quot;c224d8a0ae49515d7990f37ea3efff49&quot;,&quot;query&quot;:&quot;samsung s24&quot;,&quot;style&quot;:&quot;wf&quot;,&quot;x_item_ids&quot;:&quot;455994853&quot;,&quot;x_object_id&quot;:
