@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   columnWrapper: {
     justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.md,
     marginBottom: spacing.lg,
   },
   cardWrapper: {

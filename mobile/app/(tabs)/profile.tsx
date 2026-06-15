@@ -23,9 +23,9 @@ const MENU_SECTIONS = [
   {
     title: 'Account Settings',
     items: [
-      { id: 'personal', icon: 'person-outline', label: 'Personal Information' },
-      { id: 'shipping', icon: 'location-outline', label: 'Shipping Addresses' },
-      { id: 'payment', icon: 'card-outline', label: 'Payment Methods' },
+      { id: 'personal', icon: 'person-outline', label: 'Personal Information', route: '/personal-info' },
+      { id: 'alerts', icon: 'notifications-circle-outline', label: 'Price Alerts' },
+      { id: 'stores', icon: 'storefront-outline', label: 'Preferred Stores' },
     ]
   },
   {
@@ -120,6 +120,7 @@ export default function ProfileScreen() {
                   key={item.id} 
                   style={[styles.menuItem, index === section.items.length - 1 && styles.menuItemLast]}
                   activeOpacity={0.7}
+                  onPress={() => item.route ? router.push(item.route as any) : null}
                 >
                   <View style={styles.menuItemIcon}>
                     <Ionicons name={item.icon as any} size={22} color={colors.gray600} />

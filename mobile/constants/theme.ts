@@ -97,7 +97,7 @@ export const shadows = {
     elevation: 4,
   },
   button: {
-    shadowColor: '#2563EB',
+    shadowColor: '#F97316',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 6,
@@ -117,7 +117,7 @@ export const dimensions = {
     height: 40,
   },
   trendingCard: {
-    width: 160,
+    width: 172,
     height: 200,
   },
   recommendedCard: {

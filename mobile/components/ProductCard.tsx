@@ -56,7 +56,7 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
         useNativeDriver: true,
       }),
     ]).start();
-    
+
     onAddPress();
   };
 
@@ -78,7 +78,7 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
             style={styles.image}
             resizeMode="cover"
           />
-          
+
           {/* Wishlist Heart Top Left */}
           <Animated.View style={[styles.wishlistIconContainer, { transform: [{ scale: buttonScaleAnim }] }]}>
             <TouchableOpacity
@@ -129,10 +129,10 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
             accessibilityRole="button"
           >
             {({ pressed }) => (
-              <Ionicons 
-                name="chevron-forward" 
-                size={14} 
-                color={pressed ? colors.white : colors.gray900} 
+              <Ionicons
+                name="chevron-forward"
+                size={14}
+                color={pressed ? colors.white : colors.gray900}
               />
             )}
           </Pressable>
@@ -145,7 +145,7 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
 const styles = StyleSheet.create({
   container: {
     width: dimensions.trendingCard.width,
-    minHeight: 270, // Increased height to accommodate larger image
+    minHeight: 300, // Increased height
     backgroundColor: colors.white,
     borderRadius: borderRadius.medium,
     borderWidth: 1,
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 180, // Taller image to emphasize the product
+    height: 200, // Taller image to emphasize the product
     borderRadius: borderRadius.small,
     backgroundColor: colors.gray50,
   },
