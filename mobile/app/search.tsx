@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
   },
   viewAllText: {
     fontSize: typography.fontSize.body,
-    color: colors.indigoPrimary,
+    color: colors.primary,
   },
   historyContainer: {
     flexDirection: 'row',

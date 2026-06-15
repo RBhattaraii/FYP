@@ -17,6 +17,7 @@ export default function CustomTabBar({ state, descriptors, navigation }: BottomT
           const label = options.title !== undefined ? options.title : route.name;
 
           const onPress = () => {
+            console.log(`[TAB BAR] Tab pressed: ${route.name}`);
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,
@@ -37,8 +38,9 @@ export default function CustomTabBar({ state, descriptors, navigation }: BottomT
 
           let iconName = '';
           if (route.name === 'home') iconName = isFocused ? 'home' : 'home-outline';
-          if (route.name === 'notifications') iconName = isFocused ? 'wallet' : 'wallet-outline';
-          if (route.name === 'wishlist') iconName = isFocused ? 'compass' : 'compass-outline';
+          if (route.name === 'explore') iconName = isFocused ? 'search' : 'search-outline';
+          if (route.name === 'offers') iconName = isFocused ? 'pricetag' : 'pricetag-outline';
+          if (route.name === 'wishlist') iconName = isFocused ? 'heart' : 'heart-outline';
           if (route.name === 'profile') iconName = isFocused ? 'person-circle' : 'person-circle-outline';
 
           return (
@@ -97,12 +99,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: 8, // slightly reduced from spacing.md to fit 5 tabs
     borderRadius: borderRadius.full,
-    marginHorizontal: spacing.xs,
+    marginHorizontal: 2, // slightly reduced to fit 5 tabs
   },
   tabItemFocused: {
-    backgroundColor: colors.warningOrange, // using warningOrange from theme to mimic the yellow/gold
+    backgroundColor: colors.warningOrange,
   },
   tabText: {
     color: colors.white,

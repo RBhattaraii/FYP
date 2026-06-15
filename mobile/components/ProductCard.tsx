@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography, spacing, dimensions, borderRadius, shadows } from '../constants/theme';
 
@@ -7,8 +7,11 @@ interface Product {
   id: string;
   name: string;
   price: number;
+  rating?: number;
   imageUrl: string;
   inWishlist: boolean;
+  promotionalBadge?: string;
+  storeCount?: number;
 }
 
 interface ProductCardProps {
@@ -53,7 +56,7 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
         useNativeDriver: true,
       }),
     ]).start();
-    
+
     onAddPress();
   };
 
@@ -69,11 +72,36 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
         accessibilityRole="button"
       >
         {/* Product Image */}
-        <Image
-          source={{ uri: product.imageUrl }}
-          style={styles.image}
-          resizeMode="cover"
-        />
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: product.imageUrl }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+
+          {/* Wishlist Heart Top Left */}
+          <Animated.View style={[styles.wishlistIconContainer, { transform: [{ scale: buttonScaleAnim }] }]}>
+            <TouchableOpacity
+              style={styles.wishlistButton}
+              onPress={handleAddPress}
+              accessibilityLabel={`Toggle ${product.name} in wishlist`}
+              accessibilityRole="button"
+            >
+              <Ionicons
+                name={product.inWishlist ? 'heart' : 'heart-outline'}
+                size={20}
+                color={product.inWishlist ? colors.warningOrange : colors.gray900}
+              />
+            </TouchableOpacity>
+          </Animated.View>
+
+          {/* Promotional Badge Top Right */}
+          {product.promotionalBadge && (
+            <View style={styles.badgeContainer}>
+              <Text style={styles.badgeText}>{product.promotionalBadge}</Text>
+            </View>
+          )}
+        </View>
 
         {/* Product Name */}
         <Text style={styles.name} numberOfLines={2}>
@@ -82,23 +110,32 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
 
         {/* Price Row */}
         <View style={styles.priceRow}>
-          <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+          <View>
+            <Text style={styles.storeCount}>{product.storeCount || 3}+ Stores</Text>
+            <View style={styles.priceContainer}>
+              <Text style={styles.priceLabel}>From </Text>
+              <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+            </View>
+          </View>
 
-          {/* Add Button */}
-          <Animated.View style={{ transform: [{ scale: buttonScaleAnim }] }}>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={handleAddPress}
-              accessibilityLabel={`Add ${product.name} to wishlist`}
-              accessibilityRole="button"
-            >
+          {/* View Deals Button */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.addButton,
+              pressed && styles.addButtonPressed
+            ]}
+            onPress={onPress}
+            accessibilityLabel={`Compare deals for ${product.name}`}
+            accessibilityRole="button"
+          >
+            {({ pressed }) => (
               <Ionicons
-                name={product.inWishlist ? 'checkmark' : 'add'}
-                size={16}
-                color={colors.white}
+                name="chevron-forward"
+                size={14}
+                color={pressed ? colors.white : colors.gray900}
               />
-            </TouchableOpacity>
-          </Animated.View>
+            )}
+          </Pressable>
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -108,45 +145,97 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
 const styles = StyleSheet.create({
   container: {
     width: dimensions.trendingCard.width,
-    height: dimensions.trendingCard.height,
+    minHeight: 300, // Increased height
     backgroundColor: colors.white,
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     borderColor: colors.gray100,
-    padding: spacing.md,
+    padding: spacing.sm, // Reduced padding to reduce "border" around content
     ...shadows.card,
   },
+  imageContainer: {
+    position: 'relative',
+    width: '100%',
+  },
   image: {
-    width: dimensions.trendingCard.width - spacing.md * 2,
-    height: 100,
+    width: '100%',
+    height: 200, // Taller image to emphasize the product
     borderRadius: borderRadius.small,
     backgroundColor: colors.gray50,
   },
-  name: {
-    marginTop: spacing.sm,
-    fontSize: typography.fontSize.body,
-    fontWeight: typography.fontWeight.semibold,
-    color: colors.gray900,
-    lineHeight: typography.lineHeight.body,
+  wishlistIconContainer: {
+    position: 'absolute',
+    top: spacing.xs,
+    left: spacing.xs,
   },
-  priceRow: {
-    marginTop: spacing.xs,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  price: {
-    fontSize: typography.fontSize.bodyLarge,
-    fontWeight: typography.fontWeight.bold,
-    color: colors.gray900,
-  },
-  addButton: {
-    width: 28,
-    height: 28,
-    backgroundColor: colors.indigoPrimary,
-    borderRadius: borderRadius.small,
+  wishlistButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
     justifyContent: 'center',
     alignItems: 'center',
     ...shadows.button,
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top: spacing.xs,
+    right: spacing.xs,
+    backgroundColor: colors.warningOrange,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    borderRadius: borderRadius.small,
+  },
+  badgeText: {
+    color: colors.white,
+    fontSize: 10,
+    fontWeight: typography.fontWeight.bold,
+  },
+  name: {
+    marginTop: spacing.md,
+    fontSize: typography.fontSize.caption,
+    fontWeight: typography.fontWeight.medium,
+    color: colors.gray900,
+    lineHeight: typography.lineHeight.caption,
+  },
+  priceRow: {
+    marginTop: spacing.sm,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  priceLabel: {
+    fontSize: typography.fontSize.caption,
+    color: colors.gray700,
+    fontWeight: typography.fontWeight.medium,
+  },
+  price: {
+    fontSize: typography.fontSize.body,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+  },
+  storeCount: {
+    fontSize: typography.fontSize.caption,
+    color: colors.gray600,
+    marginBottom: 2,
+    fontWeight: typography.fontWeight.medium,
+  },
+  addButton: {
+    width: 26,
+    height: 26,
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: colors.gray300,
+    borderRadius: borderRadius.small,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addButtonPressed: {
+    backgroundColor: colors.gray900,
+    borderColor: colors.gray900,
   },
 });

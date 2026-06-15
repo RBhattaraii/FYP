@@ -1,33 +1,55 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { colors, typography, spacing, dimensions } from '../constants/theme';
 
 interface HeaderProps {
-  firstName: string;
+  firstName?: string;
+  title?: string;
+  showBackBtn?: boolean;
+  onBackPress?: () => void;
   hasUnreadNotifications?: boolean;
   onNotificationPress?: () => void;
 }
 
 export default function Header({ 
   firstName, 
+  title,
+  showBackBtn = false,
+  onBackPress,
   hasUnreadNotifications = false,
   onNotificationPress 
 }: HeaderProps) {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
-      {/* Menu Icon */}
-      <TouchableOpacity style={styles.iconButton}>
-        <Ionicons name="grid-outline" size={20} color={colors.gray900} />
-      </TouchableOpacity>
+      {/* Left Icon */}
+      {showBackBtn ? (
+        <TouchableOpacity style={styles.iconButton} onPress={onBackPress}>
+          <Ionicons name="arrow-back-outline" size={20} color={colors.gray900} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.iconButton}>
+          <Ionicons name="grid-outline" size={20} color={colors.gray900} />
+        </TouchableOpacity>
+      )}
       
-      {/* Greeting */}
+      {/* Greeting / Title */}
       <View style={styles.greetingContainer}>
-        <Text style={styles.greeting}>Hello {firstName}!</Text>
+        {title ? (
+          <Text style={styles.title}>{title}</Text>
+        ) : firstName ? (
+          <Text style={styles.greeting}>Hello {firstName}!</Text>
+        ) : null}
       </View>
       
       {/* Right Action Icons */}
       <View style={styles.rightActions}>
+        <TouchableOpacity onPress={() => router.push('/wishlist')} style={styles.wishlistHeaderBtn}>
+          <Ionicons name="heart-outline" size={24} color={colors.gray900} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => console.log('Profile clicked')}>
           <Image 
             source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop' }} 
@@ -65,8 +87,22 @@ const styles = StyleSheet.create({
     fontWeight: typography.fontWeight.semibold,
     color: colors.gray900,
   },
+  title: {
+    fontSize: typography.fontSize.h2,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+  },
   rightActions: {
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  wishlistHeaderBtn: {
+    marginRight: spacing.md,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.gray100,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   profilePic: {
