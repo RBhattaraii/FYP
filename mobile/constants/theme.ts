@@ -7,8 +7,8 @@
 export const colors = {
   // Primary Colors
   white: '#FFFFFF',
-  primary: '#2563EB',
-  primaryDark: '#1D4ED8',
+  primary: '#F97316',      // Warm Orange
+  primaryDark: '#C2410C',  // Dark Orange
   
   // Neutral Colors
   gray50: '#F9FAFB',

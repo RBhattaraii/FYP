@@ -8,6 +8,7 @@ export default function RootLayout() {
       <Stack.Screen name="product/[id]" options={{ title: 'Product Details' }} />
       <Stack.Screen name="search" options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="search-results" options={{ headerShown: false, animation: 'fade' }} />
+      <Stack.Screen name="wishlist" options={{ headerShown: false }} />
     </Stack>
   );
 }
