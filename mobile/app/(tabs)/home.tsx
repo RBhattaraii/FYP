@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import Header from '../../components/Header';
 import SearchBar from '../../components/SearchBar';
 import CategoryPills from '../../components/CategoryPills';
-import HomeCategories from '../../components/HomeCategories';
+
 import TrendingSection from '../../components/TrendingSection';
 import RecommendedSection from '../../components/RecommendedSection';
 import { colors, spacing } from '../../constants/theme';
@@ -18,6 +18,11 @@ const topCategories = [
   { id: 'beauty', name: 'Beauty', imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=200&h=200&fit=crop' },
   { id: 'sports', name: 'Sports', imageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=200&h=200&fit=crop' },
   { id: 'auto', name: 'Auto', imageUrl: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=200&h=200&fit=crop' },
+  { id: 'toys', name: 'Toys', imageUrl: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=200&h=200&fit=crop' },
+  { id: 'fashion', name: 'Fashion', imageUrl: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=200&h=200&fit=crop' },
+  { id: 'grocery', name: 'Grocery', imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&h=200&fit=crop' },
+  { id: 'books', name: 'Books', imageUrl: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=200&h=200&fit=crop' },
+  { id: 'health', name: 'Health', imageUrl: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=200&h=200&fit=crop' },
 ];
 
 import { ALL_PRODUCTS } from '../../data/mockData';
@@ -107,8 +112,6 @@ export default function HomeScreen() {
             onCategoryPress={handleCategoryPress}
           />
 
-          {/* Categories (Grid) */}
-          <HomeCategories />
 
           {/* Trending Now Section */}
           <TrendingSection

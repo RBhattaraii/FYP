@@ -10,6 +10,7 @@ interface Product {
   rating?: number;
   imageUrl: string;
   inWishlist: boolean;
+  promotionalBadge?: string;
 }
 
 interface ProductCardProps {
@@ -92,6 +93,13 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
               />
             </TouchableOpacity>
           </Animated.View>
+
+          {/* Promotional Badge Top Right */}
+          {product.promotionalBadge && (
+            <View style={styles.badgeContainer}>
+              <Text style={styles.badgeText}>{product.promotionalBadge}</Text>
+            </View>
+          )}
         </View>
 
         {/* Product Name */}
@@ -161,6 +169,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     ...shadows.button,
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top: spacing.xs,
+    right: spacing.xs,
+    backgroundColor: colors.warningOrange,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    borderRadius: borderRadius.small,
+  },
+  badgeText: {
+    color: colors.white,
+    fontSize: 10,
+    fontWeight: typography.fontWeight.bold,
   },
   name: {
     marginTop: spacing.md,

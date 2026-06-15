@@ -21,15 +21,13 @@ export default function CategoryPills({
 }: CategoryPillsProps) {
   return (
     <View style={styles.container}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-        decelerationRate="fast"
-        snapToInterval={undefined}
-        snapToAlignment="start"
-        bounces={true}
-      >
+      <View style={styles.header}>
+        <Text style={styles.title}>Categories</Text>
+        <TouchableOpacity>
+          <Text style={styles.seeAllText}>See All</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.gridContainer}>
         {categories.map((category) => {
           const isActive = category.id === activeCategory;
           return (
@@ -60,29 +58,47 @@ export default function CategoryPills({
             </TouchableOpacity>
           );
         })}
-      </ScrollView>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 100,
     marginTop: spacing.sm,
+    marginBottom: spacing.lg,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
     marginBottom: spacing.md,
   },
-  scrollContent: {
+  title: {
+    fontSize: typography.fontSize.h3,
+    fontWeight: typography.fontWeight.semibold,
+    color: colors.gray900,
+  },
+  seeAllText: {
+    fontSize: typography.fontSize.body,
+    color: colors.gray600,
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     paddingHorizontal: spacing.lg,
-    gap: spacing.md,
   },
   categoryItem: {
     alignItems: 'center',
-    width: 64,
+    width: '18%', // Fits 5 items per row with space-between
+    marginBottom: spacing.md,
   },
   circle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     overflow: 'hidden',
     backgroundColor: colors.gray100,
     justifyContent: 'center',
