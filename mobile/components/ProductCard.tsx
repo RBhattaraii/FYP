@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography, spacing, dimensions, borderRadius, shadows } from '../constants/theme';
 
@@ -11,6 +11,7 @@ interface Product {
   imageUrl: string;
   inWishlist: boolean;
   promotionalBadge?: string;
+  storeCount?: number;
 }
 
 interface ProductCardProps {
@@ -110,25 +111,31 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
         {/* Price Row */}
         <View style={styles.priceRow}>
           <View>
-            <Text style={styles.price}>${product.price.toFixed(2)}</Text>
-            {/* Rating below price */}
-            {product.rating && (
-              <View style={styles.ratingContainer}>
-                <Ionicons name="star" size={12} color="#FFD700" />
-                <Text style={styles.ratingText}>{product.rating}</Text>
-              </View>
-            )}
+            <Text style={styles.storeCount}>{product.storeCount || 3}+ Stores</Text>
+            <View style={styles.priceContainer}>
+              <Text style={styles.priceLabel}>From </Text>
+              <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+            </View>
           </View>
 
-          {/* Optional: Add to Cart Button (since wishlist moved) */}
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => console.log('Add to cart')}
-            accessibilityLabel={`Add ${product.name} to cart`}
+          {/* View Deals Button */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.addButton,
+              pressed && styles.addButtonPressed
+            ]}
+            onPress={onPress}
+            accessibilityLabel={`Compare deals for ${product.name}`}
             accessibilityRole="button"
           >
-            <Ionicons name="add" size={16} color={colors.white} />
-          </TouchableOpacity>
+            {({ pressed }) => (
+              <Ionicons 
+                name="chevron-forward" 
+                size={14} 
+                color={pressed ? colors.white : colors.gray900} 
+              />
+            )}
+          </Pressable>
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -138,7 +145,7 @@ export default function ProductCard({ product, onPress, onAddPress }: ProductCar
 const styles = StyleSheet.create({
   container: {
     width: dimensions.trendingCard.width,
-    minHeight: 250, // Increased height for better visibility
+    minHeight: 270, // Increased height to accommodate larger image
     backgroundColor: colors.white,
     borderRadius: borderRadius.medium,
     borderWidth: 1,
@@ -152,7 +159,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 160, // Taller image to occupy more space
+    height: 180, // Taller image to emphasize the product
     borderRadius: borderRadius.small,
     backgroundColor: colors.gray50,
   },
@@ -186,10 +193,10 @@ const styles = StyleSheet.create({
   },
   name: {
     marginTop: spacing.md,
-    fontSize: typography.fontSize.body,
-    fontWeight: typography.fontWeight.semibold,
+    fontSize: typography.fontSize.caption,
+    fontWeight: typography.fontWeight.medium,
     color: colors.gray900,
-    lineHeight: typography.lineHeight.body,
+    lineHeight: typography.lineHeight.caption,
   },
   priceRow: {
     marginTop: spacing.sm,
@@ -197,29 +204,38 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  priceLabel: {
+    fontSize: typography.fontSize.caption,
+    color: colors.gray700,
+    fontWeight: typography.fontWeight.medium,
+  },
   price: {
-    fontSize: typography.fontSize.bodyLarge,
+    fontSize: typography.fontSize.body,
     fontWeight: typography.fontWeight.bold,
     color: colors.gray900,
   },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  ratingText: {
-    fontSize: 12,
+  storeCount: {
+    fontSize: typography.fontSize.caption,
     color: colors.gray600,
-    marginLeft: 4,
+    marginBottom: 2,
     fontWeight: typography.fontWeight.medium,
   },
   addButton: {
-    width: 32,
-    height: 32,
-    backgroundColor: colors.gray900,
+    width: 26,
+    height: 26,
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: colors.gray300,
     borderRadius: borderRadius.small,
     justifyContent: 'center',
     alignItems: 'center',
-    ...shadows.button,
+  },
+  addButtonPressed: {
+    backgroundColor: colors.gray900,
+    borderColor: colors.gray900,
   },
 });

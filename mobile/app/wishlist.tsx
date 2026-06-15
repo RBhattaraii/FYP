@@ -30,12 +30,12 @@ const WishlistCard = ({
   item,
   onPress,
   onRemove,
-  onAddToCart
+  onCompare
 }: {
   item: any;
   onPress: () => void;
   onRemove: () => void;
-  onAddToCart: () => void;
+  onCompare: () => void;
 }) => {
   return (
     <TouchableOpacity style={styles.cardContainer} onPress={onPress} activeOpacity={0.8}>
@@ -63,21 +63,24 @@ const WishlistCard = ({
         {/* Badges */}
         <View style={styles.badgesRow}>
           <View style={styles.stockBadge}>
-            <Text style={styles.stockBadgeText}>In Stock</Text>
+            <Text style={styles.stockBadgeText}>3+ Offers</Text>
           </View>
           {item.price > 200 && (
             <View style={styles.promoBadge}>
-              <Text style={styles.promoBadgeText}>Free Shipping</Text>
+              <Text style={styles.promoBadgeText}>Best Deal</Text>
             </View>
           )}
         </View>
 
         {/* Bottom Row: Price & Action */}
         <View style={styles.bottomRow}>
-          <Text style={styles.price}>${item.price.toFixed(2)}</Text>
-          <TouchableOpacity style={styles.cartButton} onPress={onAddToCart} activeOpacity={0.7}>
-            <Ionicons name="cart-outline" size={16} color={colors.gray900} style={{ marginRight: 4 }} />
-            <Text style={styles.cartButtonText}>Add to Cart</Text>
+          <View style={styles.priceContainer}>
+            <Text style={styles.priceLabel}>From </Text>
+            <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+          </View>
+          <TouchableOpacity style={styles.cartButton} onPress={onCompare} activeOpacity={0.7}>
+            <Ionicons name="pricetags-outline" size={16} color={colors.gray900} style={{ marginRight: 4 }} />
+            <Text style={styles.cartButtonText}>Compare</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -93,8 +96,9 @@ export default function WishlistScreen() {
     setWishlistItems(prev => prev.filter(item => item.id !== id));
   };
 
-  const handleAddToCart = (id: string) => {
-    Alert.alert('Success', 'Item added to cart!');
+  const handleCompare = (id: string) => {
+    // In a real app, this might navigate specifically to a comparison tab inside the product details
+    router.push(`/product/${id}`);
   };
 
   const handleProductPress = (id: string) => {
@@ -106,7 +110,7 @@ export default function WishlistScreen() {
       item={item}
       onPress={() => handleProductPress(item.id)}
       onRemove={() => handleRemoveWishlist(item.id)}
-      onAddToCart={() => handleAddToCart(item.id)}
+      onCompare={() => handleCompare(item.id)}
     />
   );
 
@@ -273,8 +277,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: spacing.sm,
   },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  priceLabel: {
+    fontSize: typography.fontSize.caption,
+    color: colors.gray700,
+    fontWeight: typography.fontWeight.medium,
+  },
   price: {
-    fontSize: typography.fontSize.bodyLarge,
+    fontSize: typography.fontSize.body,
     fontWeight: typography.fontWeight.semibold,
     color: colors.gray900,
   },
