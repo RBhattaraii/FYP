@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { Ionicons } from '@expo/vector-icons';
-import { API_URL } from '../../constants/api';
+import { API_URL, fetchWithTimeout } from '../../constants/api';
 import { colors, typography, spacing, borderRadius, shadows } from '../../constants/theme';
 
 export default function LoginScreen() {
@@ -89,7 +89,7 @@ export default function LoginScreen() {
     setApiError('');
     
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetchWithTimeout(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,8 +120,13 @@ export default function LoginScreen() {
         setApiError(data.detail || 'Login failed. Please try again.');
         setPassword('');
       }
-    } catch (error) {
-      setApiError('Unable to connect to server. Please check your connection.');
+    } catch (error: any) {
+      console.log('❌ Login error:', error.message);
+      if (error.message?.includes('timed out')) {
+        setApiError('Connection timed out. Make sure the backend server is running on your computer.');
+      } else {
+        setApiError('Unable to connect to server. Please check your connection and ensure the backend is running.');
+      }
       setPassword('');
     } finally {
       setLoading(false);

@@ -57,13 +57,11 @@ async def shutdown():
     print("👋 PricePilot API shut down")
 
 # Configure CORS to allow React Native app to connect
-# Restricted to specific Expo development ports for security
+# In development, allow all origins since React Native and emulators
+# send requests from various addresses (10.0.2.2, LAN IPs, etc.)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:8081",   # Expo default port
-        "http://localhost:19006",  # Expo web port
-    ],
+    allow_origins=["*"],  # Allow all origins (React Native doesn't use browser CORS, but good for dev)
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allow all headers
