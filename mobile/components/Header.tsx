@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { colors, typography, spacing, dimensions } from '../constants/theme';
 
 interface HeaderProps {
@@ -20,6 +21,8 @@ export default function Header({
   hasUnreadNotifications = false,
   onNotificationPress 
 }: HeaderProps) {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       {/* Left Icon */}
@@ -44,6 +47,9 @@ export default function Header({
       
       {/* Right Action Icons */}
       <View style={styles.rightActions}>
+        <TouchableOpacity onPress={() => router.push('/wishlist')} style={styles.wishlistHeaderBtn}>
+          <Ionicons name="heart-outline" size={24} color={colors.gray900} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => console.log('Profile clicked')}>
           <Image 
             source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop' }} 
@@ -88,6 +94,15 @@ const styles = StyleSheet.create({
   },
   rightActions: {
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  wishlistHeaderBtn: {
+    marginRight: spacing.md,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.gray100,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   profilePic: {

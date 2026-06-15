@@ -50,12 +50,12 @@ export default function TabsLayout() {
         }} 
       />
       <Tabs.Screen 
-        name="wishlist" 
+        name="cart" 
         options={{ 
-          title: 'Wishlist',
+          title: 'Cart',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons 
-              name={focused ? 'heart' : 'heart-outline'} 
+              name={focused ? 'cart' : 'cart-outline'} 
               size={24} 
               color={color} 
             />

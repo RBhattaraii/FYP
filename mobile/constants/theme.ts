@@ -7,8 +7,8 @@
 export const colors = {
   // Primary Colors
   white: '#FFFFFF',
-  indigoPrimary: '#6366F1',
-  indigoDark: '#4F46E5',
+  primary: '#2563EB',
+  primaryDark: '#1D4ED8',
   
   // Neutral Colors
   gray50: '#F9FAFB',
@@ -97,7 +97,7 @@ export const shadows = {
     elevation: 4,
   },
   button: {
-    shadowColor: '#6366F1',
+    shadowColor: '#2563EB',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 6,

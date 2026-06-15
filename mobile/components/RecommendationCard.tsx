@@ -117,7 +117,7 @@ export default function RecommendationCard({
                 <Ionicons
                   name={product.inWishlist ? 'heart' : 'heart-outline'}
                   size={20}
-                  color={product.inWishlist ? colors.indigoPrimary : colors.gray600}
+                  color={product.inWishlist ? colors.primary : colors.gray600}
                 />
               </TouchableOpacity>
             </Animated.View>

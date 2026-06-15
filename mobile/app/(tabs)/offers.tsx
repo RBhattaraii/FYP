@@ -66,6 +66,7 @@ export default function OffersScreen() {
   const router = useRouter();
   const [products, setProducts] = useState(MOCK_PRODUCTS);
   const [activeBanner, setActiveBanner] = useState(0);
+  const activeBannerRef = useRef(0);
   const scrollViewRef = useRef<ScrollView>(null);
   const bannerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -83,20 +84,15 @@ export default function OffersScreen() {
     ).start();
   }, [marqueeAnim, SINGLE_ROW_WIDTH]);
 
-  useEffect(() => {
-    startAutoScroll();
-    return () => stopAutoScroll();
-  }, [activeBanner]);
-
   const startAutoScroll = () => {
     stopAutoScroll();
     bannerIntervalRef.current = setInterval(() => {
-      let nextIndex = activeBanner + 1;
+      let nextIndex = activeBannerRef.current + 1;
       if (nextIndex >= MOCK_BANNERS.length) {
         nextIndex = 0;
       }
       scrollViewRef.current?.scrollTo({ x: nextIndex * screenWidth, animated: true });
-    }, 3000);
+    }, 4000);
   };
 
   const stopAutoScroll = () => {
@@ -105,11 +101,17 @@ export default function OffersScreen() {
     }
   };
 
+  useEffect(() => {
+    startAutoScroll();
+    return () => stopAutoScroll();
+  }, []);
+
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const index = Math.round(offsetX / screenWidth);
     if (index !== activeBanner && index >= 0 && index < MOCK_BANNERS.length) {
       setActiveBanner(index);
+      activeBannerRef.current = index;
     }
   };
 

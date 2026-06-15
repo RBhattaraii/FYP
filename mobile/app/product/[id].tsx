@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   },
   brand: {
     fontSize: typography.fontSize.caption,
-    color: colors.indigoPrimary,
+    color: colors.primary,
     fontWeight: typography.fontWeight.bold,
     letterSpacing: 1,
   },
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     color: colors.gray900,
   },
   primaryButton: {
-    backgroundColor: colors.indigoPrimary,
+    backgroundColor: colors.primary,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
     borderRadius: borderRadius.full,
