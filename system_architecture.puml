@@ -1,0 +1,112 @@
+@startuml PricePilot_System_Architecture
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Segoe UI"
+skinparam roundCorner 15
+skinparam shadowing true
+skinparam linetype ortho
+
+skinparam rectangle {
+  BackgroundColor #F9F6F0
+  BorderColor #6E4B3A
+  FontColor #2D2D2D
+  BorderThickness 2
+}
+
+skinparam database {
+  BackgroundColor #F9F6F0
+  BorderColor #6E4B3A
+  FontColor #2D2D2D
+  BorderThickness 2
+}
+
+skinparam cloud {
+  BackgroundColor #FFFFFF
+  BorderColor #8D6E63
+  FontColor #2D2D2D
+  BorderThickness 2
+}
+
+skinparam package {
+  BackgroundColor #FFFFFF
+  BorderColor #6E4B3A
+  FontColor #2D2D2D
+  BorderThickness 2
+}
+
+skinparam arrow {
+  Color #6E4B3A
+  Thickness 2
+}
+
+title **PricePilot** - System Architecture
+
+' ==================== CLIENT LAYER ====================
+rectangle "**React Native Mobile App (Expo)**" as mobile {
+  rectangle "Authentication" as auth_ui
+  rectangle "Product Search" as search_ui
+  rectangle "Price Comparison" as compare_ui
+  rectangle "Price Alerts" as alerts_ui
+  rectangle "Wishlist" as wishlist_ui
+  rectangle "Points & Rewards" as points_ui
+  rectangle "Admin Dashboard" as admin_ui
+}
+
+' ==================== API LAYER ====================
+package "**FastAPI Backend (Python)**" as backend {
+
+  package "API Routers" as routers {
+    rectangle "Auth Router" as auth_r
+    rectangle "Products Router" as products_r
+    rectangle "Compare Router" as compare_r
+    rectangle "Scraper Router" as scraper_r
+    rectangle "Price History Router" as history_r
+    rectangle "Notifications Router" as notif_r
+    rectangle "Points Router" as points_r
+    rectangle "Wishlist Router" as wish_r
+    rectangle "Analytics Router" as analytics_r
+    rectangle "Admin Router" as admin_r
+  }
+
+  package "Core Services" as services {
+    rectangle "Scraper Coordinator\n(Playwright)" as scraper_svc
+    rectangle "Entity Resolution\n(TF-IDF + Cosine Similarity)" as entity_svc
+    rectangle "Price Forecasting\n(Prophet)" as forecast_svc
+    rectangle "Background Scheduler\n(APScheduler)" as scheduler_svc
+    rectangle "Rate Limiter\n(SlowAPI)" as limiter_svc
+  }
+}
+
+' ==================== DATABASE LAYER ====================
+database "**PostgreSQL (Supabase)**\nUsers, Products, Prices,\nWishlists, Alerts, Points" as postgres
+
+database "**MongoDB Atlas**\nRaw Scraped Data,\nUnprocessed Listings" as mongodb
+
+' ==================== EXTERNAL STORES ====================
+cloud "**E-Commerce Stores**" as stores {
+  rectangle "Daraz Nepal" as daraz #FFFFFF
+  rectangle "OLiZ Store" as oliz #FFFFFF
+  rectangle "HuKuT" as hukut #FFFFFF
+  rectangle "SastoDeal" as sasto #FFFFFF
+  rectangle "CG Digital" as cg #FFFFFF
+  rectangle "NeoStore" as neo #FFFFFF
+  rectangle "UFO Nepal" as ufo #FFFFFF
+  rectangle "Hardware Pasal" as hw #FFFFFF
+}
+
+' ==================== CONNECTIONS ====================
+mobile -down-> backend : REST API (HTTP/JSON)
+
+routers -down-> postgres : asyncpg\nParameterized SQL
+routers -down-> mongodb : PyMongo\nDocument Queries
+
+entity_svc -down-> postgres : Normalized Products
+scraper_svc -down-> mongodb : Raw Listings
+
+scraper_svc -right-> stores : Playwright\nHeadless Scraping
+
+scheduler_svc -right-> scraper_svc : Triggers Jobs
+scraper_svc -down-> entity_svc : Raw Data\nfor Matching
+history_r -down-> forecast_svc : Price Data
+
+@enduml

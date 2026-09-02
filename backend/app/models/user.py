@@ -15,11 +15,13 @@ class RegisterRequest(BaseModel):
     Fields:
         email: User's email address (validated as proper email format)
         password: User's password (must meet security requirements)
-        full_name: User's full name (optional)
+        first_name: User's first name (required)
+        last_name: User's last name (required)
     """
     email: EmailStr
     password: str
-    full_name: Optional[str] = None
+    first_name: str
+    last_name: str
     
     @field_validator("password")
     @classmethod
@@ -29,22 +31,24 @@ class RegisterRequest(BaseModel):
         
         Requirements:
         - At least 8 characters long
-        - Contains at least one number
-        
-        Args:
-            v: Password string to validate
-        
-        Returns:
-            str: Validated password
-        
-        Raises:
-            ValueError: If password doesn't meet requirements
+        - Contains at least one uppercase letter
+        - Contains at least one special character
         """
         if len(v) < 8:
             raise ValueError("Password must be at least 8 characters")
-        if not re.search(r"\d", v):
-            raise ValueError("Password must contain at least one number")
+        if not re.search(r"[A-Z]", v):
+            raise ValueError("Password must contain at least one uppercase letter")
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", v):
+            raise ValueError("Password must contain at least one special character (e.g. @)")
         return v
+
+    @field_validator("first_name", "last_name")
+    @classmethod
+    def validate_names(cls, v):
+        """Ensure names are not empty strings"""
+        if not v or not str(v).strip():
+            raise ValueError("Name cannot be empty")
+        return str(v).strip()
 
 
 class LoginRequest(BaseModel):
@@ -69,12 +73,48 @@ class AuthResponse(BaseModel):
         user_id: User's unique ID (UUID)
         email: User's email address
         role: User's role (e.g., "user", "admin")
+        full_name: User's full name (optional)
+        phone: User's phone number (optional)
     """
     token: str
     token_type: str = "bearer"
     user_id: str
     email: str
     role: str
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+
+
+class ChangePasswordRequest(BaseModel):
+    """
+    Request model for changing password
+    """
+    current_password: str
+    new_password: str
+    
+    @field_validator("new_password")
+    @classmethod
+    def validate_password(cls, v):
+        if len(v) < 8:
+            raise ValueError("Password must be at least 8 characters")
+        if not re.search(r"[A-Z]", v):
+            raise ValueError("Password must contain at least one uppercase letter")
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", v):
+            raise ValueError("Password must contain at least one special character")
+        return v
+
+
+class DeleteAccountRequest(BaseModel):
+    """
+    Request model for deleting an account
+    """
+    password: str
+
+class PushTokenRequest(BaseModel):
+    """
+    Request model for storing expo push token
+    """
+    token: str
 
 
 # ============================================================================

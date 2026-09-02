@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
-import { colors, typography, spacing, dimensions } from '../constants/theme';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Category {
   id: string;
   name: string;
-  imageUrl?: string;
 }
 
 interface CategoryPillsProps {
@@ -14,43 +13,56 @@ interface CategoryPillsProps {
   onCategoryPress: (categoryId: string) => void;
 }
 
+// Map tech categories to Ionicons
+const getCategoryIcon = (id: string): keyof typeof Ionicons.glyphMap => {
+  const map: Record<string, keyof typeof Ionicons.glyphMap> = {
+    'Electronics': 'hardware-chip-outline',
+    'phone': 'phone-portrait-outline',
+    'laptop': 'laptop-outline',
+    'smartwatch': 'watch-outline',
+    'audio': 'headset-outline',
+    'Home_Appliances': 'home-outline',
+    'Computer_Accessories': 'desktop-outline',
+  };
+  return map[id] || 'apps-outline';
+};
+
 export default function CategoryPills({ 
   categories, 
   activeCategory, 
   onCategoryPress 
 }: CategoryPillsProps) {
+  // Take top 4 for the row layout like the screenshot
+  const displayCategories = categories.slice(0, 4);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Categories</Text>
-        <TouchableOpacity>
+        <Text style={styles.title}>Category</Text>
+        <TouchableOpacity activeOpacity={0.7}>
           <Text style={styles.seeAllText}>See All</Text>
         </TouchableOpacity>
       </View>
+      
       <View style={styles.gridContainer}>
-        {categories.map((category) => {
+        {displayCategories.map((category) => {
           const isActive = category.id === activeCategory;
           return (
             <TouchableOpacity
               key={category.id}
+              activeOpacity={0.7}
               style={styles.categoryItem}
               onPress={() => onCategoryPress(category.id)}
-              activeOpacity={0.7}
-              accessibilityLabel={`${category.name} category`}
-              accessibilityState={{ selected: isActive }}
-              accessibilityRole="button"
             >
-              <View style={[styles.circle, isActive && styles.circleActive]}>
-                <Image 
-                  source={{ uri: category.imageUrl || `https://via.placeholder.com/80?text=${category.name.charAt(0)}` }} 
-                  style={styles.image} 
+              <View style={styles.circle}>
+                <Ionicons 
+                  name={getCategoryIcon(category.id)} 
+                  size={24} 
+                  color={'#111111'} 
                 />
               </View>
               <Text
-                style={[
-                  styles.categoryText,
-                  isActive && styles.categoryTextActive,
-                ]}
+                style={styles.categoryText}
                 numberOfLines={1}
               >
                 {category.name}
@@ -65,63 +77,49 @@ export default function CategoryPills({
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: spacing.sm,
-    marginBottom: spacing.lg,
+    paddingHorizontal: 24,
+    marginBottom: 24,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    marginBottom: spacing.md,
+    marginBottom: 16,
   },
   title: {
-    fontSize: typography.fontSize.h3,
-    fontWeight: typography.fontWeight.semibold,
-    color: colors.gray900,
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 18,
+    color: '#111111',
   },
   seeAllText: {
-    fontSize: typography.fontSize.body,
-    color: colors.gray600,
+    fontFamily: 'Poppins_500Medium',
+    fontSize: 13,
+    color: '#9E9E9E',
   },
   gridContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
   },
   categoryItem: {
     alignItems: 'center',
-    width: '18%', // Fits 5 items per row with space-between
-    marginBottom: spacing.md,
+    width: '22%',
   },
   circle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    overflow: 'hidden',
-    backgroundColor: colors.gray100,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#F5F5F5',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'transparent',
-    marginBottom: spacing.xs,
+    marginBottom: 8,
   },
   circleActive: {
-    borderColor: colors.warningOrange,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
+    backgroundColor: '#111111',
   },
   categoryText: {
-    fontSize: typography.fontSize.caption,
-    fontWeight: typography.fontWeight.regular,
-    color: colors.gray600,
+    fontFamily: 'Poppins_500Medium',
+    fontSize: 12,
+    color: '#111111',
     textAlign: 'center',
-  },
-  categoryTextActive: {
-    fontWeight: typography.fontWeight.semibold,
-    color: colors.gray900,
   },
 });

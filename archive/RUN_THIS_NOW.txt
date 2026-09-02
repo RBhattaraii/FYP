@@ -1,0 +1,126 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║   🚀 PRICEPILOT - FIX YOUR APP IN 30 SECONDS                     ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│  STEP 1: Open PowerShell in this folder                          │
+│  (Right-click in folder → "Open in Terminal")                    │
+└───────────────────────────────────────────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│  STEP 2: Run ONE of these commands:                              │
+│                                                                   │
+│  ┌─────────────────────────────────────────────────────────────┐ │
+│  │  OPTION A - Quick Start (RECOMMENDED)                       │ │
+│  │  .\quick-start.ps1                                          │ │
+│  │  → Tests everything, starts backend, launches mobile app   │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│                                                                   │
+│  ┌─────────────────────────────────────────────────────────────┐ │
+│  │  OPTION B - Just Test First                                 │ │
+│  │  .\test-everything.ps1                                      │ │
+│  │  → Shows what's working/broken, then you decide            │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│                                                                   │
+│  ┌─────────────────────────────────────────────────────────────┐ │
+│  │  OPTION C - Manual Start                                    │ │
+│  │  cd mobile                                                  │ │
+│  │  .\fix-and-start.ps1                                        │ │
+│  │  → Just clears cache and starts mobile app                 │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+└───────────────────────────────────────────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│  STEP 3: Wait for app to start                                   │
+│  → You'll see Metro bundler running                              │
+│  → QR code will appear                                           │
+│  → Scan with Expo Go app or press 'a' for Android emulator      │
+└───────────────────────────────────────────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│  STEP 4: Verify everything works                                 │
+│  ✓ Home screen shows products                                    │
+│  ✓ Images load correctly                                         │
+│  ✓ Products are clickable                                        │
+│  ✓ No error messages                                             │
+└───────────────────────────────────────────────────────────────────┘
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║  THAT'S IT! YOU'RE DONE! 🎉                                       ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+
+═════════════════════════════════════════════════════════════════════
+  TROUBLESHOOTING (if something goes wrong)
+═════════════════════════════════════════════════════════════════════
+
+Problem: "Backend not running"
+Solution: Open new terminal → cd backend → .\venv\Scripts\activate → uvicorn main:app --host 0.0.0.0 --reload
+
+Problem: "No products in database"
+Solution: cd backend → .\trigger_scraper.ps1 → Wait 60 seconds → Refresh app
+
+Problem: "Unable to resolve @/constants/api"
+Solution: cd mobile → npx expo start --clear --reset-cache
+
+Problem: Still stuck?
+Solution: Read START_HERE.md (it has EVERYTHING)
+
+
+═════════════════════════════════════════════════════════════════════
+  HELPFUL FILES
+═════════════════════════════════════════════════════════════════════
+
+START_HERE.md              ← Read this first (quick fixes)
+SOLUTION_SUMMARY.md        ← Complete solution overview  
+COMPLETE_FIX_GUIDE.md      ← Detailed troubleshooting
+WHAT_I_FIXED.md            ← Explanation of what I did
+test-everything.ps1        ← Diagnostic tool
+quick-start.ps1            ← One-click start
+mobile/fix-and-start.ps1   ← Mobile app fix
+
+
+═════════════════════════════════════════════════════════════════════
+  EXPECTED RESULT
+═════════════════════════════════════════════════════════════════════
+
+Backend Terminal:
+  INFO: Uvicorn running on http://0.0.0.0:8000
+  INFO: 192.168.x.x:xxxx - "GET /products/home HTTP/1.1" 200 OK
+
+Mobile Terminal:
+  🔗 API URL: http://10.0.2.2:8000
+  📱 Platform: android
+  Metro bundler is running...
+
+Mobile App:
+  Home screen with:
+  ✓ Trending Now (3 products)
+  ✓ Recommended (2 products)  
+  ✓ Real images
+  ✓ Real prices
+  ✓ No errors
+
+
+═════════════════════════════════════════════════════════════════════
+  QUESTIONS? CHECK:
+═════════════════════════════════════════════════════════════════════
+
+1. START_HERE.md - Has everything you need
+2. Run: .\test-everything.ps1 - Shows what's wrong
+3. Check backend logs - Terminal 1
+4. Check Metro console - Terminal 2
+
+
+═════════════════════════════════════════════════════════════════════
+
+           Made with ❤️ - Your app will work now!
+
+═════════════════════════════════════════════════════════════════════

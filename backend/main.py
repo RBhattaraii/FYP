@@ -1,18 +1,21 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+import asyncio
+import sys
+
+# Windows requires ProactorEventLoop for Playwright subprocesses
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+
 from app.database.postgres import create_pool, close_pool
-from app.database.mongo import connect_mongodb, close_mongodb
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
+from app.services.scheduler import start_scheduler, stop_scheduler, daily_homepage_scraping_job
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from app.limiter import limiter
 
-# Load environment variables from .env file
+# Load environment variables from .env file 
 load_dotenv()
-
-# Initialize rate limiter
-# Uses client's IP address to track request counts
-limiter = Limiter(key_func=get_remote_address)
 
 # Create FastAPI app instance
 app = FastAPI(
@@ -33,28 +36,39 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 async def startup():
     """
     Called when the FastAPI app starts.
-    Creates the PostgreSQL connection pool and connects to MongoDB.
+    Creates the PostgreSQL connection pool, connects to MongoDB,
+    and starts the background scheduler.
     """
     # Connect to PostgreSQL (async)
-    await create_pool()
+    try:
+        await create_pool()
+    except Exception as exc:
+        print(f"[WARN] PostgreSQL startup skipped: {exc}")
     
-    # Connect to MongoDB (synchronous)
-    mongodb_connected = connect_mongodb()
-    if not mongodb_connected:
-        print("⚠️  Warning: MongoDB connection failed, but API will continue")
+    # Disable background scheduler and homepage scraping to ensure a fully offline experience
+    # start_scheduler()
     
-    print("🚀 PricePilot API started successfully")
+    # Check if we missed the midnight scrape and run it now if needed
+    # The job itself checks if 24 hours have passed since the last scrape
+    # asyncio.create_task(daily_homepage_scraping_job())
+    
+    print("[OK] PricePilot API started successfully")
 
 # Shutdown event: Close database connection pool
 @app.on_event("shutdown")
 async def shutdown():
     """
     Called when the FastAPI app shuts down.
-    Closes the PostgreSQL connection pool and MongoDB connection.
+    Stops the scheduler, closes the PostgreSQL connection pool,
+    and closes MongoDB connection.
     """
+    # Stop scheduler first
+    stop_scheduler()
+    
+    # Close database connections
     await close_pool()
-    close_mongodb()
-    print("👋 PricePilot API shut down")
+    
+    print("[OK] PricePilot API shut down")
 
 # Configure CORS to allow React Native app to connect
 # In development, allow all origins since React Native and emulators
@@ -102,8 +116,32 @@ async def root():
     return {"message": "PricePilot API is working"}
 
 # Import and include routers
-from app.routers import auth, products
+from app.routers import (
+    auth,
+    products,
+    scraper,
+    wishlist,
+    notifications,
+    analytics,
+    points,
+    categories,
+    price_history,
+    admin,
+    history,
+    compare
+)
+
 app.include_router(auth.router)
 app.include_router(products.router)
+app.include_router(scraper.router)
+app.include_router(wishlist.router)
+app.include_router(notifications.router)
+app.include_router(analytics.router)
+app.include_router(points.router)
+app.include_router(categories.router)
+app.include_router(price_history.router)
+app.include_router(admin.router)
+app.include_router(history.router)
+app.include_router(compare.router)
 
 # Run with: uvicorn main:app --reload

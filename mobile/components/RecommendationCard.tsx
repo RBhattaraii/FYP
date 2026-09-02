@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, Pressable, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography, spacing, dimensions, borderRadius, shadows } from '../constants/theme';
 
@@ -29,18 +29,22 @@ export default function RecommendationCard({
   const heartScaleAnim = React.useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
-    Animated.timing(scaleAnim, {
-      toValue: 0.98,
-      duration: 150,
+    Animated.spring(scaleAnim, {
+      toValue: 0.96,
       useNativeDriver: true,
+      damping: 12,
+      mass: 0.6,
+      stiffness: 180,
     }).start();
   };
 
   const handlePressOut = () => {
-    Animated.timing(scaleAnim, {
+    Animated.spring(scaleAnim, {
       toValue: 1,
-      duration: 150,
       useNativeDriver: true,
+      damping: 12,
+      mass: 0.6,
+      stiffness: 180,
     }).start();
   };
 
@@ -48,15 +52,17 @@ export default function RecommendationCard({
     // Spring animation for heart
     Animated.sequence([
       Animated.spring(heartScaleAnim, {
-        toValue: 1.3,
-        friction: 3,
-        tension: 40,
+        toValue: 1.25,
+        damping: 8,
+        mass: 0.4,
+        stiffness: 200,
         useNativeDriver: true,
       }),
       Animated.spring(heartScaleAnim, {
         toValue: 1,
-        friction: 3,
-        tension: 40,
+        damping: 8,
+        mass: 0.4,
+        stiffness: 200,
         useNativeDriver: true,
       }),
     ]).start();
@@ -66,13 +72,15 @@ export default function RecommendationCard({
 
   return (
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-      <TouchableOpacity
-        style={styles.container}
+      <Pressable
+        style={({ hovered }: any) => [
+          styles.container,
+          hovered && styles.containerHovered
+        ]}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
-        activeOpacity={1}
-        accessibilityLabel={`${product.name}, ${product.store}, $${product.price.toFixed(2)}`}
+        accessibilityLabel={`${product.name}, ${product.store}, Rs ${product.price.toFixed(2)}`}
         accessibilityRole="button"
       >
         {/* Product Image */}
@@ -95,10 +103,10 @@ export default function RecommendationCard({
           {/* Price Row */}
           <View style={styles.priceRow}>
             <View style={styles.priceInfo}>
-              <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+              <Text style={styles.price}>Rs {product.price.toFixed(2)}</Text>
               {product.originalPrice && (
                 <Text style={styles.originalPrice}>
-                  ${product.originalPrice.toFixed(2)}
+                  Rs {product.originalPrice.toFixed(2)}
                 </Text>
               )}
               {product.discount && (
@@ -113,17 +121,18 @@ export default function RecommendationCard({
                 onPress={handleWishlistPress}
                 accessibilityLabel={`${product.inWishlist ? 'Remove from' : 'Add to'} wishlist`}
                 accessibilityRole="button"
+                activeOpacity={0.7}
               >
                 <Ionicons
                   name={product.inWishlist ? 'heart' : 'heart-outline'}
-                  size={20}
-                  color={product.inWishlist ? colors.primary : colors.gray600}
+                  size={18}
+                  color={product.inWishlist ? colors.primary : colors.gray900}
                 />
               </TouchableOpacity>
             </Animated.View>
           </View>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     </Animated.View>
   );
 }
@@ -139,6 +148,22 @@ const styles = StyleSheet.create({
     padding: spacing.base,
     flexDirection: 'row',
     ...shadows.featuredCard,
+    ...Platform.select({
+      web: {
+        transition: 'all 0.2s ease-in-out',
+      },
+      default: {},
+    }),
+  },
+  containerHovered: {
+    borderColor: colors.primaryIndigoLight,
+    ...Platform.select({
+      web: {
+        transform: 'translateY(-4px)',
+        boxShadow: '0px 15px 35px rgba(79, 70, 229, 0.08), 0px 4px 12px rgba(0, 0, 0, 0.02)',
+      },
+      default: {},
+    }),
   },
   image: {
     width: 100,
@@ -152,14 +177,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   name: {
-    fontSize: typography.fontSize.h3,
+    fontSize: 14,
     fontWeight: typography.fontWeight.semibold,
     color: colors.gray900,
-    lineHeight: typography.lineHeight.h3,
+    lineHeight: 18,
   },
   store: {
     fontSize: typography.fontSize.caption,
-    fontWeight: typography.fontWeight.regular,
+    fontWeight: typography.fontWeight.medium,
     color: colors.gray400,
     marginTop: spacing.xs,
   },
@@ -174,9 +199,9 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   price: {
-    fontSize: typography.fontSize.bodyLarge,
+    fontSize: 14,
     fontWeight: typography.fontWeight.bold,
-    color: colors.gray900,
+    color: colors.primaryIndigo,
   },
   originalPrice: {
     fontSize: typography.fontSize.caption,
@@ -192,9 +217,11 @@ const styles = StyleSheet.create({
   wishlistButton: {
     width: 32,
     height: 32,
-    backgroundColor: colors.gray50,
-    borderRadius: borderRadius.small,
+    backgroundColor: colors.gray100,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.gray200,
   },
 });

@@ -1,86 +1,73 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, typography, spacing, dimensions, borderRadius } from '../constants/theme';
 
 interface SearchBarProps {
   onPress?: () => void;
-  onVoicePress?: () => void;
+  onFilterPress?: () => void;
 }
 
-export default function SearchBar({ onPress, onVoicePress }: SearchBarProps) {
+export default function SearchBar({ onPress, onFilterPress }: SearchBarProps) {
   return (
-    <TouchableOpacity 
-      style={styles.container}
-      onPress={onPress}
-      activeOpacity={0.7}
-      accessibilityLabel="Search"
-      accessibilityRole="button"
-    >
-      <View style={styles.inputWrapper}>
-        {/* Search Icon */}
-        <Ionicons 
-          name="search" 
-          size={20} 
-          color={colors.gray400} 
-          style={styles.searchIcon}
+    <View style={styles.container}>
+      <TouchableOpacity 
+        style={styles.searchInputContainer} 
+        onPress={onPress}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="search-outline" size={20} color="#9E9E9E" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+          placeholderTextColor="#9E9E9E"
+          editable={false}
+          pointerEvents="none"
         />
-        
-        {/* Placeholder Text */}
-        <View style={styles.placeholderContainer}>
-          <TextInput
-            style={styles.placeholder}
-            placeholder="Search to compare prices"
-            placeholderTextColor={colors.gray400}
-            editable={false}
-            pointerEvents="none"
-          />
-        </View>
-        
-        {/* Voice Search Icon */}
-        <TouchableOpacity 
-          style={styles.voiceButton}
-          onPress={onVoicePress}
-          accessibilityLabel="Voice search"
-          accessibilityRole="button"
-        >
-          <Ionicons name="mic-outline" size={20} color={colors.gray600} />
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: dimensions.searchBar.height + 4,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.sm,
-    marginBottom: spacing.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    marginTop: 16,
+    marginBottom: 24,
+    gap: 12,
   },
-  inputWrapper: {
+  searchInputContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.gray100,
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.lg,
+    height: 52,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 9999, // Pill shape
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
+    paddingHorizontal: 16,
   },
   searchIcon: {
-    marginRight: spacing.sm,
+    marginRight: 10,
   },
-  placeholderContainer: {
+  searchInput: {
     flex: 1,
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
+    color: '#111111',
+    marginTop: 2, // Slight adjustment for Poppins baseline
   },
-  placeholder: {
-    fontSize: typography.fontSize.bodyLarge,
-    color: colors.gray900,
+  scannerButton: {
+    padding: 8,
+    marginLeft: 4,
   },
-  voiceButton: {
-    width: dimensions.touchTarget.min,
-    height: dimensions.touchTarget.min,
+  filterButton: {
+    width: 52,
+    height: 52,
+    backgroundColor: '#704F38',
+    borderRadius: 12,
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    marginRight: -spacing.sm,
+    alignItems: 'center',
   },
 });

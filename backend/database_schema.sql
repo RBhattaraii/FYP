@@ -163,3 +163,150 @@ CREATE INDEX idx_users_role ON users(role);
 
 -- Get active users only
 -- SELECT * FROM users WHERE is_active = TRUE;
+
+-- ============================================================================
+-- Home Screen Products Table
+-- Stores curated products for home screen display (best deals and top price drops)
+-- ============================================================================
+
+CREATE TABLE home_screen_products (
+    id                SERIAL PRIMARY KEY,
+    section           TEXT NOT NULL,  -- 'best_deals' or 'top_price_drops'
+    title             TEXT NOT NULL,
+    price             DECIMAL(10, 2) NOT NULL,
+    original_price    DECIMAL(10, 2),
+    discount_percent  INTEGER,
+    image_url         TEXT NOT NULL,
+    store_name        TEXT NOT NULL,
+    product_url       TEXT NOT NULL,
+    category          TEXT,
+    scraped_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Create indexes for performance optimization
+CREATE INDEX idx_home_products_section ON home_screen_products(section);
+CREATE INDEX idx_home_products_scraped ON home_screen_products(scraped_at);
+
+-- ============================================================================
+-- Search Cache Table
+-- Stores search results with tiered caching (Tier 1 and Tier 2 results)
+-- ============================================================================
+
+CREATE TABLE search_cache (
+    id                SERIAL PRIMARY KEY,
+    query             TEXT NOT NULL,
+    tier1_results     JSONB,
+    tier2_results     JSONB,
+    tier1_cached_at   TIMESTAMPTZ,
+    tier2_cached_at   TIMESTAMPTZ,
+    is_complete       BOOLEAN DEFAULT FALSE,
+    request_id        TEXT UNIQUE,
+    UNIQUE(query)
+);
+
+-- Create indexes for performance optimization
+CREATE INDEX idx_search_cache_query ON search_cache(query);
+CREATE INDEX idx_search_cache_request ON search_cache(request_id);
+CREATE INDEX idx_search_cache_cached ON search_cache(tier1_cached_at);
+
+-- ============================================================================
+-- Scrape Metadata Table
+-- Tracks daily scraping status and search scraping metadata
+-- ============================================================================
+
+CREATE TABLE scrape_metadata (
+    id                SERIAL PRIMARY KEY,
+    scrape_type       TEXT NOT NULL,  -- 'daily_homepage' or 'search'
+    last_scrape_time  TIMESTAMPTZ,
+    next_scrape_time  TIMESTAMPTZ,
+    status            TEXT,  -- 'idle', 'running', 'completed', 'failed'
+    products_found    INTEGER,
+    error_message     TEXT,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Create indexes for performance optimization
+CREATE INDEX idx_scrape_metadata_type ON scrape_metadata(scrape_type);
+CREATE INDEX idx_scrape_metadata_last ON scrape_metadata(last_scrape_time);
+
+-- ============================================================================
+-- Example Queries for New Tables
+-- ============================================================================
+
+-- Home Screen Products Examples:
+-- ---------------------------------
+
+-- Insert a best deal product
+-- INSERT INTO home_screen_products (section, title, price, original_price, discount_percent, image_url, store_name, product_url, category)
+-- VALUES ('best_deals', 'iPhone 15 Pro Max', 149999.00, 199999.00, 25, 'https://example.com/image.jpg', 'Daraz', 'https://daraz.com.np/product', 'Electronics');
+
+-- Get all best deals
+-- SELECT * FROM home_screen_products WHERE section = 'best_deals' ORDER BY scraped_at DESC LIMIT 25;
+
+-- Get all top price drops
+-- SELECT * FROM home_screen_products WHERE section = 'top_price_drops' ORDER BY scraped_at DESC LIMIT 25;
+
+-- Delete old products (for daily refresh)
+-- DELETE FROM home_screen_products WHERE scraped_at < NOW() - INTERVAL '1 day';
+
+-- Search Cache Examples:
+-- -----------------------
+
+-- Insert a search cache entry with Tier 1 results
+-- INSERT INTO search_cache (query, tier1_results, tier1_cached_at, is_complete, request_id)
+-- VALUES ('laptop', '[{"title": "Dell Inspiron", "price": 75000}]'::jsonb, NOW(), FALSE, 'uuid-xyz');
+
+-- Update with Tier 2 results
+-- UPDATE search_cache SET tier2_results = '[{"title": "HP Pavilion", "price": 80000}]'::jsonb, tier2_cached_at = NOW(), is_complete = TRUE WHERE query = 'laptop';
+
+-- Get cached search results
+-- SELECT * FROM search_cache WHERE query = 'laptop' AND tier1_cached_at > NOW() - INTERVAL '24 hours';
+
+-- Delete expired cache entries (older than 24 hours)
+-- DELETE FROM search_cache WHERE tier1_cached_at < NOW() - INTERVAL '24 hours';
+
+-- Scrape Metadata Examples:
+-- --------------------------
+
+-- Insert scrape metadata for daily homepage scraping
+-- INSERT INTO scrape_metadata (scrape_type, last_scrape_time, next_scrape_time, status, products_found)
+-- VALUES ('daily_homepage', NOW(), NOW() + INTERVAL '24 hours', 'completed', 50);
+
+-- Get last scrape time for daily homepage
+-- SELECT * FROM scrape_metadata WHERE scrape_type = 'daily_homepage' ORDER BY last_scrape_time DESC LIMIT 1;
+
+-- Update scrape status
+-- UPDATE scrape_metadata SET status = 'running', last_scrape_time = NOW() WHERE scrape_type = 'daily_homepage' AND id = (SELECT MAX(id) FROM scrape_metadata WHERE scrape_type = 'daily_homepage');
+
+-- ============================================================================
+-- Products Table (For Pre-Scraped Search)
+-- Stores lightweight product data for fast searching across all platforms
+-- ============================================================================
+
+CREATE TABLE products (
+    id                SERIAL PRIMARY KEY,
+    title             TEXT NOT NULL,
+    price             DECIMAL(10, 2) NOT NULL,
+    original_price    DECIMAL(10, 2),
+    discount_percent  INTEGER,
+    image_url         TEXT,
+    store_name        TEXT NOT NULL,
+    product_url       TEXT NOT NULL,
+    category          TEXT,
+    mongo_id          TEXT,  -- Reference to heavy data in MongoDB
+    scraped_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    
+    -- Search vector for full-text search
+    search_vector     tsvector GENERATED ALWAYS AS (
+        setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
+        setweight(to_tsvector('english', coalesce(store_name, '')), 'B') ||
+        setweight(to_tsvector('english', coalesce(category, '')), 'C')
+    ) STORED
+);
+
+-- Create indexes for performance optimization
+CREATE INDEX idx_products_search ON products USING GIN(search_vector);
+CREATE INDEX idx_products_store ON products(store_name);
+CREATE INDEX idx_products_scraped ON products(scraped_at);
+CREATE UNIQUE INDEX idx_products_url ON products(product_url);
+

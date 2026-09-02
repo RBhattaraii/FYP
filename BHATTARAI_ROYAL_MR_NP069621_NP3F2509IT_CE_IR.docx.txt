@@ -1,0 +1,1975 @@
+Cover Page
+INVESTIGATION REPORT
+ PricePilot: A Smart Cloud-Based System for Comparing Online Product Prices in Real Time
+By
+Royal Bhattarai 
+NP069621
+NP3F2509IT-CE
+A report submitted in partial fulfillment of the requirements for the degree of B.Sc. (Hons) IT in Cloud Engineering at Asia Pacific University of Technology and Innovation.
+Supervised by Mr. Rajan Raj Pant
+2nd Marker: Dr. Laxman Mandal
+2026
+Acknowledgement
+I would like to take this opportunity to convey my gratitude towards Asia Pacific University of Technology and Innovation (APU) & Lord Buddha Education Foundation (LBEF) for allowing me to perform this research work for the purpose of my study. Both institutions have provided me with an effective environment wherein I have got an adequate knowledge about theories and applications of my topic.
+I wish to extend my gratitude towards my two supervisors Mr. Rajan Raj Pant and second supervisor, Dr. Laxman Mandal. They have been providing me with proper guidance during the course of this research. This was very helpful as they kept me motivated and on track in all of the aspects of my work. Also, I wish to acknowledge my module leader Prof. Dr. R.N. Thakur who has guided me with all necessary help to formulate the ideas and concepts in each chapter. Their criticism was very helpful for improving my results. 
+The overall experience proved to be of immense value in the development of ideas and the whole process of this research work.
+Abstract
+This document provides an overview of the development for PricePilot which is a cloud-based mobile app aiming to enhance online shopping in Nepal. The Nepali online marketplace is currently very geographically and fragmentally dispersed. Therefore, shoppers have difficulty finding accurate information on price, discount, etc. To better understand the issues with online shopping in Nepal and what user expectations will be for the app, we undertook a structured survey focusing on Nepali consumer's shopping behavior, problems, and requirements. PricePilot aims to meet the needs of its users through an innovative price scrapping and normalization system across multiple platforms. In addition, PricePilot contains a module that calculates a Deal Score, this helps identify whether or not an offer made by an on-line retailer is legitimate. The product was created using a modular architecture, which includes a FastAPI back end, a React Native mobile UI, and cloud-based databases.
+Keywords: Price Comparison, Deal Score, Web Scraping, Data Normalization, Mobile Application, Price Transparency
+SDG Goal 12: Responsible Consumption and Production
+Table of Contents
+Cover Page1
+Acknowledgement2
+Abstract3
+1. Chapter 1: Introduction14
+1.1. Background to the Project14
+1.2. Problem Statement16
+1.3. Rationale19
+1.4. Project Aim19
+1.5. Project Objectives20
+1.6. Scope20
+1.6.1. Tasks to be Executed20
+1.6.2. Constraints21
+1.6.3. In-Scope21
+1.6.4. Out-of-Scope21
+1.7. Potential Benefits22
+1.7.1. Tangible Benefits22
+1.7.2. Intangible Benefits22
+1.8. Target Users23
+1.9. Functionalities (Deliverables)24
+1.9.1. For Users (Shoppers)24
+1.9.2. For Administrators25
+1.9.3. For the System (Technical Deliverables)25
+1.10. Mapping the Project with Sustainable Development Goal26
+1.10.1. Sustainable Development Goal 1226
+1.10.2. How PricePilot Aligns with SDG 1226
+1.11. Requirements27
+1.11.1. Functional Requirements27
+1.11.2. Non-Functional Requirements29
+1.12. Nature of Challenges30
+1.13. Overview of the Investigation Report31
+1.13.1. Chapter 1: Introduction31
+1.13.2. Chapter 2: Literature Review31
+1.13.3. Chapter 3: System Development Methodology31
+1.14. Project Plan32
+1.14.1. Project Timeline for IR32
+1.14.2. Project Timeline for Future Implementation36
+2. Chapter 2: Literature Review40
+2.1. Introduction40
+2.2. Domain Research40
+2.2.1. Nepal's E-Commerce Landscape and Consumer Behavior40
+2.2.2. Web Scraping and Real-Time Price Aggregation42
+2.2.3. Fake Discounts and Deceptive Pricing in Online Retail43
+2.2.4. Dynamic/Algorithmic Pricing and its Impact on Customer Confidence43
+2.3. Similar Systems44
+2.3.1. Google Shopping44
+2.3.2. PriceSpy46
+2.3.3. CamelCamelCamel47
+2.3.4. Idealo48
+2.3.5. PriceRunner49
+2.4. Comparison of Similar Systems50
+2.5. Why PricePilot?52
+2.6. Technical Research54
+2.6.1. System Architecture54
+2.6.2. System Flowchart56
+2.6.3. Hardware Requirements57
+2.6.4. Software Requirements58
+2.6.5. Programming Language Chosen58
+2.6.6. Database Management System66
+2.6.7. Interactive Development Environment (IDE)72
+2.6.8. Operating System75
+2.6.9. Web Browser77
+2.7. Summary79
+3. Chapter 3: System Development Methodology81
+3.1. Introduction81
+3.2. Comparison of System Development Methodologies82
+3.3. Justification for Selected Methodology84
+3.4. Agile Methodology86
+3.4.1. Overview86
+3.4.2. Agile Development Life Cycle Stages87
+3.5. Activities and Processes in Each Agile Phase89
+3.5.1. Planning Phase89
+3.5.2. Requirement Analysis Phase89
+3.5.3. Design Phase90
+3.5.4. Implementation Phase90
+3.5.5. Testing Phase90
+3.5.6. Deployment Phase91
+3.5.7. Evaluation and Feedback Phase91
+3.6. Data Gathering Design91
+3.6.1. Introduction91
+3.6.2. Advantages of Using a Questionnaire92
+3.6.3. Types of Questions Used in Survey93
+3.6.4. Questionnaire Design94
+3.7. Requirements Validation – Analysis110
+3.7.1. Analysis of Collected Data through Questionnaires111
+3.8. Summary147
+4. Chapter 4: Conclusion149
+4.1. Achievements149
+4.2. Limitations150
+4.3. Reflections151
+5. References152
+6. Appendices160
+6.1. APPENDIX 1: Gantt Chart160
+6.2. APPENDIX 2: Project Proposal Form (PPF)162
+6.3. APPENDIX 3: Project Specification Form (PSF)172
+6.4. APPENDIX 4: ETHICS FORM188
+6.5. APPENDIX 5: Meeting Logs193
+Table of Figures
+Figure 1 Growth of E-Commerce Users in Nepal14
+Figure 2 Consumer Belief of Fake Discounts from Businesses17
+Figure 3 SDG 12 Logo26
+Figure 4 Online Consumer Products Research Process41
+Figure 5 Google Shopping Logo44
+Figure 6 PriceSpy Logo46
+Figure 7 CamelCamelCamel Logo47
+Figure 8 Idealo Logo48
+Figure 9 PriceRunner Logo49
+Figure 10 PricePilot System Architecture54
+Figure 11 Flowchart of the Proposed System56
+Figure 12 PostgreSQL Logo66
+Figure 13 MongoDB Logo68
+Figure 14 VS Code Logo72
+Figure 15 Windows 11 Logo75
+Figure 16 Chrome Logo77
+Figure 17 Agile Development Lifecycle86
+Figure 18 Six Stages of Agile Development Life Cycle87
+Figure 19 Survey Description95
+Figure 20  Respondent's Profile Queries-196
+Figure 21  Respondent's Profile Queries -297
+Figure 22  Questions on current behavior and patterns99
+Figure 23  Questions on user's behavior on seeking to use any such tools100
+Figure 24  Questions on noticing any suspicious price variance on e-commerce platforms101
+Figure 25  Questions about awareness on present tools102
+Figure 26  Questions about usage of present tools103
+Figure 27  Questions about feature preferences-1104
+Figure 28  Questions about feature preferences-2105
+Figure 29  Questions about feature preferences-3106
+Figure 30  Questions about feature preferences-4107
+Figure 31  Questions about interface preferences108
+Figure 32  Open Ended Feedback options provided in the Survey110
+Figure 33  Respondent Profile Information -Full Name:1111
+Figure 34  Respondent Profile Information -Full Name:2112
+Figure 35  Respondent Profile Information -Full Name:3113
+Figure 36  Respondent Profile Information -Email Address:1114
+Figure 37  Respondent Profile Information -Email Address:2115
+Figure 38  Respondent Profile Information -Email Address:3116
+Figure 39  Age Distribution of Respondents117
+Figure 40  Gender Distribution of Respondents118
+Figure 41  Employment Status of Respondents119
+Figure 42  Online Shopping Frequency120
+Figure 43  E-Commerce Platforms Used by Respondents121
+Figure 44  Number of Platforms Visited Before Purchase122
+Figure 45  Time Spent on Price Comparison123
+Figure 46  Frequency of Abandoning Price Search124
+Figure 47  Frequency of Suspecting Fake Discount125
+Figure 48  Ability to Verify Discount Authenticity126
+Figure 49  Key Shopping Challenges Faced by Respondents127
+Figure 50  Usage of Price Comparison Apps128
+Figure 51  Platform Coverage of Used Tools129
+Figure 52  Most Useful Features in Existing Tools130
+Figure 53  Barriers to Using Price Comparison Tools132
+Figure 54  Survey result of the preferred features133
+Figure 55  Most important feature for the Respondent134
+Figure 56  Importance of Nepali Platform Coverage135
+Figure 57  Likelihood of Regular App Usage136
+Figure 58  Trust in App-Provided Price Data137
+Figure 59  Factors That Build Data Trust138
+Figure 60  Preferred Access Method (Mobile vs. Web)139
+Figure 61  Feature Priority Rankings140
+Figure 62  Preferred Notification Method141
+Figure 63  Open ended feedback from Respondents142
+Figure 64 Gantt Chart for IR160
+Figure 65 Gantt Chart of Future Implementation Plan161
+Table of Tables
+Table 1 Functional Requirements Table27
+Table 2 Non-Functional Requirements Table29
+Table 3  Comparing Similar Systems with PricePilot50
+Table 4  Hardware Requirements for the System57
+Table 5  Software Requirements for the System58
+Table 6  Comparing Similar Frontend Languages60
+Table 7  Comparison of Similar Backend Languages64
+Table 8  Comparison of similar DBMS69
+Table 9  Comparison of Similar IDEs73
+Table 10  Comparison of Operating Systems75
+Table 11  Comparison of Web Browsers77
+Table 12  Comparison of System Development Methodologies82
+Table 13 Age Distribution of Respondents117
+Table 14 Gender Distribution of Respondents118
+Table 15 Employment Status of Respondents119
+Table 16 Online Shopping Frequency120
+Table 17 E-Commerce Platforms Used by Respondents121
+Table 18 Number of Platforms Visited Before Purchase122
+Table 19 Time Spent on Price Comparison123
+Table 20 Frequency of Abandoning Price Search125
+Table 21 Frequency of Suspecting Fake Discount126
+Table 22 Ability to Verify Discount Authenticity127
+Table 23 Key Shopping Challenges Faced by Respondents128
+Table 24 Usage of Price Comparison Apps129
+Table 25 Platform Coverage of Used Tools130
+Table 26 Most Useful Features in Existing Tools131
+Table 27 Barriers to Using Price Comparison Tools132
+Table 28 Most important feature for the Respondent134
+Table 29 Importance of Nepali Platform Coverage136
+Table 30 Likelihood of Regular App Usage137
+Table 31 Trust in App-Provided Price Data138
+Table 32 Factors That Build Data Trust139
+Table 33 Preferred Access Method140
+Table 34 Feature Priority Rankings141
+Table 35 Preferred Notification Method142
+Chapter 1: Introduction
+Background to the Project 
+Shopping online in Nepal has become increasingly popular within the last decade. The use of smartphones is increasing annually (Bhattarai & Thapa, 2024). There is a decrease in the cost of internet connectivity. Electronic payment options such as eSewa and Khalti handle thousands of transactions per month (Parajuli et al., 2025). E-commerce sites are attracting an increasing number of shoppers who are looking to buy electronics and household items (Shrestha et al., 2025). The figure below clearly shows that the number of e-commerce users in Nepal has grown from nearly 1 million to 4 million in a couple of years, and it seems to be only going up.
+Figure 1Growth of E-Commerce Users in Nepal
+Note. From E-commerce in Nepal: Growth, opportunities, and threats, by D. Chapagain and B. Aryal, 2024, Preprints.  https://doi.org/10.20944/preprints202410.1585.v1
+Despite the development, there is still fragmentation in the marketplace. Every platform works on its own, maintains its own database of products, and has its own price without disclosing any of its data to other platforms (Khadka et al., 2025). In case a customer wants to purchase a laptop, he/she will browse one platform first, and afterward opens another platform in a new tab, and may go to another one again. All the platforms offer the same product but at different prices. No platform provides competitive information on its web site. This means that buyers must invest their time or money (Shrestha S. K., 2023).
+Nepal-specific research supports this behavior in online consumer decision-making and pricing practices. Studies show that price strongly influences online purchasing decisions. This is claimed based on data collected from 400 respondents in Kathmandu Valley (Manandhar & Chalise, 2023). However, the fragmented structure of the e-commerce market limits effective price comparison and forces consumers to rely on incomplete information. A separate survey of 202 Nepalese youth has ranked ease of price comparison as the most important feature, clearly showing strong demand for comparison tools (Shrestha et al., The Digital Consumer Economy: Purchasing Behavior of Youth in E-Commerce Markets, 2025). Still, the market still lacks adequate platforms to meet this need. Researchers also observe that prices on major Nepali e-commerce platforms fluctuate between 5% and 11% (Rahman, 2025). They further found a strong positive correlation between price variation and platform revenue. This suggests that sellers benefit from reduced price transparency. As a result, sellers often increase the prices before promotional periods and later reduce them during sales, creating the persona of discounts without offering real savings.
+PricePilot solves all these problems directly. PricePilot functions as a web-based price comparison platform made for the Nepalese e-commerce sites. The system extracts the live prices by means of web scraping. It also maintains the records of the price trends in the past to come up with a Deal Score, which allows the consumer to decide if the discount offered is legitimate or just an inflated reference price.
+Problem Statement
+In the last ten years, there have been remarkable changes in the digital market of Nepal, moving from a conventional market to an online market because people use smartphones and inexpensive internet facilities (Thakur, 2025). In the old days, the buying experience was simple. People would visit the shop, ask about the price, and bargain at times. Nevertheless, the rise of the online market does not mean having a single market. It means fragmenting the market into many small and medium-scale firms operating independently and marketing their products for distinct customer groups (Rukhmana & Dwiarta, 2026). However, the presence of many stores is not the main issue. The real problem lies in the absence of a system that connects these stores and enables efficient price discovery for consumers (Devkota et al., 2021).
+The consumer may notice that the same product is available on several different platforms when looking to purchase a particular product. Each of these platforms has a different name to the product, sets a price for it, and does not provide any means by which to verify that each listing refers to the same product. There is no API used between these platforms to share information about products since they operate independently as different platforms (Chen, 2024). Platforms generally rely on manual updates of product data, meaning that the prices shown do not represent current market conditions (Shaikh et al., 2023).
+This problem can be easily understood by considering an example of the Rs. 45,000 laptop case. Suppose that a laptop is sold for Rs. 45,000. Before the sale period, the price of the laptop is raised to Rs. 60,000. Then during the Sale period, the price is again brought down to Rs. 45,000. However, now the seller claims a discount of 25% is given for the product. The customer thinks that they benefitted from the discount, but they had to pay the same price because there is no change in the price. This is because the customer does not have any information about the previous price.
+Figure 2Consumer Belief of Fake Discounts from Businesses
+Note. From Deceptive deals or real savings? 51% of consumers say brands regularly float fake discounts, by YouGov, 2024. https://yougov.com/articles/49460-deceptive-deals-or-real-savings-51-of-consers-say-brands-regularly-float-fake-discounts.
+The key problems that this project addresses are described below:
+Fragile Market with High Cost of Search: The e-commerce market in Nepal does not have a centralized platform that links the various retail portals. The consumers need to go through each platform separately, look for the same product with different naming standards, and then make comparisons between them. Studies reveal that such a fragmented approach makes the consumers to give up their search, leading to overpayment for products (Devkota et al., 2021).
+Manipulating Prices through False Discounts: Recent studies reveal that the pricing mechanism has an effect on the decision-making process of consumers in e-commerce portals of Nepal (Rahman, 2025). It has also been found that there is an inverse relationship between price discrimination and competitiveness. This suggests that the lack of transparency in prices along with the variation in prices reduces the decision-making capacity of consumers. On the other hand, there is a strong influence of discounts on the decision-making process of consumers.
+Lack of Tools for the Local Market: Currently available global shopping price comparison tools are all based on standard retailing systems and voluntary participation by retailers (Fadhilla et al., 2024). No current tool facilitates shopping price comparison for local shopping sites in Nepal. Hence, the local gaps remain unaddressed.
+Technical Isolation of Local Platforms: While international markets for online shopping have the advantage of standardized data exchange through API interfaces between retailers and third parties, Nepal’s local retail portals suffer from technical isolation. These portals do not provide any product feeds or APIs. So, any scraper platform would be required to perform independent web scraping to obtain data on prices. However, this is not a drawback but rather part of the challenge being solved.
+Rationale
+The evolution of PricePilot is based on a market gap which was found by conducting primary and secondary research. There is no solution in the Nepalese online shopping market which provides price aggregation in real-time. This is from local platforms, historic price fluctuations and the genuineness of price reductions. Moreover, there is no mobile platform for consumers having basic knowledge of technology. The current market lacks such kind of platform. Global price comparison software works in environments where there is uniformity of infrastructure and robust API integration. Such an environment is not available in Nepal. Consequently, such software will not provide relevant information in the local environment. The problem does not come from the incapability of the technology but from its non-availability in the local environment. The issue also has an ethical angle. The seller has full information regarding the pricing process, including historical prices, while the consumer does not have access to this information. The information asymmetry here works against the consumer, particularly the inexperienced one. PricePilot addresses this issue by offering information on the history of prices and discounts. This gives power back to the consumer and facilitates fair competition. The use of cloud-native practice's during scraping of data will be used in this project. This consists of scheduling tasks, scraping data off of the websites, and managing the errors.
+Project Aim
+To create a smart cloud-based price comparison system that can aggregate, analyze, and visualize real-time product price information from various category-specific e-commerce platform in the highly fragmented digital marketplace in Nepal, which can allow consumers to compare product prices, identify genuine discounts, and make purchasing decisions while saving search time and improving price transparency.
+Project Objectives
+To build a category-centric web scraping system to fetch real-time product information from niche platform on different categories of products.
+To build an automated system to fetch prices of the products on diverse platforms and store historical data on a cloud database to analyze trends.
+To build a deal score algorithm to authenticate the originality of deals by comparing concurrent price on multiple platforms.
+To build a cross-platform mobile application featuring real-time price comparison, price history visualization, a unified Wishlist, price-drop alerts, and one-click merchant redirection.
+Scope
+Tasks to be Executed
+Develop the application PricePilot that will help to compare the prices of products on different Nepali e-commerce websites
+Collect product data from different websites using a proper web scraping pipeline process
+Normalize collected data to make sure consistency of data regarding product information
+Conduct price comparisons for the product available on different sites
+Show historical price trends for products
+Compute a Deal Score to detect legitimate discounts
+Provide the Wishlist functionality to save products
+Schedule alerts for price drops and notify users via notifications
+Create a backend framework using FastAPI
+Build a front-end application using React Native
+Use cloud databases to store and manipulate data
+Constraints
+The system relies on web scraping because of the lack of APIs available from most platforms
+A restructuring of websites may interfere with the data scraping process
+The system supports a relatively low number of platforms due to time constraints
+Accuracy issues may arise with real-time scraping intervals
+High amounts of data processing can affect system performance
+In-Scope
+Product search on various e-commerce websites 
+Comparison of prices from different sellers 
+Viewing price trends for making better purchase decisions 
+Discount evaluation through Deal Score 
+Wishlist management and price alerts 
+Product data gathering, processing, and storing 
+Support for selected Nepali e-commerce sites
+Out-of-Scope
+Integration with official APIs of e-commerce platforms
+Direct purchasing, payment processing, or order management
+Coverage of all e-commerce platforms in Nepal
+Advanced features such as AI-based product recommendations
+Integration with international e-commerce platforms
+Potential Benefits
+Tangible Benefits
+Real Time Price Comparison: Users can make comparisons on prices from different markets within one window instead of visiting each website separately.
+Deal Legitimacy Check: The Deal Score algorithm verifies the authenticity of offers by comparing the real-time prices to past data that shows previous manipulation of prices before any sale took place.
+Price History Visibility: Interactive price chart for 30-60 days that will help the user decide whether to buy immediately or wait until further price decline.
+Automated Price Drop Alerts: User sets an ideal price level, after which a notification will be triggered automatically once price meets user's requirements.
+Unified Shopping Wishlist: All saved items are stored in one list regardless of vendor's website, allowing user to find the optimal combination of platforms for lower overall expenses.
+Intangible Benefits
+Enhanced Consumer Confidence: Users rely on verified pricing and historical data, which increases trust and improves confidence in purchasing decisions.
+Reduced Decision Fatigue: Users access all required information in one platform, which simplifies decision-making and removes the need to compare multiple sites manually.
+Promotion of Transparent Market Practices: The system exposes price manipulation through historical data, which encourages fair pricing and increases market transparency.
+Informed Spending Habits: Users understand price trends and avoid impulsive purchases, leading to more informed and controlled spending behavior.
+Time Savings: Users save significant time by avoiding manual comparison across platforms and can focus on more productive activities.
+Target Users
+PricePilot targets online shoppers in Nepal who actively use local e-commerce platforms to purchase technology products but lack an effective tool to compare prices and verify discount claims. The system serves four key user groups:
+Price-Conscious Online Shoppers: Regular purchasers of electronics and tech products that rely on manually comparing prices across different websites before purchasing an item.
+Technology-Savvy Young Adults: Consumers aged between 20-35 who are familiar with using mobile applications and making digital payments but have no tool that can help consolidate pricing data on products before they purchase.
+Frequent Online Shoppers: Consumers that purchase items from the internet multiple times per month are experiencing price search fatigue and have difficulty confirming if the discount being offered is accurate due to misrepresentation.
+Budget-Sensitive Buyers: Consumers who are looking to find the lowest price available and are unable to confirm they have found the best prices available for shopping at local shopping websites.
+Functionalities (Deliverables)
+PricePilot aims to help consumers in Nepal via an intelligent and efficient price comparison application. It is easy for consumers to do price comparisons using different sources of information and buy their desired items. Data collection, data analysis, and data visualization all come together in creating a user-friendly platform through this application.
+For Users (Shoppers)
+Registration and login services are available on the platform through the use of secure cloud-based authentication services.
+Searching for products and accessing live pricing information for the products offered on various online shopping sites is possible on the application.
+The deal score tool simplifies the process for users to differentiate between legitimate sales and fraudulent deals.
+The application presents the price history graphically to help users easily monitor price trends.
+The application lets users compare multiple product listings simultaneously.
+The users can add products to the Wishlist, and the information gets saved safely in the cloud storage.
+The application lets users set their desired prices for the products, which will trigger alerts when the product goes under that value.
+The application features single-click redirection, taking users to the website of the original product seller.
+For Administrators
+The system helps administrators to track system performance and manage data gathered from products.
+Administrators can make changes in scraping rules whenever there is a change in the structure of platforms.
+Basic monitoring facilities are provided by the system to ensure data integrity.
+Data related to users can be managed by administrators.
+For the System (Technical Deliverables)
+The system gathers data related to the products from various Nepali online shopping portals through an efficient scraping pipeline.
+Normalization is used in the system to ensure consistency in product data.
+The system uses Deal Score calculation algorithm, which compares the current and other/platform product data.
+Hybrid MongoDB and PostgreSQL databases are utilized to save unstructured and structured data respectively.
+Backend of the system is developed with the help of FastAPI to efficiently handle API requests and data processing.
+React Native is utilized to build frontend of the system for cross-platform mobile 
+app use.
+The overall system architecture is scalable and accommodates additional platforms.
+The system has notifications service that sends notifications according to users' set criteria.
+Mapping the Project with Sustainable Development Goal
+Sustainable Development Goal 12
+Figure 3SDG 12 Logo
+Note. From Sustainable Development Goal 12: Responsible Consumption and Production, by United Nations, n.d. https://www.un.org/en/file/60460.
+SDG 12 of the United Nations, known as Responsible Consumption and Production, involves advocating for responsible patterns of consumption and production (Raman et al., 2024). This goal mainly concentrates on offering adequate information to consumers in order to help them make informed purchase decisions and avoid wasting resources because of market deception (Gumanti et al., 2026). Additionally, the objective promotes competition among enterprises using value-based criteria.
+How PricePilot Aligns with SDG 12
+PricePilot helps achieve SDG 12 through provision of verified data that allows for identification of fake discounts. This is done through verification of prices via Deal Score and tracking prices over time. It empowers customers to base their decisions on facts, not marketing.
+Through PricePilot, there is also increased transparency since it reveals any manipulative behavior through the recorded price history. The increased dependence on the price history by consumers makes it difficult for sellers to manipulate consumers due to information asymmetry. Hence, the tool not only aids consumer decision-making but also ensures that the markets act responsibly and ethically.
+Requirements
+Functional Requirements
+Table 1Functional Requirements Table
+ID
+Requirement
+Description
+FR01
+Product Search
+The system will allow users to search for a product and get real-time price listings from multiple local e-commerce platforms, altogether.
+FR02
+Multi-Platform Price Comparison
+The system will display prices for the same product from all supported platforms in a single place. This will be updated in real time through the scraping engine.
+FR03
+Deal Score Display
+The system will calculates and displays a Deal Score for each product listing. This is indicating whether the current discount is genuine or not, based on historical price data and cross-platform summary.
+FR04
+Price History Graph
+The system will display an interactive graph of a product's price history over the past 30 to 60 days. This will allow users to assess price trends before making a purchase decision.
+FR05
+Price-Drop Alerts
+The system will allow users to set a target price for any tracked product and sends a push notification when the price falls to or below that target.
+FR06
+Unified Wishlist
+The system allows users to save products from different vendor platforms to a single Wishlist and compare all saved products in one place.
+FR07
+Side-by-Side Comparison
+The system allows users to select multiple product listings and compare their prices side by side with the seller, availability, and Deal Score.
+FR08
+Merchant Redirection
+The system provides a one-click deep link for each listing. This will redirect the user to the original product page on the seller's platform to complete the purchase.
+FR09
+User Authentication
+The system provides secure user registration and login functionality. The user’s data and preferences will be stored in an encrypted cloud environment.
+FR10
+Notification Management
+The user will be able to customize his/her notifications. Among the customized notifications are the price drop notifications for certain items.
+FR11
+Scraping Pipeline
+The system schedules scraping jobs that run automatically for all platforms that are supported by the system. The pricing information will be saved in the database and will be updated periodically.
+FR12
+Data Normalization
+The system normalizes the product name, its price, and other relevant information from different sources before making comparisons.
+FR14
+Category-Based Browsing
+The system will support browsing products by category. This will allow users to explore listings across product types such as smartphones, laptops, and accessories without a specific search query.
+Non-Functional Requirements
+Table 2Non-Functional Requirements Table
+ID
+Requirement
+Description
+NFR01
+Performance
+Price comparisons will be returned by the system within three seconds of a user query.
+NFR02
+Scalability
+Scrapers for additional platforms and an increase in the volume of data can be added to the system infrastructure. This scaling will be done without modifying any aspect of the system architecture itself.
+NFR03
+Security
+User data, including usernames/passwords as well as the Wishlist contents, is stored using encryption technology. API endpoints are protected through token-based authentication.
+NFR04
+Data Freshness
+The pricing information will be updated automatically for all supported platforms at certain intervals. The latest time when the information was updated will also be provided for all listings.
+NFR05
+Availability
+The system will be made to maintain a minimum uptime of 99 percent. The integration of cloud is done to restart failed services automatically.
+NFR06
+Usability
+The mobile interface will be developed in a user-friendly style . So that the user can access it without the need for a tutorial or onboarding guide.
+NFR07
+Cross-Platform Compatibility
+The mobile application functions correctly on both Android and iOS devices without platform-specific defects in core features.
+NFR08
+Maintainability
+The scraping engine is structured so that each platform scraper is updated or replaced independently without affecting the scrapers for other platforms.
+Nature of Challenges
+Every ambitious system comes with its own set of challenges which needs to be tackled in the process of development. Some of the major challenges faced by the PricePilot system are given below:
+Web Scraper's Fragility and Upkeep: The web scraper depends on the website's static structure. However, Nepali e-commerce websites often change their formats, leading to the need for constant updating of scrapers.
+Anti-Bot Protection Measures: To prevent scraping, websites utilize anti-bot mechanisms such as rate limiting, CAPTCHA and others. So, the system must manage them effectively using session management and controlled requests.
+Product Standardization: Products are shown in different ways depending on the platform used. It includes differences in names, attributes and variations. It can prove challenging for the system to match them.
+Data Validity and Reliability: The platform needs to show accurate and timely information about prices. In case of wrong information, user confidence will be lost.
+Cross-Platform Mobile Development: The software needs to operate efficiently in both the Android and iOS platforms. Therefore, thorough testing needs to be done before the final deployment.
+Overview of the Investigation Report
+Chapter 1: Introduction
+This chapter outlines the background, problem statement, rationale, objectives, scope, benefits, intended users, requirements, challenges, and SDGs alignment for the project.
+Chapter 2: Literature Review
+This chapter reviews relevant research on e-commerce, web scraping, price manipulation, and consumer trust. This chapter also analyzes existing systems to determine gaps in the Nepali market. It also assesses and justifies the chosen technology stack in terms of front-end, back-end, databases, development tools, and the overall architecture.
+Chapter 3: System Development Methodology
+This chapter details and justifies the selected methodology and its advantages over other methods. This chapter also explains the phases of development utilized for the project. It also explains the survey method employed in collecting data from Nepali consumers online and elaborates on the questionnaire structure. It also analyzes the survey results, interprets them, and validates the system requirements.
+Project Plan
+Project Timeline for IR 
+SN
+Task Name
+Start Date
+End Date
+Duration (Days)
+Resource Name
+PPF
+01/02/2026
+08/02/2026
+8
+Royal Bhattarai
+PSF
+10/02/2026
+01/03/2026
+20
+Royal Bhattarai
+Ethics Form
+22/02/2026
+01/03/2026
+8
+Royal Bhattarai
+Chapter 1: Introduction to the Study
+18/02/2026
+05/03/2026
+16
+Royal Bhattarai
+1.1
+Introduction
+18/02/2026
+19/02/2026
+2
+Royal Bhattarai
+1.2
+Background to the Project
+20/02/2026
+21/02/2026
+2
+Royal Bhattarai
+1.3
+Problem Statement
+22/02/2026
+23/02/2026
+2
+Royal Bhattarai
+1.4
+Rationale
+24/02/2026
+24/02/2026
+1
+Royal Bhattarai
+1.5
+Project Aim
+25/02/2026
+25/02/2026
+1
+Royal Bhattarai
+1.6
+Objectives
+26/02/2026
+26/02/2026
+1
+Royal Bhattarai
+1.7
+Scope
+27/02/2026
+27/02/2026
+1
+Royal Bhattarai
+1.8
+Potential Benefits
+28/02/2026
+01/03/2026
+2
+Royal Bhattarai
+1.9
+Target Users
+02/03/2026
+02/03/2026
+1
+Royal Bhattarai
+1.10
+SDG Mapping
+03/03/2026
+03/03/2026
+1
+Royal Bhattarai
+1.11
+Requirements
+04/03/2026
+04/03/2026
+1
+Royal Bhattarai
+1.12
+Project Plan
+05/03/2026
+05/03/2026
+1
+Royal Bhattarai
+Chapter 2: Literature Review
+06/03/2026
+20/03/2026
+15
+Royal Bhattarai
+2.1
+Introduction
+06/03/2026
+06/03/2026
+1
+Royal Bhattarai
+2.2
+Domain Research
+07/03/2026
+10/03/2026
+4
+Royal Bhattarai
+2.3
+Similar Systems
+11/03/2026
+14/03/2026
+4
+Royal Bhattarai
+2.4
+Technical Research
+15/03/2026
+17/03/2026
+3
+Royal Bhattarai
+2.5
+Technology Selection
+18/03/2026
+19/03/2026
+2
+Royal Bhattarai
+2.6
+Summary
+20/03/2026
+20/03/2026
+1
+Royal Bhattarai
+Chapter 3: System Development Methodology
+21/03/2026
+15/04/2026
+26
+Royal Bhattarai
+3.1
+Methodology Introduction
+21/03/2026
+22/03/2026
+2
+Royal Bhattarai
+3.2
+Agile Methodology
+23/03/2026
+25/03/2026
+3
+Royal Bhattarai
+3.3
+Method Comparison
+26/03/2026
+28/03/2026
+3
+Royal Bhattarai
+3.4
+Agile Phases
+29/03/2026
+31/03/2026
+3
+Royal Bhattarai
+3.5
+Data Gathering Design
+01/04/2026
+03/04/2026
+3
+Royal Bhattarai
+3.6
+Survey & Questionnaire
+04/04/2026
+07/04/2026
+4
+Royal Bhattarai
+3.7
+Requirement Validation & Analysis
+08/04/2026
+12/04/2026
+5
+Royal Bhattarai
+3.8
+Summary
+13/04/2026
+15/04/2026
+3
+Royal Bhattarai
+Chapter 4: Conclusion 
+16/04/2026
+21/04/2026
+6
+Royal Bhattarai
+4.1
+Conclusion
+16/04/2026
+17/04/2026
+2
+Royal Bhattarai
+4.2
+Reflection
+18/04/2026
+19/04/2026
+2
+Royal Bhattarai
+4.3
+Limitations
+20/04/2026
+20/04/2026
+1
+Royal Bhattarai
+4.4
+Summary
+21/04/2026
+21/04/2026
+1
+Royal Bhattarai
+Finalization
+22/04/2026
+27/04/2026
+6
+Royal Bhattarai
+F1
+Appendices
+22/04/2026
+24/04/2026
+3
+Royal Bhattarai
+F2
+References
+25/04/2026
+26/04/2026
+2
+Royal Bhattarai
+F3
+Final Editing & Proofreading
+26/04/2026
+27/04/2026
+2
+Royal Bhattarai
+Project Timeline for Future Implementation
+SN
+Task Name
+Start Date
+End Date
+Duration (Days)
+Resource Name
+Chapter 5: Design and Implementation
+13/05/2026
+29/07/2026
+78
+Royal Bhattarai
+5.1
+Introduction to Design and Implementation
+13/05/2026
+14/05/2026
+2
+Royal Bhattarai
+5.2
+System Architecture Design (Cloud-Based Layered Architecture)
+15/05/2026
+19/05/2026
+5
+Royal Bhattarai
+5.3
+Data Flow Diagram (DFD) Design
+20/05/2026
+22/05/2026
+3
+Royal Bhattarai
+5.4
+Use Case Diagram Design
+23/05/2026
+24/05/2026
+2
+Royal Bhattarai
+5.5
+Sequence Diagram Design
+25/05/2026
+26/05/2026
+2
+Royal Bhattarai
+5.6
+Functional Feature Design (Price Comparison, Deal Score, Alerts)
+27/05/2026
+30/05/2026
+4
+Royal Bhattarai
+5.7
+System Workflow and Process Design
+31/05/2026
+02/06/2026
+3
+Royal Bhattarai
+5.8
+Database Design (PostgreSQL for Structured Data and MongoDB for Unstructured Data)
+03/06/2026
+06/06/2026
+4
+Royal Bhattarai
+5.9
+API Design using FastAPI Framework
+07/06/2026
+10/06/2026
+4
+Royal Bhattarai
+5.10
+Web Scraping Pipeline Design using Playwright
+11/06/2026
+14/06/2026
+4
+Royal Bhattarai
+5.11
+Security Design (User Authentication, JWT, Data Protection)
+15/06/2026
+17/06/2026
+3
+Royal Bhattarai
+5.12
+Frontend Development (React Native Mobile Application UI)
+18/06/2026
+30/06/2026
+13
+Royal Bhattarai
+5.13
+Backend Development (FastAPI Business Logic and Services)
+01/07/2026
+13/07/2026
+13
+Royal Bhattarai
+5.14
+Database Implementation and Data Storage Setup
+14/07/2026
+18/07/2026
+5
+Royal Bhattarai
+5.15
+Web Scraping Engine Implementation
+19/07/2026
+23/07/2026
+5
+Royal Bhattarai
+5.16
+Deal Score Algorithm Implementation and Integration
+24/07/2026
+27/07/2026
+4
+Royal Bhattarai
+5.17
+System Integration (Frontend, Backend, Database, Scraper)
+28/07/2026
+29/07/2026
+2
+Royal Bhattarai
+Chapter 6: Result and Discussion
+30/07/2026
+13/08/2026
+15
+Royal Bhattarai
+6.1
+Unit Testing of System Components
+30/07/2026
+02/08/2026
+4
+Royal Bhattarai
+6.2
+Integration Testing of Complete System
+03/08/2026
+06/08/2026
+4
+Royal Bhattarai
+6.3
+Performance Testing (API Response and Scraping Efficiency)
+07/08/2026
+10/08/2026
+4
+Royal Bhattarai
+6.4
+Security Testing (Authentication and Data Protection)
+11/08/2026
+12/08/2026
+2
+Royal Bhattarai
+6.5
+Result Analysis and Discussion
+13/08/2026
+13/08/2026
+1
+Royal Bhattarai
+Chapter 7: Conclusion and Recommendation
+14/08/2026
+22/08/2026
+9
+Royal Bhattarai
+7.1
+Conclusion of the Study
+14/08/2026
+16/08/2026
+3
+Royal Bhattarai
+7.2
+Reflection on Project Development
+17/08/2026
+18/08/2026
+2
+Royal Bhattarai
+7.3
+Recommendations and Future Improvements
+19/08/2026
+20/08/2026
+2
+Royal Bhattarai
+7.4
+References and Appendices Finalization
+21/08/2026
+22/08/2026
+2
+Royal Bhattarai
+Chapter 2: Literature Review
+Introduction
+The issue of price comparisons within fragmented digital markets has been present since the early days of e-commerce and many studies have been conducted on topics ranging from consumer behavior and web scraping to misleading prices and algorithmic pricing mechanisms. This chapter will review some of the literature related to this topic, discussing its significance regarding PricePilot. In particular, this chapter will examine the problems that hinder price transparency within Nepal's online retail sector, which requires finding an efficient technical solution. Moreover, this chapter will assess existing online price comparison websites through features, accuracy, discount verification, and adaptability to Nepal.
+Domain Research
+Nepal's E-Commerce Landscape and Consumer Behavior
+The e-commerce market in Nepal has been growing rapidly over the last decade, with the rise of smartphone usage and the popularity of digital payment systems like eSewa and Khalti (Rijal & Bhandari, 2026). However, the market has been disorganized, with the number of online retailers growing instead of the number of well-integrated online retail sites (Tabsum & Kumar, 2026). For instance, if an individual wants to purchase a smartphone or a laptop, they will have to visit each online retailer website, noting the price of the product, as they will not have a single source to compare price. This is not just an issue of inconvenience, as it also become costly for the buyer.
+Figure 4Online Consumer Products Research Process
+Note. From Consumer Product Research Statistics, by Capital One Shopping, 2025. https://capitaloneshopping.com/research/consumer-product-research-statistics/.
+One of the strongest factors that determine online purchasing behavior among consumers in Nepal are price sensitivity (Phd, 2019). However, tools to help consumers make the most of this factor is not readily available in the market. Most consumers want to get the best price, but they don’t want to spend their precious time searching for it. Perceived benefits and ease of access is two major factors that determine consumers behavior in purchasing online. These two factors are affected in a negative manner due to the fragmented nature of the online market, where consumers must search multiple websites to get information about prices (Sejuwal, 2025). The difference between what consumers want and what is currently possible in the market show that there is a real need for a tool like PricePilot.
+Web Scraping and Real-Time Price Aggregation
+Most of the e-commerce sites in Nepal do not offer public APIs. In that case, the best option is to use web scraping (Chavan, 2024). However, different websites require different approaches to be used while scraping. For some websites, which have static web pages, simple HTTP protocol-based scrapers can be used. But today, most of the online retail sites use dynamic page generation, which is done by JavaScript. In those cases, simple scrapers will not be able to fetch the pages, as they will be empty. Headless browser automation tools are required, which can mimic the actions of real browsers and can execute JavaScript (Kuo et al., 2026). Some of the target websites of PricePilot, like Daraz, Oliz Store, and GadgetByte, use this approach. Hence, Playwright was selected as the best choice for the task, as compared to other simple scrapers.
+However, extracting this data is just half the hurdle. Once this data is obtained from various sources, the same product is referred to by various names or formats. For instance, a laptop is referred to as “Lenovo IdeaPad 5” on one platform and “IdeaPad 5 Gen 8 AMD” on another. However, for any meaningful comparison to take place, the system must first understand that they are essentially talking about the same product. This process is referred to as data normalization. It is often underestimated but is one of the major hurdles in developing price comparison systems (Hadasik, 2024). PricePilot solves this problem by using a category-focused architecture with a product mapping layer suitable for Nepali retailers.
+Fake Discounts and Deceptive Pricing in Online Retail
+The problem of fake discounts is common in online retail, especially in the electronic products segment. Essentially, the idea behind this technique is very simple. The merchant increases the price of the product slightly before the sale, and then lowers it back to the original price once the sale starts. This is then advertised as a massive discount (Hoolikatti et al., 2025). From the buyer's perspective, it's like they're getting an amazing bargain. In fact, they have no idea whether the price was ever lowered or not. They don't have access to data regarding the price changes, so they can't verify the claim (Muktadir et al., 2025).
+The lack of price transparency has been cited as one of the major causes of reduced consumer trust in digital marketplaces. It has been found that consumers who have access to price history makes more informed purchasing decisions (Hasmalawati et al., 2024). They are not easily swayed by false promotional prices. They can spot real deals. This idea is what inform the idea of the PricePilot’s ‘Deal Score’ feature. By comparing the price of a product to its price history and averages across different platforms, it can be determined whether the product is being sold at a genuine discount (Pandey et al., 2024). In this way, price history level the information advantage that sellers have over consumers.
+Dynamic/Algorithmic Pricing and its Impact on Customer Confidence
+The use of dynamic or algorithmic pricing have been observed in recent times in modern electronic commerce environments. In this type of pricing, the price of products is constantly updated based on different factor (Vomberg et al., 2025). Even though this type of pricing is advantageous to sellers, it can be uncertain for customers. When customers notices that the price of products is constantly changing, they may not be clear about the reasons behind the change in price (Banerjee, 2025). In this regard, price transparency tools can be used to shows customers the change in price over time. When customers have access to price history data, they can easily understand the pricing process. This will also allow customers to feel more in control of their purchase decisions.
+Algorithmic pricing can also result in higher average market prices due to the use of similar algorithmic pricing strategies by various platforms (Spann et al., 2024). Although the pricing practices in Nepal are still in the manual phase, algorithmic promotions are being used during major sales. There is a lack of information between buyers and sellers. Such information gaps are not just confined to developing countries, but they are seen in various online platforms where the pricing mechanism is dynamic and complex to understand (Varnukhov, 2025). PricePilot can function in this environment by increasing the visibility of prices and helping consumers compare the prices in a better way.
+Similar Systems
+Google Shopping
+Figure 5Google Shopping Logo
+Note. From Google trademarks and terms: Google trademarks list, by Google, n.d. https://partnermarketinghub.withgoogle.com/brands/google/trademarks-and-terms/google-trademarks-list/.
+Google Shopping is considered one of the most popular price comparison tools across the world, and it is included within Google Search. The tool aggregate product information from thousands of retailers, enabling consumers to compare product information and shop at the retailers’ websites (Goodman, 2020). The Google Shopping platform have enhanced its price comparison feature in 2024, enabling consumers to compare product prices using price history graph, typical price indicators, and price drop alerts for tracked products (Schwartz, 2024). The tool operates at a large scale, using over 45 billion product listings within the Google Shopping Graph (Muller, 2024).
+Key Features
+Comparison of prices of products across various stores through a single search
+Price history chart that shows the history of price changes
+Notification through email if the price of the chosen products has gone down
+A.I. product insights and personalized deal suggestions
+Integration with Google Lens to compare prices of products in stores through the camera of the device
+Limitations
+The information is aggregated from retailers that have shared their product information with Google. However, stores such as Oliz Store and GadgetByte in Nepal cannot be found on this platform.
+There is no option to verify the authenticity of discounts offered on products, as is available through ‘Deal Score’
+The feature of price history and notifications is only available for a few products and regions.
+The ranking of products might be affected if there is the presence of advertisements, which might affect the comparison of prices.
+PriceSpy
+Figure 6PriceSpy Logo
+Note. From PriceSpy, by PriceSpy, n.d. https://pricespy.co.nz/.
+PriceSpy is a price comparison engine that is based in Sweden and primarily operates in European markets, with more than 14 million users. It allows users to compare product prices from various retailers and offers price graphs, price drop alerts, daily deals, and product comparisons (PriceSpy, 2025). PriceSpy is known for offering users historical price data, which allows users to understand price trends for any product and check if they are being presented in a misleading manner.
+Key Benefits
+Price comparison across various stores with category-based product browsing
+Price history with graphical representation for price trends
+Price drop alerts through email notifications
+Ability to compare product specifications and prices side by side
+Daily deals and flash sales monitoring
+Limitations
+The accuracy of product information depends on retailers’ voluntary listing of products
+Nepali e-commerce sites are not supported
+There is no system to verify whether the price is artificially inflated or discounted
+The accuracy of product information depends on retailers’ voluntary listing of products.
+CamelCamelCamel
+Figure 7CamelCamelCamel Logo
+Note. From CamelCamelCamel: Amazon Price Tracker with Daniel Green, by Software Engineering Daily, 2019. https://softwareengineeringdaily.com/2019/05/24/camelcamelcamel-amazon-price-tracker-with-daniel-green/.
+CamelCamelCamel is an Amazon-specific price tracker that allows users to see the entire price history of any item on Amazon and receive notifications when it reaches their preferred price (Henschel, 2025). This application is quite popular among people who are interested in finding out whether there is a genuine discount on Amazon, or the price is being manipulated before the sale. This tool can be accessed free of charge and comes in both web-based and browser extensions forms.
+Key Features
+Tracking of historical prices for Amazon products
+Receiving emails when a product is available for a certain price
+Browser extension for viewing historical prices on Amazon
+Tracking prices from both Amazon and other sellers on a single product page
+Limitations
+The extension can only trace the prices of items sold by Amazon
+Amazon is not a market leader in Nepal
+Cross platform price comparison cannot be done with this extension
+The validity of prices needs to be comprehended by the users
+Idealo
+Figure 8Idealo Logo
+Note. From Idealo price comparison app, by WebCatalog, n.d. https://webcatalog.io/de/apps/idealo.
+Idealo is an online price comparison site headquartered in Germany that enables its users to make comparisons between the prices of products from various online sellers. It uses live price data from these retailers to help its consumers find the most affordable prices in the marketplace (Oraya, 2025). Some of the additional features that the site offers include price histories, price alerts, and purchasing capabilities. Idealo primarily serves European markets and gets its price data from retailer feeds.
+Key Benefits
+Real-time price comparisons across multiple retailers
+Visualization of price history for products
+Alerts for price alerts
+Idealo Direct Purchase for completing purchases
+Mobile app for scanning items in stores
+Limitations
+Limited to European retailers and does not support South Asian retailers
+Limited to retailers that provide product feeds
+Lack of mechanism for verifying whether the discount is genuine
+Some features are only available in certain regions
+PriceRunner
+Figure 9PriceRunner Logo
+Note. From PriceRunner Logo 2019, by PriceRunner, 2019. https://commons.wikimedia.org/wiki/File:PriceRunner_Logo_2019.svg.
+PriceRunner is a Swedish price comparison website, now owned by Klarna, which have access to over 4.9 million products across over 6,400 retailers. It was first established in 1999, but it has since become one of the most popular price comparison tools in Europe, covering the UK, Sweden, Denmark, Germany, and Norway (PriceRunner, 2025). The thing that makes PriceRunner stand out is the fact that it uses screen scraping and data feeds. This technically makes it the closest among all the ones reviewed to the way PricePilot operate. It includes features such as price history graphs, price drop alerts, product reviews, and an uncluttered interface for comparing prices across multiple stores (PriceRunner, 2025).
+Key Benefits
+Comparison of prices from over 6,400 retailers through scraping and retailer feeds
+Price graphs for tracking changes in prices
+Notifications are sent when the target price is reached
+Product reviews and retailer ratings are included
+Side-by-side comparison of product specifications
+Limitations
+Geographical coverage is only European markets, and the platforms like Daraz, Oliz Store, and GadgetByte are not included
+There is no mechanism in place to check the authenticity of discounts
+Klarna is not relevant in the payment systems of Nepal
+Retailer ranking may be based on a pay per click model
+Comparison of Similar Systems
+Table 3 Comparing Similar Systems with PricePilot
+Feature
+Google Shopping
+PriceSpy
+CamelCamelCamel
+Idealo
+PriceRunner
+PricePilot
+Real-Time Price Comparison
+Provides comparison across multiple retailers
+Provides comparison across supported stores
+Limited to Amazon products only
+Provides comparison across European retailers
+Provides comparison across multiple retailers
+Provides comparison across Nepali e-commerce platforms
+Price History Graph
+Available for selected products and regions
+Available with detailed historical trends
+Fully available for Amazon products
+Available for supported products
+Available for most products
+Available with 30–60-day interactive graphs
+Discount Verification
+Does not verify authenticity of discounts
+Does not verify discounts
+Does not verify discounts
+Does not verify discounts
+Does not verify discounts
+Verifies discounts using Deal Score and historical data
+Price Drop Alerts
+Available but limited in scope
+Available via notifications
+Available via alerts
+Available for tracked products
+Available for tracked products
+Available with customizable user-defined price alerts
+Wishlist Tracking
+Not available
+Available for saving products
+Available for tracking products
+Available for tracking products
+Limited support
+Available as unified Wishlist across platforms
+Web Scraping Capability
+Relies on retailer data feeds
+Relies on retailer participation
+Uses Amazon data only
+Relies on retailer data 
+Uses partial scraping
+Uses independent web scraping for all platforms
+Market Support
+Supports global markets (not Nepal)
+Supports European markets only
+Supports Amazon marketplace only
+Supports European markets
+Supports selected international markets
+Specifically designed for Nepal market
+Cost
+Free to use
+Free to use
+Free to use
+Partially free
+Free to use
+Free to use
+Why PricePilot?
+If we compare all these tools, we can clearly see that they are effective in their own domains. However, they are created with the idea of working in environments that have standardized retail infrastructure, voluntary retailer engagement, and well-established API infrastructures. None of the tools use independent data scraping, and none of the tools operate in the Nepali environment. Moreover, none of the tools allow users to check whether the discount is genuine or artificially created by inflating the price. Even though all these tools have a wide array of features, the problem of artificial discounts remains unresolved.
+However, PricePilot addresses these shortcomings in three major ways. Firstly, the tool relies on web scrapers to fetch data in real-time directly from local Nepali e-commerce sites. As a result, there is no need to require retailers to register or opt-in to provide data. With this method, the tool can include retailers that may not have been included in the sites discussed above. Secondly, the tool offers users a Deal Score that helps in identifying whether the discounted prices offered are genuine or artificially manipulated. This addresses one of the shortcomings that the other tools may not have addressed. Thirdly, the tool has been tailored to suit the Nepali e-commerce environment. As a result, even though the tools discussed above can serve users in other regions, they may not offer the same service and relevance to users in Nepal, especially if they are looking to buy products such as laptops or smartphones at reasonable and competitive prices.
+Technical Research
+System Architecture
+Figure 10PricePilot System Architecture
+The architecture of PricePilot is designed with a cloud-based layer architecture, which enables searching, comparing, and discounting. The whole system starts from the Presentation Layer. In the Presentation Layer, the customer interacts with the React Native application and passes their requests to the backend through REST API and JSON Web Tokens (JWT).
+Application layer controls the system logic through the FastAPI backend. The Application layer also provides other services including normalization, Deal Score calculation, and notification services. Product data, discount validation, and user services like Wish List and notifications are part of the responsibilities handled by the backend.
+The Data Acquisition Layer extracts data about products from several Nepali e-commerce websites using a multi-site web scraper pipeline. The raw data is stored in MongoDB. After cleansing and normalizing, the system saves the data in PostgreSQL.
+The Data Layer distinguishes structured from unstructured data. Both PostgreSQL and MongoDB are used to enhance efficiency. In most cases, the architecture provides services such as data collection, data processing, data storage, and user interaction.
+System Flowchart
+Figure 11Flowchart of the Proposed System
+The above flowchart demonstrates the entire process involved in running PricePilot application. The procedure begins when the user searches for a product through the app and the system passes the information to the backend. Next, the system checks if the data it needs can be found in the database. In case if the data cannot be found in the database, the process of web scraping begins where the system extracts data from different sources. In case if there is no need to use the web scraping process, the system skips this step. As soon as the process is finished, the system calculates the Deal Score which helps to determine if the discount was offered for real and shows the results to the user. Afterward, the system analyzes whether the user desires to receive alerts about the price drop below the selected price level. If yes, the system will send the alert messages when the price falls below the chosen level.
+Hardware Requirements
+Table 4 Hardware Requirements for the System
+Component
+Minimum Requirement
+Processor (CPU)
+Dual-core 2.0 GHz
+Memory (RAM)
+8 GB
+Storage
+1 GB free space
+Network Connectivity
+Stable internet connection
+Mobile Device (User Side)
+Android / iOS smartphone
+Development Machine
+Standard laptop/PC
+Software Requirements
+Table 5 Software Requirements for the System
+Software Component
+Requirement
+Operating System
+Windows 11
+Programming Language
+Python 3.x, TypeScript
+Backend Framework
+FastAPI
+Frontend Framework
+React Native (Expo)
+Database Systems
+PostgreSQL, MongoDB
+Development Environment
+Visual Studio Code
+Containerization Tool
+Docker Desktop
+Mobile Development Tools
+Android Studio / Expo CLI
+Web Browser
+Google Chrome
+Version Control System
+Git / GitHub
+Programming Language Chosen
+Frontend: React-Native with TypeScript
+Note. From React logo, by Meta, n.d. https://react.dev and TypeScript logo, by Microsoft, n.d. https://www.typescriptlang.org/branding/.
+React Native is an open-source cross-platform app development framework developed by Meta. It enables developers to build applications for mobile devices using a single codebase, either in JavaScript or TypeScript, and then compiling it to native code for Android and iOS platforms (Panda, 2025). Microsoft developed TypeScript, which are a superset of JavaScript that support type checking and thus prevent errors at compile time. This is very important in a data-intensive app like PricePilot, where prices are fetched from multiple sources simultaneously. 
+Advantages
+Shared codebase runs on Android and iOS, no need to write and maintain separate code for each.
+No errors occur due to mismatch in data structures, thanks to the static type of system used in Typescript.
+Access to Expo APIs, which include camera, notifications, and deep linking, without having to write native modules.
+Components provide a simple and easy way to develop screens.
+Access to a large ecosystem of third-party libraries, which makes developing some screens easier.
+Disadvantages
+Performance may be compromised if screens are complex and involve heavy animations.
+There will be some difference in the behavior of screens between Android and iOS, and this will need to be handled.
+The presence of the Typescript compiler will add an extra step to the build process, and developers will need to think in terms of types, which is a new paradigm for people used to working with plain old JavaScript.
+Comparison of Similar Frontend Frameworks
+Table 6 Comparing Similar Frontend Languages
+Feature
+React Native
+Flutter
+Native (Swift/Kotlin)
+Cross-Platform Support
+Uses single codebase for both Android and iOS
+Uses single codebase for both platforms
+Requires separate codebases for Android and iOS
+Programming Language
+Uses TypeScript or JavaScript
+Uses Dart
+Uses Swift (iOS) and Kotlin (Android)
+Performance
+Provides near-native performance
+Provides near-native performance
+Delivers best performance with full native access
+Development Speed
+Faster due to reusable components and large ecosystem
+Moderate speed with growing ecosystem
+Slower due to separate development for each platform
+Ecosystem Maturity
+Very large and well-established ecosystem
+Growing ecosystem with limited libraries
+Platform-specific and mature ecosystems
+Code Maintenance
+Easy to maintain single codebase
+Easy to maintain single codebase
+Difficult due to multiple codebases
+Learning Curve
+Low to moderate (JavaScript familiarity)
+Moderate (requires learning Dart)
+High (requires knowledge of two languages)
+Tooling Support
+Strong support with tools like Expo and large libraries
+Good tooling support but fewer libraries
+Strong native tools but platform-dependent
+Justification of Frontend Framework Chosen
+Comparing the three choices, it could be said that they all have their own merits. Flutter provides good performance and cross-platform development, yet at the same time, there is a problem associated with the use of Dart. Learning Dart will take extra effort without any tangible benefits. Moreover, the libraries of Flutter are still under development, and their number is much smaller than that of React Native. This will lead to the necessity of developing more features manually. Native development on Swift and Kotlin will result in maximum performance. However, the developer will be faced with the need to develop two different codebases for Android and iOS. In other words, the workload on updates will almost double, which is hardly possible for one developer.
+React Native with TypeScript resolves all of the above issues very efficiently. First of all, the need to develop two separate apps for Android and iOS is solved with React Native because one codebase can be utilized on both platforms. It saves time and minimizes the amount of work put into development. Additionally, TypeScript improves the stability of the system because data structures' errors will be caught while compiling the code, so there would not be any crashes caused by incorrect data that were extracted from the web. The ecosystem is very stable and includes lots of useful libraries implementing PricePilot's features, which provide necessary functionality for PricePilot, including visualizations, push notifications, and deep linking. Hence, this is the best possible option for this project.
+Backend: FastAPI with Python
+Note. From Python logo, by Python Software Foundation, n.d. https://www.python.org/community/logos/ and FastAPI logo, by Sebastián Ramírez, n.d. https://fastapi.tiangolo.com.
+Python is a high-level programming language that can be used for web development, automation, data analysis, and machine learning. It was first released in 1991 by Guido van Rossum. It's one of the most sought-after programming languages due to its simplicity and availability of libraries (Tarale, 2025). In PricePilot, Python is used for the entire backend stack, including the web scraping engine to fetch information from Nepali websites, normalization of fetched information, calculation of deal score to verify the authenticity of discounts, and finally providing information in the form of REST APIs to the mobile frontend.
+FastAPI is used to develop the API layer. FastAPI was developed and released in 2018 and is considered a modern and high-performance Python framework that is built on top of the Starlette and Pydantic frameworks (Ruchi et al., 2026). FastAPI was designed to develop APIs quickly and securely. FastAPI support asynchronous programming using Python’s asyncio system, which allow the server to handle multiple scraping operations and API requests simultaneously without being blocked. Additionally, it enforces strict validation using Pydantic models, which is crucial in handling scraped data, especially pricing information, which may not always be in a consistent format. FastAPI can automatically generates interactive API documentation, thus avoiding the need for using API testing tools during development.
+Advantages
+The entire backend pipeline, from scraping, normalization, scoring, and finally the API, is written in Python, eliminating the need to switch languages or environments
+Native async support of FastAPI enables multiple scraping jobs or API requests to be processed concurrently without blocking the server
+Pydantic provides strict validation of both inputs and outputs, catching invalid pricing data before it reaches the database
+FastAPI automatically generates interactive API documentation, making endpoint testing fast without the need for a separate tool
+Being a widely used language, Python has a strong community, meaning common problems have well-documented and readily available solutions
+Disadvantages
+Being interpreted, Python has the disadvantage of being slower than Go or C++ when it comes to pure throughput, although this difference is only noticeable at extremely high scraping volumes
+Mixing async and sync code in the same scraping pipeline, all written in the same language, requires careful management of the async code to avoid accidentally blocking the event loop
+The need to self-host the FastAPI server requires more infrastructure management than a backend service
+Comparison of Similar Backend Frameworks
+Table 7 Comparison of Similar Backend Languages
+Feature
+Python + FastAPI
+Node.js + Express
+Go + Gin
+Django
+Language
+Python
+JavaScript
+Go
+Python
+Async Support
+Full async support using asyncio
+Strong async support
+Strong async support
+Partial async support
+Scraping Libraries
+Playwright, BeautifulSoup, Scrapy
+Puppeteer, Cheerio
+Very limited libraries
+Same as Python ecosystem
+Data Processing
+Excellent (Pandas, NumPy)
+Limited support
+Limited support
+Excellent (same as Python)
+API Performance
+High performance with FastAPI
+Good performance
+Very high performance
+Moderate performance
+Auto API Documentation
+Built-in automatic documentation
+Requires additional tools
+Limited built-in support
+Requires additional setup
+Learning Curve
+Moderate
+Low
+High
+Moderate
+Best Use Case
+Data-intensive APIs with scraping and analytics
+Lightweight APIs and real-time apps
+High-performance systems
+Full-stack web applications
+Justification of Backend Framework Chosen
+Considering the options, some drawbacks can be noted. Node.js have excellent concurrency capabilities and works well as an API server. However, Node.js does not have the robust data processing libraries that are needed for the PricePilot Deal Score and normalization. There are no libraries like Pandas or NumPy at the same level of maturity. Go have excellent performance, but the web scraping ecosystem are not as mature. Introducing another language just for web scraping would make the project unnecessarily complex. Django has the same ecosystem as Python but are a full web framework, and features like the ORM, admin, and templating is not necessary for an API-only backend.
+Python with FastAPI addresses all these limitations in one technology stack. The scraper engine run in Playwright, normalization in Pandas, the algorithm in Python, and the API in FastAPI. This keeps everything in one language and one codebase, eliminating the need to switch between different environments. FastAPI also run the scraper jobs, API calls, and database calls concurrently without blocking the server, which is necessary in our case as we will be scraping multiple sources. Another bonus of FastAPI is the automatic generation of the documentation, which make it easier to test endpoints.
+Database Management System 
+PricePilot makes use of two different database systems. Each database system plays a different role. The reason for using two different database systems instead of one was based on the nature of the information that the system works with. Some information was highly structured, while some was loosely structured. Forcing both types of information into one database system would require a rigid system that cannot accommodate the loosely structured information, or a flexible system that cannot provide the necessary integrity for user accounts and prices.
+PostgreSQL
+Figure 12PostgreSQL Logo
+Note. From PostgreSQL logo, by PostgreSQL Global Development Group, n.d. https://www.postgresql.org/about/press/.
+PostgreSQL is used as the primary relational database, and it store user accounts, saved products, price history records, Wishlist, and alert settings. It is used as it allows for ACID compliance, which ensure that the price history records are kept consistent, especially if the scraper is inserting multiple records at once (Ijaz, 2026). The process of calculating the deal score and analyzing the price trend are a complex query that compare the price of a product to its history and the price across multiple platforms, and it is handled well by PostgreSQL. The row security policies in PostgreSQL ensure that only the user can access their own records, providing an extra layer of security.
+Advantages
+PostgreSQL guarantees that its ACID-compliant database management system remains reliable despite high volumes of work.
+It can manage highly related data through its ability to support complex queries, joins, and transactions.
+The database is structured using tables and constraints, ensuring that all data remains consistent and free from any errors.
+It offers some advanced functionalities including indexes, constraints, and window functions, improving performance and analysis of the data.
+It offers some advanced functionalities including indexes, constraints, and window functions, improving performance and analysis of the data.
+Disadvantages
+The developers must determine a set schema beforehand in PostgreSQL, making it inflexible for data whose structure changes dynamically.
+It is not efficient at processing unstructured data, especially in comparison to NoSQL databases.
+It demands more database designing and planning time from the user, especially when it comes to establishing complex connections.
+It also complicates horizontal scaling as distributing data among many servers becomes much more challenging.
+MongoDB
+Figure 13MongoDB Logo
+Note. From MongoDB logo, by MongoDB, Inc., n.d. https://www.mongodb.com/company/brand.
+MongoDB is used alongside PostgreSQL to manage the unstructured data in this setup. These include unprocessed scraped product information, results from the normalization pipeline, and cached data  (Sriram et al., 2025). Once this data is scraped from Daraz or GadgetByte by the scraper, this data is not always neatly structured. Some fields are missing, and some fields are in different positions depending on where they are scraped from. This data is stored in a document database, which is then processed by the normalization pipeline before being written to PostgreSQL. Another advantage is that since this is a horizontal scaling database, this data store will not have to change any structure as more and more products are scraped.
+Advantages
+It has a flexible document-oriented schema that makes it easy to manipulate data schemas as the needs of the application change.
+It can manage both unstructured and semi-structured data, making it applicable in current applications characterized by changing data formats.
+It can be scaled horizontally using sharding, which helps it cope with huge data volumes and traffic.
+It provides excellent performance in simple data retrieval and storage applications that demand fast access to data.
+It provides fast development as developers can develop their applications without being constrained by any schema.
+Disadvantages
+MongoDB is less consistent in some scenarios because it does not guarantee complete ACID compliance as relational databases do.
+It supports fewer capabilities for complex queries and transactions involving multiple tables and relations, making it less appropriate for highly relational datasets.
+It demands redundant copies of data because of its denormalized nature, thus leading to higher data storage overheads and inefficiencies.
+It processes complex queries and deeply nested relationships inefficiently, particularly when compared with relational databases such as PostgreSQL.
+Comparison of Similar Database Management Systems
+Table 8 Comparison of similar DBMS
+Aspect
+PostgreSQL
+MongoDB
+MySQL
+Firebase Firestore
+SQLite
+Database Type
+Relational (SQL)
+Document-based (NoSQL)
+Relational (SQL)
+Document-based (NoSQL)
+Relational (SQL)
+Schema Structure
+Strict and structured schema
+Flexible and dynamic schema
+Structured schema
+Flexible schema
+Structured schema
+Handling Structured Data
+Excellent for relational and consistent data
+Limited for complex relations
+Good for structured data
+Limited relational support
+Suitable for small, structured data
+Handling Unstructured Data
+Limited flexibility
+Excellent for unstructured data
+Limited flexibility
+Good for unstructured data
+Not suitable
+Query Capability
+Advanced queries and joins
+Limited join support
+Moderate query support
+Limited querying features
+Basic querying only
+Scalability
+Vertically scalable with strong performance
+Highly scalable horizontally
+Moderate scalability
+Highly scalable cloud-based
+Not scalable for large systems
+ACID Compliance
+Full ACID support
+Partial ACID support
+Full ACID support
+Limited ACID guarantees
+Full ACID (single-user scale)
+Best Use Case
+Complex queries, user data, price history
+Flexible scraped data storage
+General-purpose applications
+Real-time mobile apps
+Local lightweight applications
+Justification of Chosen Database Management System
+Considering these options, it is easy to see how limited they are when compared with what is required. MySQL is a solid relational database system and can manage small-scale user data. However, it lacks some additional features in querying, which are important in the actual implementation of Deal Score and price history. Firestore is a good option for mobile application development because it offers a real-time synchronization feature. However, when it comes to querying, Firestore is limited because it is a document-based system. Joins on multiple collections are often required when comparing price history between platforms. SQLite was not a good option because it is a cloud-based application and write operations from many instances of the scrapers would have caused conflicts, which SQLite is not designed to handle.
+Both PostgreSQL and MongoDB cover all the data-related needs of PricePilot, and this is done by choosing the most suitable database for the task that the other is less likely to perform efficiently. PostgreSQL is used for managing user-related data that requires structured relationships, complex queries, and consistency, such as user information, price history, Wishlist, and alerts. On the other hand, MongoDB are used for managing the unpredictable and flexible forms of data that are scraped from websites, such as raw product information that is in different forms on Daraz, GadgetByte, and Oliz Store. The problem is that none of the databases that are being compared in this analysis are likely to efficiently supports both needs simultaneously.
+Interactive Development Environment (IDE)
+Figure 14VS Code Logo
+Note. From Visual Studio Code logo, by Microsoft, n.d. https://code.visualstudio.com/brand.
+The primary environment used in the entire PricePilot project is Visual Studio Code. Visual Studio Code is used to develop frontend, backend, and scraping. It is a free environment developed by Microsoft that have excellent support for both TypeScript and Python, including syntax highlighting, IntelliSense, and debugging (Sole, 2023). ESLint and Prettier extensions are used to ensure that the code is always of high quality and are formatted correctly.
+Comparison of Similar IDEs
+Table 9 Comparison of Similar IDEs
+Feature
+VS Code
+PyCharm
+WebStorm
+Vim / Neovim
+Cost
+Free
+Paid (Community version free)
+Paid
+Free
+TypeScript Support
+Strong built-in support
+Limited support
+Strong support
+Plugin-based
+Python Support
+Strong built-in support
+Excellent support
+Limited support
+Plugin-based
+Built-in Terminal
+Available
+Available
+Available
+Available (via configuration)
+Extension Marketplace
+Very large ecosystem
+Moderate ecosystem
+Moderate ecosystem
+Plugin-based ecosystem
+Performance
+Lightweight and fast
+Heavy
+Heavy
+Very fast and lightweight
+Ease of Use
+Easy to use with minimal setup
+Easy for Python development
+Easy for JavaScript development
+Requires configuration and setup
+Justification of Chosen IDE
+On comparing all the options, all the options provide support for some features but not all. For example, PyCharm is considered one of the best IDEs for Python development, providing good debugging features along with good support for virtual environments. However, when it comes to TypeScript and React Native, it provides poor support, which makes it difficult to develop the frontend. WebStorm provides good support for TypeScript and React Native but poor support for Python. Vim and Neovim provides good support for both languages but require a lot of setup time to configure them to provide features like VS Code.
+VS Code is the only code editor of those listed here that support both TypeScript and Python well out of the box, without requiring additional setup. In the case of PricePilot, where the React Native frontend, FastAPI backend, and Playwright-based scraping engine are all being worked on at the same time, using an editor that provide a shared terminal, debugger, and Git UI will minimize context switching and allow the entire codebase to be contained within a single workspace.
+Operating System
+Figure 15Windows 11 Logo
+Note. From Windows 11 logo, by Microsoft, n.d. https://www.microsoft.com/en-us/windows/windows-11.
+The project leverages Windows 11 as the operating system. All necessary tools for the PricePilot framework can be executed in Windows 11 seamlessly. It makes use of Docker Desktop for running backend services in containers locally that mimic the production environment which is on Linux. Android Studio is used for Android emulation testing. It also allows testing on actual devices connected through USB.
+Comparison of Similar Operating Systems
+Table 10 Comparison of Operating Systems
+Feature
+Windows 11
+macOS
+Linux (Ubuntu)
+React Native Support
+Full support via Expo and Android tools
+Full support with iOS and Android tools
+Full support via Expo but requires setup
+Python Support
+Strong support
+Strong support
+Excellent native support
+Docker Support
+Supported via Docker Desktop
+Supported via Docker Desktop
+Native Docker support
+Android Development
+Fully supported with Android Studio
+Fully supported
+Fully supported
+iOS Development
+Not supported
+Fully supported via Xcode
+Not supported
+Ease of Setup
+Easy setup for most tools
+Easy but requires Apple hardware
+Requires more manual configuration
+Performance
+Good performance
+Very good performance
+Excellent performance
+Availability
+Widely available
+Limited to Apple devices
+Open-source and widely available
+Justification of Chosen Operating System
+When looking at these options, macOS provides the best environment for developing React Native, as it allows testing on iOS using Xcode and offers a Unix-based system that works well with Docker and Python. The only disadvantage of using macOS is that it requires Apple hardware, which was not available for this project. The next best option, Ubuntu, offers excellent performance with Docker and a lightweight system, but it requires more manual setup for the React Native and Expo environment and still does not support running iOS simulators
+Windows 11 has thus been chosen because it is the only platform on which the development environment is currently available, and it does not require any modifications to run all the necessary tools. Docker containers provide a runtime environment for backend service execution that is close to the production environment. Android emulators and devices offer good coverage of testing needs. Although it is not possible to perform simulator tests on Windows, it is also not possible on Linux, which does not affect the development of the project.
+Web Browser
+Figure 16Chrome Logo
+Note. From Google Chrome logo, by Google, n.d. https://www.google.com/chrome/.
+Google Chrome is the primary browser used to access the web during the development of PricePilot. It is also used to access backend services through web-based dashboards. Google Chrome’s developer tools include features such as inspecting network requests, debugging JavaScript code, and viewing elements on a web page, which are often used to verify API calls and test the web-based version of the application (Krishnakumar et al., 2022).
+Comparison of Similar Web Browsers
+Table 11 Comparison of Web Browsers
+Feature
+Google Chrome
+Mozilla Firefox
+Microsoft Edge
+Safari
+DevTools Quality
+Excellent developer tools with advanced debugging
+Very good inspection and debugging tools
+Good tools based on Chromium engine
+Good tools but less advanced
+Performance
+Fast and stable across platforms
+Fast with efficient memory usage
+Fast with Chromium optimization
+Very fast on Apple devices
+Extension Support
+Very large extension ecosystem
+Good extension support
+Supports Chrome extensions
+Limited extension support
+Market Share
+Highest global usage (~65%)
+Low usage (~3%)
+Moderate usage (~13%)
+Moderate usage (~19%)
+Cross-Platform Support
+Available on all major platforms
+Available on all major platforms
+Available on all major platforms
+Limited to Apple devices
+Justification of Chosen Web Browser
+When comparing the browsers considered for development, each has its own advantages and disadvantages. Mozilla Firefox is excellent for developers, with a well-designed network inspector; however, due to its lower market share, testing in Firefox is not fully representative of the overall user experience. Microsoft Edge is essentially the same as Chrome, as it uses the Chromium engine; however, there is no need to use Edge if Chrome is already being used. Safari is only available on Apple devices and is not installed on the Windows development machine used for this project.
+The Chrome browser was chosen because it has the best developer tools and the largest market share. Chrome’s developer tools, known as DevTools, have the best debugging features when it comes to network requests, performance, and the DOM. These features are also commonly used by developers. Additionally, Chrome has a 65% market share in the world’s largest browser market share. This makes Chrome the most accessible browser when it comes to testing.
+Summary
+To introduce the problem and the solution offered by PricePilot, the paper first introduces four different areas of domain research. Firstly, while Nepal's e-commerce industry grows fast, it also suffers from fragmentation that compels buyers to search for products on several websites simultaneously and to spend too much money on their purchases. For that reason, web scraping emerges as one of the best ways to gather data from websites such as Daraz, Oliz Store, and GadgetByte that have no public APIs. To deal with dynamic pages based on JavaScript, it is suggested to make use of such software as Playwright. Secondly, the problem of deceptive pricing occurs when sellers raise prices in anticipation of a sale in order to create an illusion of discounts. One should note that the availability of information about price history enables users to find good deals, thereby supporting the idea of implementing the Deal Score functionality. Lastly, the problem of algorithmic pricing and how price transparency tools can enhance the understanding of price variations is addressed.
+Secondly, this section of the review will examine five price comparison services which are Google Shopping, PriceSpy, CamelCamelCamel, Idealo, and PriceRunner in terms of their capabilities like real-time price comparison, price history availability, price discount verification, and regional markets supported. Every one of these platforms is suitable for use in its respective geographic region. However, these price comparison services have identical shortcomings that include reliance on retailers to supply information, lack of support for the Nepali market, and inability to verify discounts. Following this, the next section will explain why the technical research chose the particular technologies that were selected for use in the project. The frontend was built using React Native and TypeScript, the backend was developed with FastAPI using Python, and the database system utilized two databases, namely PostgreSQL and MongoDB to store structured and raw data respectively. Visual Studio Code was chosen as the preferred development environment. These choices were backed up by considerations of other options including Flutter, Node.js, Django, PyCharm, and MySQL.
+Chapter 3: System Development Methodology
+Introduction
+The system development methodology refers to a structured way of planning, building, and deploying an entire software system from the beginning until its final deployment to users. The methodology determines how development activities are to be carried out in various phases throughout the lifecycle  (Hossain, 2023). Therefore, it is a set of processes which cover all activities associated with gathering requirements, designing the solution, implementing it, conducting tests, and maintaining the system after deployment. To put it simply, it is the roadmap for the project development.
+With a well-defined methodology, development processes remain organized and structured; consequently, the project gains flexibility in responding to problems that may emerge. Resource management is also improved by the adoption of this approach. This is crucial since unstructured development will soon lose its direction, which can result in a series of problems.
+Typically, there exist two broad categories of system development methodologies, traditional and modern. While traditional approaches like Waterfall and V-Model include a linear flow from one activity to the other without backtracking, modern methodologies employ the cyclical model  (Morozov & Kulyk, 2025). Examples of modern methodologies include Agile and Spiral. The former two are characterized by strict structure while the latter two allow room for improvement through feedback.
+This chapter will evaluate several system development methodologies using evaluation criteria that are relevant to the project. After identifying the best strategy, the chapter will analyze the methodology's framework, implementation process, and potential problems during development.
+Comparison of System Development Methodologies
+Understanding the differences between methodologies is a step that must come before choosing the best one. This way, one can choose the best methodology for their project. The three methodologies that will be compared based on various aspects are Waterfall, Spiral, and Agile.
+Table 12 Comparison of System Development Methodologies
+Criteria
+Waterfall
+RAD (Rapid Application Development)
+Prototyping
+Agile
+Requirement Handling
+Requirements are fixed at the start, making later changes difficult and costly
+Requirements evolve through rapid prototyping and user feedback
+Requirements are initially unclear and refined through repeated prototypes
+Requirements are flexible and continuously updated between sprint cycles
+Flexibility
+Low flexibility due to rigid phase structure
+Moderate to high flexibility but focused on speed
+High flexibility during early stages but less structured overall
+Very high flexibility with continuous adaptation to change
+Development Approach
+Linear and sequential phases with no overlap
+Fast development using reusable components and prototypes
+Iterative creation of experimental models before final system
+Incremental development through structured sprint cycles
+User Involvement
+Limited to requirement gathering and final delivery
+High involvement during prototype feedback stages
+High involvement during early validation of system features
+Continuous involvement throughout development via feedback loops
+Handling Technical Uncertainty
+Weak, assumes clear requirements and stable environment
+Moderate, relies on quick adjustments during development
+Strong, designed to explore and refine uncertain components
+Strong, uncertainty handled through continuous testing and iteration
+Delivery Style
+Complete system delivered at the end of development
+Rapid delivery of working prototypes followed by refinement
+Prototype versions delivered before final implementation
+Functional features delivered at the end of each sprint
+Testing Process
+Testing mainly occurs at the final stage, increasing risk of late errors
+Testing occurs during development but may be less structured
+Testing focuses on validating prototype functionality
+Continuous testing integrated into every sprint cycle
+Suitability for PricePilot
+Not suitable due to dynamic e-commerce platforms and changing requirements
+Partially suitable for UI and rapid feature development but lacks long-term structure
+Suitable for developing scraping logic and Deal Score experimentation but not for full system development
+Highly suitable as it supports evolving requirements, continuous feedback, and adaptation to changing web data sources
+Justification for Selected Methodology
+Agile is chosen for implementation into PricePilot as it meets the requirements of the project. One of its strong sides is the ability to cope with the changes of the system's requirements. Contrary to the Waterfall model, where the scope of the system is defined beforehand, in Agile it can change during the whole development period. This is necessary since PricePilot requires the input of user surveys, reviews, and real-life testing, which might differ over time.
+While Spiral methodology is also iterative, it is ideal for larger and more risky projects where extensive analysis is required at all stages of development. In our case, adding too much process will only add complexity. The added effort will not provide sufficient value in return. Instead, Agile methodology represents a more reasonable approach which is still iterative.
+In terms of development, Agile fits perfectly for solo developers because of its structure that enables organization of work without making the process cumbersome. Priorities are set in the form of the Product Backlog. Sprint cycles are relatively short, allowing for constant revision and adjustment. It is easy to track progress. Changes are easily managed.
+One more key advantage offered by Agile is user engagement at all stages of work. The PricePilot project is aimed at providing Nepali online shoppers with the opportunity to compare prices and check discounts using the Deal Score and price history features among others. Thus, it is important to validate the product through user experience and feedback. Such feedback is gathered and considered after every sprint cycle.
+Agile Methodology
+Overview
+Figure 17Agile Development Lifecycle
+Note. From Agile methodology, by InterQuality, n.d. https://interqualitybg.com/en/resources/scrum-and-agile-resources/agile-methodology.
+Agile is an adaptable and customer-oriented software development methodology. It uses iterative development cycles known as sprints. In every sprint, an operational and testable part of the system is created  (Vadlamani & Jain, 2025). The development of the entire system is not done in one shot. It is done step by step. Each step helps to improve the previous version.
+This methodology relies on the principles of the Agile Manifesto. They include preference for delivering working software, cooperation, and the capacity to adapt to changes  (Hanser, 2026). Planning remains crucial, yet it is flexible. There is constant feedback, and development gradually changes over time.
+A typical sprint can be one to four weeks long. At the beginning of every sprint, tasks are chosen from the Product Backlog and development begins. At the end of the sprint, these tasks are fully accomplished and implemented into the system. It brings order to the development process. It also enables better tracking of its results and adjusting when required.
+Agile Development Life Cycle Stages
+Figure 18Six Stages of Agile Development Life Cycle
+Note. From Agile software development life cycle, by Spiceworks, n.d. https://www.spiceworks.com/soft-tech/what-is-agile-software-development/.
+The Agile development lifecycle can be described in six phases. All of them are important for ensuring the proper guidance for the project throughout its development. They provide structure without rigidity and allow for flexibility.
+Concept
+This stage is the beginning of the project. It defines the overall direction and identifies the problem that is being addressed. A prioritized Product Backlog is created to organize system features  (Singh et al., 2026). For PricePilot, this includes real-time price data collection, the Deal Score algorithm, and a mobile-first interface. Features are prioritized so that the most important ones are developed first.
+Inception
+At this stage, the planning for the first sprint will take place. The backlog items will be translated into user stories, followed by acceptance criteria  (Sharma & Kumar, 2023). Finally, the development environment will be set up. It will consist of version control, cloud services, scraping tool, and backend configuration.
+Construction / Iteration
+It is the primary and most extensive stage of the Agile development process. Development is done in iterations called sprints that typically last for two weeks. At the end of each sprint, a working and tested component of the system is delivered  (Wakili et al., 2025). In the case of PricePilot, this involves web scraping services, back-end development, implementation of Deal Score, user interface design, and database construction.
+Release
+Once all features have been implemented and tested after several sprints, the process goes into the release phase. During the release phase, system testing is conducted. This comprises the integration test, user acceptance test, and polishing the system for perfection  (Cherviakov & Kataiev, 2025). It aims to ensure that the system works as intended as a whole product.
+Production
+Upon the deployment of the system, it goes into the production stage. This stage mainly focuses on performance and reliability maintenance. It monitors the scraping pipeline, tracks API performance, and ensures data accuracy  (Kucharska et al., 2026). Once that is done, the problems are sorted out and added to the Product Backlog.
+Retirement
+This is the point at which the lifecycle of the system ends. The system will be retired, and all appropriate information will be backed up or transferred  (Sohail et al., 2021). In PricePilot’s case, this represents the completion of the project. The system will be tested to determine its efficiency, and results will be reported.
+Activities and Processes in Each Agile Phase
+Planning Phase
+Planning sets the groundwork for the project. This is accomplished through setting the scope of the system, listing essential elements, and defining the overall architecture. In PricePilot, planning includes the scraping pipeline, price normalization module, Deal Score calculation method, cloud-based database, FastAPI API server, and mobile front-end interface.
+           This phase generates the Product Backlog along with user stories for all the items. Features are ranked according to their priority and system needs. This ensures that the most important features such as price comparison in real time, data gathering from various platforms, and the Deal Score are developed first. The cloud architecture is also established with the help of services, databases, and APIs defined during this process.
+Requirement Analysis Phase
+ In this stage, both functional and non-functional requirements will be determined. For PricePilot, this will be done via a requirement-gathering procedure using a survey of users in Nepal.
+           The survey will capture all the behaviors of users, price difficulties faced, and the features expected from various product types. The requirements will then be used to specify the system requirements. These features include price comparison, price history, deal confirmation, Wishlist feature, alert notifications and many more.
+Design Phase
+In this phase, the requirements are translated to a proper technical design through the utilization of the three-tier architectural approach. The process involves designing the data tier with scraping services. In this case, the process scrapes data from different e-commerce platforms for diverse products. Next, the backend is designed using the FastAPI platform for logic and data handling, whereas the front-end supports user interactions.
+           These steps help in creating data flow diagrams, creating database models, and defining APIs to ensure proper communication among the components. The UI wireframe for the proposed system will also be created in order to help define system functionalities.
+Implementation Phase
+Development is done during this phase by way of sprint cycles. Tasks are chosen from the product backlog, and their status is tracked via a Kanban board (Backlog, In Process, Under Review, Done).
+This process requires scraping of modules by making use of Python and Playwright to handle dynamic web pages. The back end is developed using FastAPI while the front end interacts with the API and presents the outcome. GitHub will be used to manage versions as well as test modules prior to integration within the project.
+Testing Phase
+In this stage, testing is carried out constantly during the development process, as opposed to just performing it at the end of the process. Unit testing and integration testing are employed to confirm that units and various components of the software interact correctly. This is followed by user acceptance testing.
+           The system reviews scraping modules for any changes in external platforms. If there are problems, they are added to the Product Backlog for resolution in future sprints. Additionally, it conducts security tests to ensure the safety of stored and transmitted data.
+Deployment Phase
+This phase adopts an organized approach for deployment. The initial stage involves the use of a staging environment for proper validation before moving into production. The use of Docker ensures consistency between the environments and minimizes deployment errors.
+The process involves the use of a CI/CD pipeline via GitHub Actions. Security features like SSL and authentication are incorporated into the system. Once the backend reaches stability, then the mobile app is deployed.
+Evaluation and Feedback Phase
+In this phase, the system is reviewed based on the aims and performance of the system after it has been deployed. The users will evaluate important aspects like searching for the products, price comparison, Deal Score, and Wishlist feature.
+Feedback is collected through this process, and then analyzed to see what areas need improvement. On the basis of that, more items get added to the Product Backlog. Finally, documentation of the entire process is carried out.
+Data Gathering Design
+Introduction
+Research methodology refers to an organized way by which one collects and analyses data to address questions regarding a system under investigation. Methods of research can generally be categorized as qualitative and quantitative. Qualitative methods involve the study of behaviors and attitudes through open-ended questions and interviews. On the other hand, quantitative methods involve collecting numerical and categorical data through questionnaires  (Oh et al., 2026).
+It is necessary to carry out research in order to ensure that PricePilot will be designed according to the needs of the actual users, not any assumptions. Although literature and observations show various issues such as the search fatigue, false discounts, and the absence of the possibility to compare, user experience validates their needs, level of trust, and preferred features.
+In this project, surveys will be used as the main mode of gathering data. The questionnaire will be sent to online consumers in Nepal, who are currently utilizing local e-commerce sites. Surveys have been chosen as the most appropriate tool for data gathering since they provide efficient ways of collecting data from a wide array of respondents, as well as allowing open-ended questions that provide qualitative data. They are also structured and can be analyzed using the statistical features available in Google Forms.
+Advantages of Using a Questionnaire
+The questionnaire was chosen to be the main method of collecting data due to the following reasons:
+Efficiency: The survey tool covers a lot of respondents without the need to schedule interviews individually. This is critical for a project done in a specific time frame. 
+Consistency: Using standard questions ensures that the answers will be given consistently, which allows analyzing them easily. 
+Quantitative Insight: Asking structured questions allows measuring data through statistics and graphing.
+Qualitative Insight: The open-ended questions allow providing subjective information that cannot be given through multiple choice questions.
+Anonymity: Participating anonymously will encourage the respondents to be honest about the misleading pricing practices they encountered. 
+Accessibility: Google Form surveys can be accessed by anyone and from any device without logging in.
+Types of Questions Used in Survey
+There are five categories of questions that have been used in the questionnaire survey, with each playing a certain role in the design of data collection.
+Multiple Choice Questions: MCQs are designed in such a way that only one answer can be selected. MCQs are suitable when there is a need for only one correct answer to the proposed question, e.g., demographic questions like age bracket, how often the respondent’s shop, and modes of communication.
+Checkbox Questions: Here, the participant is free to select more than one answer if necessary. Such a type of question would be essential if the study seeks information on multiple platforms used and various problems experienced in the process of online shopping.
+Likert Scale Questions: These are the types of questions that require a person to rate their opinion regarding something. In simple words, likert scale questions provide the user an opportunity to judge the attitude toward a particular statement on the basis of scale varying from 1 to 5 points.
+Ranking Questions: Ranking questions consist of listing various items in order of importance or preference to the respondent. This helps identify what features are important for customers while buying.
+Open-ended Questions: In open-ended questions, the respondents are free to express their views without any restriction of response options.
+Questionnaire Design
+The survey will be developed and distributed through Google Forms. The name of the survey is “PricePilot: Online Shopping and Price Comparison Survey” and it contains 25 questions that are categorized into six sections, where 21 are close-ended questions while four are open-ended questions. Close-ended questions are designed in the form of multiple-choice, checkboxes, Likert scale, and ranking, whereas open-ended questions will give the participants an opportunity to answer freely.
+The survey targets online shoppers in Nepal who have purchased or considered purchasing products from local e-commerce platforms. It distributes the survey through social media platforms and direct messaging, aiming to collect at least 50 responses. Once it reaches the target, the survey closes, and the responses are analyzed using Google Forms’ built-in statistical tools.
+The survey starts with an introductory statement presented before the first question, which is then followed by six major parts. These parts go from demographic data to feature feedback and open comments. Below is a detailed description of the parts and questions.
+Survey Introduction
+The introduction serves as the first thing seen by the respondents before the questions. This serves to explain the purpose of the survey, the identity of the researcher, and the context of the study.
+Figure 19Survey Description
+Section A: Respondent Profile.
+This portion of the survey involves gathering demographic and behavior data from the respondents. This aims to verify if the respondents belong to the target group of PricePilot.
+Figure 20 Respondent's Profile Queries-1
+Figure 21 Respondent's Profile Queries -2
+Section B: Present Shopping Behaviors and Challenges
+The current section addresses the ways in which respondents shop through the fractured environment of online commerce in Nepal while trying to compare prices. This section will also attempt to validate the key issues found in Chapter 1 through primary data collection.
+Figure 22 Questions on current behavior and patterns
+Figure 23 Questions on user's behavior on seeking to use any such tools
+Figure 24 Questions on noticing any suspicious price variance on e-commerce platforms
+Section C: Awareness of Existing Price Comparison Tools.
+This part tests the knowledge of the respondent about the current systems for comparison of prices and his/her personal experience in using those systems. This test shows how well PricePilot fits into the niche that is not yet filled in the local market.
+Figure 25 Questions about awareness on present tools
+Figure 26 Questions about usage of present tools
+Section D: Feature Preferences and Priorities.
+This section contains PricePilot's planned features and collects both usefulness ratings of the features and priority rankings of them as well. It has a direct impact on the features that will be developed. Features that receive consistently high ratings and rankings are scheduled for early development, while lower-rated features are planned for later stages.
+Figure 27 Questions about feature preferences-1
+Figure 28 Questions about feature preferences-2
+Figure 29 Questions about feature preferences-3
+Figure 30 Questions about feature preferences-4
+Section E: Interface and Experience Preference
+            This section gives an indication of how the respondents prefer to use the price comparison application. Through this, we get a better understanding of the user interface aspects that matter most to the user base.
+Figure 31 Questions about interface preferences
+Section F: Open-End Feedback.
+These questions involve open-ended responses. They are included in the latter part of the questionnaire because respondents tend to respond better to open-ended questions after answering closed-ended ones. They also help to obtain information that is not covered by pre-determined answers.
+Figure 32 Open Ended Feedback options provided in the Survey
+Requirements Validation – Analysis
+The current chapter will present an analysis of the survey results to verify whether the requirements for the PricePilot system are valid. An interpretation of the user responses will be provided to prove that the issues discovered, and the features developed are consistent with the users' needs. The current analysis will be conducted by examining the users' behavior and problems in terms of what the users expect rather than merely providing a statistic result. A total of 30 responses were collected for this task.
+Analysis of Collected Data through Questionnaires
+Section A: Respondent Profile
+Figure 33 Respondent Profile Information -Full Name:1
+Figure 34 Respondent Profile Information -Full Name:2
+Figure 35 Respondent Profile Information -Full Name:3
+Figure 36 Respondent Profile Information -Email Address:1
+Figure 37 Respondent Profile Information -Email Address:2
+Figure 38 Respondent Profile Information -Email Address:3
+Figure 39 Age Distribution of Respondents
+From the analysis, 46.7% of the respondents are within the age bracket of 25-34 years, which is the largest demographic age group. In addition, 30% of the respondents are within the age bracket of 18-24 years, while 20% of the respondents are within the age bracket of 35-44 years, and only 3.3% of the respondents are above 45 years old. None of the respondents are below 18 years old.
+Table 13Age Distribution of Respondents
+Age Group
+Total
+Under 18
+0
+18–24
+9
+25–34
+14
+35–44
+6
+45+
+1
+Figure 40 Gender Distribution of Respondents
+This survey reveals that the majority of the respondents, 83.3%, are men, while 16.7% are women. No respondent chose the "prefer not to say" option. Therefore, the results of this survey have gender bias. Even so, the results still contribute some insights on how users behave.
+Table 14Gender Distribution of Respondents
+Gender
+Total
+Male
+25
+Female
+5
+Prefer not to say
+0
+Figure 41 Employment Status of Respondents
+The majority of respondents are employed full time (46.7%), thus forming the largest group. Other respondents include students (36.7%) and people engaged in their own business (13.3%), while only a few are employed part-time. The implication is that people who are either employed full time or students form the primary target market.
+Table 15Employment Status of Respondents
+Status
+Total
+Full-time
+14
+Student
+11
+Self-employed
+4
+Part-time
+1
+Figure 42 Online Shopping Frequency
+From these results, we can see that 46.7% of the respondents shop several times a week, making it the most frequent behavior. 36.7% of the respondents shop weekly, whereas 16.7% shop monthly or twice a month. There is no one who shops on a daily basis or does not use online shopping at all.
+Table 16Online Shopping Frequency
+Frequency
+Total
+Several times a week
+14
+Once a week
+11
+Once or twice a month
+5
+Daily
+0
+Never
+0
+Figure 43 E-Commerce Platforms Used by Respondents
+The use of Daraz was reported by all participants (100%), which is the highest among all other platforms. Furthermore, the use of GadgetByte and Evo Store has been reported by 46.7%, and 10% use Fantech Nepal. No other platforms were mentioned in the survey.
+Table 17E-Commerce Platforms Used by Respondents
+Platform
+Total
+Daraz
+30
+GadgetByte
+14
+Evo Store
+14
+Fantech Nepal
+3
+Section B: Current Shopping Behaviors and Challenges
+Figure 44 Number of Platforms Visited Before Purchase
+From the findings, it is clear that 60 percent of the users visit at least two to three websites before buying. On the other hand, 20 percent go to four or five sites, while another 10 percent access only one website, with an additional 10 percent going to five or more sites. This shows that most people do their comparisons from various sources.
+Table 18Number of Platforms Visited Before Purchase
+Platforms Visited
+Total
+1 platform
+3
+2–3 platforms
+18
+4–5 platforms
+6
+More than 5
+3
+Figure 45 Time Spent on Price Comparison
+According to the results, 63.3% of the participants take between 15 and 30 minutes for price comparisons before making any purchase. Moreover, 16.7% of the participants take more than 30 minutes, 10% take less than 5 minutes, and yet another 10% take 5 to 15 minutes. This implies that people put a lot of effort into making price comparisons.
+Table 19Time Spent on Price Comparison
+Time
+Total
+Less than 5 min
+3
+5–15 min
+3
+15–30 min
+19
+More than 30 min
+5
+Figure 46 Frequency of Abandoning Price Search
+As seen from the results above, 46.7% of the participants often stop trying to look for better prices, while 43.3% do so sometimes, with just 10% of the participants comparing everything all the time. It is evident that the users are spending much time comparing the prices. This also suggests that most of the participants have a hard time in comparison process.
+Table 20Frequency of Abandoning Price Search
+Response
+Total
+Frequently
+14
+Occasionally
+13
+Always compare
+3
+Figure 47 Frequency of Suspecting Fake Discount
+From the above analysis, it can be noted that 50% of the respondents suspect fake discounts frequently. Also, 40% of the respondents experienced this on some occasions, whereas 10% of the respondents have never encountered this before. None of the people chose the choice of completely ignoring such situations.
+Table 21Frequency of Suspecting Fake Discount
+Response
+Total
+Many times
+15
+Few times
+12
+Never
+3
+Figure 48 Ability to Verify Discount Authenticity
+According to the data, 73.3% of participants did not have a means of checking whether there were discounts. Some participants tried to check the discounts, while others had a method for doing so. Moreover, 16.7% did not check, and 10% did not see this task as applicable to their situation.
+Table 22Ability to Verify Discount Authenticity
+Response
+Total
+Yes, found a way
+0
+No way to check
+22
+Did not try
+5
+Not applicable
+3
+Figure 49 Key Shopping Challenges Faced by Respondents
+The major problem faced is having to manually verify too many websites, which is faced by 83.3% of the respondents. The other problems are inability to distinguish between fake discounts and legitimate ones, which is faced by 66.7% of the respondents, and lack of a unified comparison tool faced by 36.7% of the respondents. Price variation is another problem faced by 23.3%.
+Table 23Key Shopping Challenges Faced by Respondents
+Challenge
+Total
+Too many platforms to check manually
+25
+Unable to tell if a sale price is genuine
+20
+No single tool covers all platforms
+11
+Prices change frequently and are hard to track
+7
+Difficult to find consistent product listings
+4
+I do not face any challenges
+0
+Section C: Awareness of Existing Price Comparison Tools
+Figure 50 Usage of Price Comparison Apps
+According to the results, 46.7% have used price comparison applications at some point in their life. In addition, 23.3% use such apps on a regular basis, while 26.7% do not know any, and very few have heard of them. It is clear that people’s awareness of the application is relatively high, but the adoption rate is low.
+Table 24Usage of Price Comparison Apps
+Response
+Total
+Use regularly
+7
+Tried before
+14
+Heard but never used
+1
+Not aware
+8
+Figure 51 Platform Coverage of Used Tools
+The results indicate that 60% of users filled that they have used price comparison tools which only covered international websites. Further, 26.7% did not use any comparison tools, whereas 13.3% were unsure about the availability of support from platforms. None of the users had mentioned support for comparison tools on Nepali platforms.
+Table 25Platform Coverage of Used Tools
+Response
+Total
+Yes (supports Nepali platforms)
+0
+Only international platforms
+18
+Not used any tool
+8
+Not sure
+4
+Figure 52 Most Useful Features in Existing Tools
+The best useable feature that was found out is having access to the prices of different stores at once, chosen by 70% of the respondents. Furthermore, 26.7% find it helpful to get notifications when there is a price reduction, while only 6.7% of respondents think that getting graphs of the historical price is helpful.
+Table 26Most Useful Features in Existing Tools
+Response
+Total
+Seeing prices from multiple stores in one place
+21
+Price history graphs
+2
+Price drop alerts
+8
+Product specification comparison
+0
+Nothing, I found it unhelpful
+1
+I have not used any
+8
+Figure 53 Barriers to Using Price Comparison Tools
+The most significant barrier was the absence of backing for Nepali platforms, which 70% of the participants mentioned. Other reasons include the lack of knowledge about the existence of these tools by 26.7%, and the difficulty of using the tools cited by 16.7%. None of the participants had problems of mistrust or no necessity to use the tools.
+Table 27Barriers to Using Price Comparison Tools
+Barrier
+Total
+Does not support Nepali platforms
+21
+Not aware of such tools
+8
+Too complicated
+5
+Do not trust data
+0
+No need
+0
+Section D: Feature Preferences and Priorities
+Figure 54 Survey result of the preferred features
+It can be seen from the results that real time comparison and deal scoring are two of the most useful features as they receive the highest scores for their usefulness. Users have responded quite well to price alerts and history as well. Some other features like unified view and side by side comparison have received moderate responses.
+Figure 55 Most important feature for the Respondent
+According to the statistics, 100% of the participants chose the real-time price comparison and deal score features. In addition, 46.7% of the users picked up price drop alert, whereas 13.3% of the participants chose price history and Wishlist options. On the other hand, zero percent of the participants chose side-by-side comparison or one-click redirection.
+Table 28Most important feature for the Respondent
+Feature
+Total
+Real-time comparison
+30
+Deal Score
+30
+Price-drop alerts
+14
+Price history
+4
+Wishlist
+4
+Side-by-side comparison
+0
+One-click redirection
+0
+Figure 56 Importance of Nepali Platform Coverage
+As per the findings, 53.3% of the participants find coverage on the local platform to be extremely important. Also, 43.3% find it very important. Only a small number of participants see this factor as somewhat important. None of the participants chose not important.
+Table 29Importance of Nepali Platform Coverage
+Response
+Total
+Extremely important
+16
+Very important
+13
+Somewhat important
+1
+Not important
+0
+Figure 57 Likelihood of Regular App Usage
+According to the results, 56.7% of the survey takers are highly likely to use this kind of software on a regular basis. Furthermore, 33.3% were likely to do so, and 10% had no opinion. There were no participants who were opposed to the idea of using the system.
+Table 30Likelihood of Regular App Usage
+Response
+Total
+Very likely
+17
+Likely
+10
+Neutral
+3
+Unlikely
+0
+Figure 58 Trust in App-Provided Price Data
+The findings indicate that 63.3% of participants believe in the information provided if the data is constantly updated. Moreover, 23.3% of participants were neutral about their trust, whereas 13.3% had some doubts. None of the participants was distrustful of data provided by such systems.
+Table 31Trust in App-Provided Price Data
+Response
+Total
+Trust if updated regularly
+19
+Neutral
+7
+Slightly skeptical
+4
+Do not trust at all
+0
+Figure 59 Factors That Build Data Trust
+From the findings, it is clear that the highest preference is for the time the data was last updated, which attracts 83.3% preference. Further, 73.3% of the users like to be shown where the data originated from for each price, whereas 23.3% would like to have a verification or trustworthiness rating for the price information. Price trend charts are preferred by 13.3%, but no one chose an option that suggests that they do not trust any sources at all.
+Table 32Factors That Build Data Trust
+Factor
+Total
+Last updated time
+25
+Source platform
+22
+Trust rating system
+7
+Price history graph
+4
+Nothing builds trust
+0
+Section E: Interface and Experience Preferences 
+Figure 60 Preferred Access Method (Mobile vs. Web)
+The data reveals that 70% of respondents prefer to access the app only on their mobile phones while 30% prefer accessing both apps and websites. None of the respondents chose the option of using only the website or not preferring either.
+Table 33Preferred Access Method 
+Option
+Total
+Mobile app only
+21
+App + Website
+9
+Website only
+0
+No preference
+0
+Figure 61 Feature Priority Rankings
+From the analysis, it is clear that accuracy of price information gets the greatest number of first place rankings. Navigational ease and information credibility both get good second-tier rankings, which shows their significance. Clarity ranking tends to be low compared to other rankings, whereas speed ranking shows moderate importance. From this we can conclude that users give more significance to accuracy than other factors.
+Table 34Feature Priority Rankings
+Factor
+Most Common Rank
+Accuracy of pricing data
+1 (Highest Priority)
+Ease of navigation
+3–4 (Medium Priority)
+Trustworthiness of platform
+2–3 (Moderate Priority)
+Speed of loading results
+Balanced (Mixed Rankings)
+Visual clarity of comparisons
+4–5 (Lower Priority)
+Figure 62 Preferred Notification Method
+Push notifications have received 66.7% of votes. At the same time, there is 16.7% of people preferring email notifications and 16.7% in-app notifications. None of participants did not choose the option of no notifications. It means that people like to receive real-time mobile notifications.
+Table 35Preferred Notification Method
+Method
+Total
+Push notification
+20
+Email
+5
+In-app only
+5
+No alerts
+0
+Section F: Open-End Feedback
+Figure 63 Open ended feedback from Respondents
+Summary
+In this chapter, the system development methodology used for PricePilot is explained. This begins with the comparison of four system development methodologies which are Waterfall, RAD, Prototyping, and Agile. After thorough evaluation, the Agile methodology is determined to be the best fit for the project due to its ability to allow flexibility, get user feedback continuously, and use a Sprint-based approach which is suitable to a technologically difficult system developed by a single developer. The Agile lifecycle is also described in this chapter as well as the activities involved in each of the six stages, which include creating the product backlog, generating the user stories in planning, developing the scraping system using Python and Playwright in implementation, and deployment using Docker and CI/CD pipelines through GitHub Actions. Lastly, this chapter describes the design of the data gathering process where the online questionnaire survey is used as the main research tool due to its effectiveness in collecting quantitative and qualitative data from Nepali online shoppers.
+The survey findings reveal that there is an absolute requirement for PricePilot, based on responses from 30 users. All the respondents are regular online buyers, who use Daraz and other similar platforms for purchasing products. Platforms such as GadgetByte and Evo Store are used by almost half of the respondents. Most of the users usually check two to three platforms before buying a product and spend about 15 to 30 minutes comparing the prices on different platforms. It has been found that several users do not even proceed because of the efforts involved in price comparison. It is also seen that a number of users feel that there might be fake discounts available on these platforms. Moreover, most of them have not got any way of verifying the authenticity of the discounts. It was also found that the key features of PricePilot, such as price comparison and Deal Score, were highly valued by all users, while a majority favored a mobile-first app. Therefore, it can be stated that PricePilot design is in accordance with users' requirements.
+Chapter 4: Conclusion
+To conclude, this research has been successful in setting up a validated basis for developing PricePilot. This is because it has proven the existence of some actual problems that Nepalese consumers encounter when shopping online, such as fragmentation, searching exhaustion, and unverifiable discounts. Survey results have confirmed the problems and shown a high demand for an easy price-comparison tool.
+These issues are solved using PricePilot’s main features such as price gathering, price history monitoring, and the Deal Score that helps to verify discounts. The chosen architecture, technologies, and approach to software development are highly suitable for implementing the solution. The analysis process also contributes to the definition of system requirements by emphasizing the necessity to ensure data transparency and credibility. In general, the project is ready for further development.
+Achievements
+The present research accomplishes all its major goals and objectives. Firstly, the study manages to detect and confirm several critical issues faced by the majority of Nepali online shoppers. According to the results obtained during the analysis, consumers have difficulties with platform fragmentation, spending considerable amounts of time comparing prices, and the inability to ensure that the discounts they receive are indeed legitimate. Despite the considerable amount of effort put into checking prices on different websites, many buyers are unable to be sure that their prices are accurate. Moreover, the data collected in the survey provides compelling arguments in favor of these claims, and it is evident that there is a growing need for software like PricePilot.
+Moreover, the study creates a good base from the technical perspective to proceed with the development process of the system. The chosen architecture, technologies, and Agile framework ensure scalability and future enhancement capabilities. Nevertheless, there are some limitations in terms of research and design. The paper is focused primarily on using survey results as the main source of data without considering any user studies, which might help to understand user interactions better. In addition, it does not focus on more sophisticated aspects such as personalized suggestions and performance testing.
+Limitations
+There are three primary limitations associated with this study. The first one is that the sample primarily consists of digitally active users because of the nature of its collection through social media and messaging services. Hence, there is a possibility that the results of this survey will not be applicable to other people and people who are not that digitally active but face the same problems. It can also be argued that not all consumers from Nepal will have the same online shopping experience.
+Second, the analysis of the system is based on the tools and platforms that existed when the research was done, and these may be subject to changes in the future depending on the development of the market. There may be new tools for comparing prices, as well as new versions of the e-commerce platforms that may alter the structure and affect the longevity of the results found.
+Lastly, this research was based exclusively on surveys and did not employ usability tests or interviews, which could have been used to reveal more about the users' interactions with the website.
+Reflections
+It can be seen from this study that the issue is even more complicated than anticipated earlier. It is because, apart from the need to compare prices, users also need the element of trust in information, particularly in discount information. This helps us understand the significance of providing information about the Deal Score and keeping the information updated, since both these factors contribute significantly to building trust among users.
+The research process also helps to enhance important technical and methodological choices. This is because the research proves that it would be better to adopt Agile since there will be constant changes. In addition, the research makes it clear that there will be a need to use PostgreSQL and MongoDB since each of them has its own strengths in handling certain data types. In general, the research helps us gain greater insight into the project and make better choices regarding its further development.
+References
+Banerjee, P. (2025). Impact of Dynamic Pricing on Consumer Loyalty in E-Commerce. Journal of Informatics Education and Research, 5(1). https://doi.org/10.52783/jier.v5i1.2316
+Bhattarai, G., & Thapa, P. (2024). An Empirical Study on E-Commerce and Its Determinants in the Context of Nepalese Small and Medium Enterprises. International Research Journal of MMC, 5(5), 109-122. https://doi.org/10.3126/irjmmc.v5i5.73701
+Chavan, P. (2024). Web Scraping Application for E-Commerce Website. International Journal for Research in Applied Science and Engineering Technology, 12(5), 4011-4014. https://doi.org/10.22214/ijraset.2024.60555
+Chen, F. (2024). Research on Real-time E-commerce Price Comparison System Using Python Web Scraping Technology. International Journal of Computer Science and Information Technology, 4(2), 127-136. https://doi.org/10.62051/ijcsit.v4n2.18
+Cherviakov, K., & Kataiev, D. (2025). Models of agile management of IT projects in conditions of high release frequency. Management of Development of Complex Systems. https://doi.org/10.32347/2412-9933.2025.64.153-160
+Devkota, N., Dhungana, S., Parajuli, S., Bhandari, U., & Paudel, U. R. (2021). Nepalese consumers' perception on online shopping challenges and its managerial solution. International Research Journal of Science, Technology, Education and Management, 1(2), 65-77. https://doi.org/10.5281/zenodo.5726289
+Fadhilla, S. R., Dini, N. R., & Wolontery, S. A. (2024). Analysis Of The Influence Of Fake Discount Price Labels For A Product In The Marketplace On The Concept Of Business Competition And Responsibility. Ipso Jure, 1(4), 50-58. https://doi.org/10.62872/bzb02c69
+Goodman, M. (2020, August 19). google-shopping. Retrieved from okenda: https://okendo.io/resources/guides/google-shopping/
+Gumanti, D., Baroroh, K., & Astuti, W. (2026). People's Economy Education as an Instrument for Achieving the SDGs: A Study of SDG 8, SDG 10, and SDG 12. Indo-MathEdu Intellectuals Journal, 7(2), 2878-2889. https://doi.org/10.54373/imeij.v7i2.5292
+Hadasik, B. (2024). Reduction of information asymmetry in e-commerce: the web scraping approach. Publishing House of the University of Economics in Katowice. https://doi.org/10.22367/9788378758907
+Hanser, E. (2026). The Agile Manifesto. In E. Hanser, Agile Processes – Agile Teams. Springer Nature. https://doi.org/10.1007/978-3-662-72726-3_2
+Hasmalawati, N., Vonna, R. D., & Oktariana, V. (2024). PRODUCT PRICE PERCEPTIONS ON PRODUCT PURCHASING DECISIONS. Psikoislamedia Jurnal Psikologi, 9(2), 148-153. https://doi.org/10.22373/psikoislamedia.v9i2.26169
+Henschel, H. (2025, November 19). what-is-camelcamelcamel-amazon-price-tracker. Retrieved from mashable.com: https://mashable.com/article/what-is-camelcamelcamel-amazon-price-tracker
+Hoolikatti, K., Nidasosi, M. V., Kamble, Y., Suchita.L.Bandi, M., Devarmani, N. G., & Kulkarni, S. G. (2025). The Fake Discount Epidemic In E-Commerce Platform: An Examination Of Tactics, Tools, And Consumer Awareness. 54(1), 796-807. https://doi.org/10.48047/va8ybt47
+Hossain, M. I. (2023). Software Development Life Cycle (SDLC) Methodologies for Information Systems Project Management. International Journal For Multidisciplinary Research. https://doi.org/10.36948/ijfmr.2023.v05i05.6223
+Ijaz, M. A. (2026). SQL Query Engine: A Self-Healing LLM Pipeline for Natural Language to PostgreSQL Translation. https://doi.org/10.48550/arXiv.2604.16511
+Khadka, N. B., Adhikari, S., & Lama, P. B. (2025). Consumer Behavior toward E-Commerce among Youth of Kathmandu. International Journal of Atharva, 3(1), 166-175. https://doi.org/10.3126/ija.v3i1.76726
+Krishnakumar, G., Varghese, R., Krishna, A., Biji, H., & Joseph, A. (2022). AN ANALYSIS: GOOGLE CHROME KEEPS ON BEING THE MOST POPULAR WEB BROWSER. International Journal of Engineering Technology and Management Sciences, 5(6). https://doi.org/10.46647/ijetms.2022.v06i05.058
+Kucharska, W., Jussila, J. J., & Kucharski, M. (2026). Agile Mindset – What Have We Learned So Far? HAMK Pilkku. https://doi.org/10.63777/92e6
+Kuo, A. C., Wolansky, R. L., Hiraldo, L., Sujka, J., & Kuo, P. C. (2026). Web Scraping Techniques for Surgical Research: A Technical Tutorial With a Worked Example in Publication Data Mining. The American surgeon. https://doi.org/10.1177/00031348261441678
+Manandhar, R. B., & Chalise, M. (2023). Digital Retail Trends: Analyzing Online Shopping Behaviour among College Level - Students in Nepal. Quest Journal of Management and Social Sciences, 5(2), 291-301. https://doi.org/10.3126/qjmss.v5i2.60832
+Morozov, V., & Kulyk, R. (2025). Building integration models for the efficiency of managing complex fixed-budget IT projects. Management of Development of Complex Systems. https://doi.org/10.32347/2412-9933.2025.62.97-106
+Muktadir, M. G., Mridu, Sabrina, S., Pinky, Kazi, M., Ahmed, . . . Reza. (2025). The Discount Trap: A Study of Pricing Manipulation and Brand Accountability in Online Marketplaces. BRAC University. https://doi.org/10.13140/RG.2.2.29412.49285
+Muller, J. (2024, November 5). 2-major-google-shopping-updates-that-will-impact-your-online-business. Retrieved from nationwidegroup: https://www.nationwidegroup.org/2-major-google-shopping-updates-that-will-impact-your-online-business/
+Oh, P. M., Fox, K. B., Dhani, J., Carland, A. L., Long, K., Selzer, F., . . . Weiss‐Laxer, N. S. (2026). How Do Open‐Ended Interview and Closed‐Ended Questionnaire Responses Compare? A Matched Mixed‐Methods Study Examining Treatment Attitudes of Patients With Meniscal Tear and Persistent Pain. ACR Open Rheumatology, 8(4). https://doi.org/10.1002/acr2.90029
+Oraya. (2025). idealo-as-a-price-comparison-platform-relevance-as-a-point-of-sale-for-manufacturers-and-retailers. Retrieved from oraya.io: https://www.oraya.io/idealo-as-a-price-comparison-platform-relevance-as-a-point-of-sale-for-manufacturers-and-retailers/
+Panda, K. C. (2025). Application Development Using Flutter and React Native: Cross Platform Development. Journal of Research in Science and Engineering, 7(1), 6-8. https://doi.org/10.53469/jrse.2025.07(01).02
+Pandey, S., Mittal, S., & Chawla, D. (2024). Tackling consumer information asymmetry and perceived uncertainty for luxury re-commerce through seller signals. Journal of Retailing and Consumer Services, 79, 103736. https://doi.org/10.1016/j.jretconser.2024.103736
+Parajuli, K., Chapagain, S., Lama, A., Pokhrel, A., Shrestha, S., & Neupane, A. (2025). USER'S SATISFACTION WITH eSewa: A Live Project Research Report. https://doi.org/10.13140/RG.2.2.21358.93762
+Phd, R. V. (2019). Online Shopping in Nepal: Preferences and Problems. Journal of Nepalese Business Studies, 12(1), 71-86. https://doi.org/10.3126/jnbs.v12i1.28184
+PriceRunner. (2025). about-pricerunner. Retrieved from pricerunner.com: https://www.pricerunner.com/info/about-pricerunner
+PriceRunner. (2025). why-pricerunner. Retrieved from pricerunner.com: https://www.pricerunner.com/info/why-pricerunner
+PriceSpy. (2025, July 16). about-pricespy. Retrieved from pricespy.co.nz: https://pricespy.co.nz/information/about-pricespy
+Rahman, A. (2025). Understanding the Effects of Price Discrimination on Digital Market Competition. Journal of Economics and Management, 5(1). https://doi.org/https://doi.org/10.3126/jem.v5i1.86950
+Raman, R., Lathabai, H. H., & Nedungadi, P. (2024). Sustainable development goal 12 and its synergies with other SDGs: identification of key research contributions and policy insights. Discover Sustainability, 5(1). https://doi.org/10.1007/s43621-024-00289-0
+Rijal, M., & Bhandari, R. (2026). Digital Payment Adoption on Local Small Businesses in Urban and Semi-Urban Areas of Kathmandu Valley Madhu Rijal, Rita Bhandari Multi-disciplinary double-blind peer review journal Digital Payment Adoption on Local Small Businesses in Urban and Semi-Urban . https://doi.org/10.58196/jhswn.v18.i1.2.2026
+Ruchi, R., Saroj, S., Joshi, H., & Thareja, D. Y. (2026). A Comparative Analysis of Fastapi and Django Frameworks: Evaluating Performance, Scalability, And Concurrency Efficiency in Modern Web Applications. INTERANTIONAL JOURNAL OF SCIENTIFIC RESEARCH IN ENGINEERING AND MANAGEMENT, 10(3), 1-9. https://doi.org/10.55041/IJSREM58536
+Rukhmana, U., & Dwiarta, I. M. (2026). How quality, service, and marketing drive customer satisfaction in medium-scale manufacturing companies. Manajemen dan Bisnis, 25(1), 267. https://doi.org/10.24123/mabis.v25i1.1049
+Schwartz, B. (2024, October 16). google-shopping-researched-with-ai-more-features-38253.html. Retrieved from seroundtable: https://www.seroundtable.com/google-shopping-researched-with-ai-more-features-38253.html
+Sejuwal, N. (2025). Impact of Product Reviews and Online Information Search on Purchase Intention among Nepalese Online Consumers. NPRC Journal of Multidisciplinary Research, 2(13), 46-55. https://doi.org/10.3126/nprcjmr.v2i13.87436
+Shaikh, A., Khan, R., Panokher, K., Ranjan, M. K., & Sonaje, V. (2023). E-commerce Price Comparison Website Using Web Scraping. International Journal of Innovative Research in Engineering & Multidisciplinary Physical Sciences, 11(3), 1-13. https://doi.org/10.37082/IJIRMPS.v11.i3.230223
+Sharma, S., & Kumar, D. (2023). Product backlog optimization technique in agile software development using clustering algorithm. Multimedia Tools and Applications, 82(30), 1-21. https://doi.org/10.1007/s11042-023-15406-w
+Shrestha, H. L., Dhital, K. P., Shrestha, A., Tramu, G., & Sejuwal, N. (2025). The Digital Consumer Economy: Purchasing Behavior of Youth in E-Commerce Markets. NPRC Journal of Multidisciplinary Research, 2(8), 340-349. https://doi.org/10.3126/nprcjmr.v2i8.83947
+Shrestha, H. L., Dhital, K. P., Shrestha, A., Tramu, G., & Sejuwal, N. (2025). The Digital Consumer Economy: Purchasing Behavior of Youth in E-Commerce Markets. NPRC Journal of Multidisciplinary Research, 2(8). https://doi.org/ https://doi.org/10.3126/nprcjmr.v2i8.83947
+Shrestha, S. K. (2023). Online shopping attitude and purchase intention of Nepalese consumers: Moderated mediation of social media. Journal of Nepalese Management Academia, 1(1), 17-26. https://doi.org/10.3126/jnma.v1i1.62029
+Singh, S., Rana, H., & Sharma, T. (2026). Effort and Cost Estimation in Agile Software Development. SSRN Electronic Journal, 8. https://doi.org/10.2139/ssrn.6127067
+Sohail, F., Zia, S. S., Qureshi, R., Naseem, M., & Haider, H. (2021). Impact of Agile Methodology on Software Development Life Cycle. Pakistan Journal of Engineering and Technology, 4(2), 153-158. https://doi.org/10.51846/vol4iss2pp153-158
+Sole, A. D. (2023). Introducing Visual Studio Code. In A. D. Sole, Visual Studio Code Distilled (pp. 1-11). Apress.
+Spann, M., Bertini, M., Koenigsberg, O., Zeithammer, R., Aparicio, D., Chen, Y., . . . Yoo, H. (2024). Algorithmic Pricing: Implications for Consumers, Managers, and Regulators. SSRN Electronic Journal. https://doi.org/10.2139/ssrn.4859392
+Sriram, N., C, D., & Kanagalakshmi, S. (2025). Mastering NoSQL with MongoDB. Deep Science Publishing. https://doi.org/10.70593/978-93-7185-934-9
+Tabsum, R., & Kumar, V. (2026). The Role of E-commerce Platforms in Shaping the Future of Retail. Journal of Global Economics Management and Business Research, 18(1), 98-111. https://doi.org/10.56557/jgembr/2026/v18i110135
+Tarale, H. (2025). Web Scraping using Python. 3(1), 1023. https://doi.org/10.5281/zenodo.14852767
+Thakur, S. K. (2025). Impact of Digital Marketing on Business Growth in Nepal. Journal of Nepal Commerce Association, 1(1), 69-78. https://doi.org/10.3126/jnca.v1i1.89221
+Trapasiya, N. (2026). Mobile App Development Trends: A Comparative Study of Flutter and React Native. International Journal of Advanced Research in Science Communication and Technology. https://doi.org/10.48175/IJARSCT-31903
+Vadlamani, S., & Jain, A. (2025). Implementing Agile Methodologies in Software Development. Journal of Quantum Science and Technology, 2(2). https://doi.org/10.63345/jqst.v2i2.288
+Varnukhov, A. Y. (2025). Specifics of pricing on marketplaces. Vestnik Tomskogo gosudarstvennogo universiteta Ekonomika. https://doi.org/10.17223/19988648/69/9
+Vomberg, A., Homburg, C., & Sarantopoulos, P. (2025). Algorithmic pricing: Effects on consumer trust and price search. International Journal of Research in Marketing, 42(4), 1166-1186. https://doi.org/doi.org/10.1016/j.ijresmar.2024.10.006
+Wakili, A. A., Alhasan, L. N., & Kamagata, A. H. (2025). QUALITY ASSURANCE PRACTICES IN AGILE METHODOLOGY. IJARKE Science & Technology Journal, 9(10), 141-149. https://doi.org/10.48550/arXiv.2411.05134
+Appendices
+APPENDIX 1: Gantt Chart
+Figure 64Gantt Chart for IR
+Figure 65Gantt Chart of Future Implementation Plan
+APPENDIX 2: Project Proposal Form (PPF)
+APPENDIX 3: Project Specification Form (PSF)
+APPENDIX 4: ETHICS FORM
+APPENDIX 5: Meeting Logs

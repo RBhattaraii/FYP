@@ -11,11 +11,20 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import * as SecureStore from 'expo-secure-store';
+import { useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import Svg, { Path } from 'react-native-svg';
 import { API_URL, fetchWithTimeout } from '../../constants/api';
-import { colors, typography, spacing, borderRadius, shadows } from '../../constants/theme';
+import { authStorage } from '../../lib/authStorage';
+
+const GoogleLogo = () => (
+  <Svg width="28" height="28" viewBox="0 0 24 24">
+    <Path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+    <Path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+    <Path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+    <Path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+  </Svg>
+);
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -26,10 +35,6 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   
-  // Focus states for iOS-like effects
-  const [isEmailFocused, setIsEmailFocused] = useState(false);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-
   // State for validation errors
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -45,10 +50,10 @@ export default function LoginScreen() {
   useEffect(() => {
     const loadRememberedUser = async () => {
       try {
-        const savedRememberMe = await SecureStore.getItemAsync('rememberMe');
+        const savedRememberMe = await authStorage.getItemAsync('rememberMe');
         if (savedRememberMe === 'true') {
           setRememberMe(true);
-          const savedEmail = await SecureStore.getItemAsync('savedEmail');
+          const savedEmail = await authStorage.getItemAsync('savedEmail');
           if (savedEmail) {
             setEmail(savedEmail);
           }
@@ -89,7 +94,10 @@ export default function LoginScreen() {
     setApiError('');
     
     try {
-      const response = await fetchWithTimeout(`${API_URL}/auth/login`, {
+      const isAdminLogin = email.trim() === 'admin@pricepilot.com';
+      const endpoint = isAdminLogin ? '/auth/admin-login' : '/auth/login';
+      
+      const response = await fetchWithTimeout(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,19 +111,26 @@ export default function LoginScreen() {
       const data = await response.json();
       
       if (response.ok) {
-        await SecureStore.setItemAsync('token', data.token);
-        await SecureStore.setItemAsync('email', email.trim());
+        await authStorage.setItemAsync('token', data.token);
+        await authStorage.setItemAsync('email', email.trim());
+        await authStorage.setItemAsync('role', data.role || 'user');
         
-        // Handle Remember Me securely
-        if (rememberMe) {
-          await SecureStore.setItemAsync('rememberMe', 'true');
-          await SecureStore.setItemAsync('savedEmail', email.trim());
-        } else {
-          await SecureStore.setItemAsync('rememberMe', 'false');
-          await SecureStore.deleteItemAsync('savedEmail');
+        if (data.full_name) {
+          await authStorage.setItemAsync('full_name', data.full_name);
+        }
+        if (data.phone) {
+          await authStorage.setItemAsync('phone', data.phone);
         }
         
-        router.replace('/(tabs)/home');
+        if (rememberMe) {
+          await authStorage.setItemAsync('rememberMe', 'true');
+          await authStorage.setItemAsync('savedEmail', email.trim());
+        } else {
+          await authStorage.setItemAsync('rememberMe', 'false');
+          await authStorage.deleteItemAsync('savedEmail');
+        }
+        // Redirect to index so the root routing logic (which handles profile completion and notifications) kicks in
+        router.replace('/');
       } else {
         setApiError(data.detail || 'Login failed. Please try again.');
         setPassword('');
@@ -134,10 +149,11 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <Stack.Screen options={{ headerShown: false }} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
+        style={styles.flex}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -146,145 +162,124 @@ export default function LoginScreen() {
         >
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.title}>Welcome back</Text>
+            <Text style={styles.title}>Sign In</Text>
             <Text style={styles.subtitle}>
-              Log in to compare prices, track deals, and save money on your favorite products.
+              Hi! Welcome back, you've been missed
             </Text>
           </View>
-          
+
           {/* API Error Message */}
           {apiError ? (
-            <View style={styles.errorContainer}>
-              <Ionicons name="alert-circle" size={20} color={colors.errorRed} />
-              <Text style={styles.errorText}>{apiError}</Text>
+            <View style={styles.errorBanner}>
+              <Ionicons name="alert-circle" size={18} color="#EF4444" />
+              <Text style={styles.errorBannerText}>{apiError}</Text>
             </View>
           ) : null}
-          
+
           {/* Email Input */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email address</Text>
-            <View style={[
-              styles.inputWrapper, 
-              isEmailFocused && styles.inputWrapperFocused,
-              emailError ? styles.inputWrapperError : null
-            ]}>
-              <Ionicons 
-                name="mail-outline" 
-                size={20} 
-                color={isEmailFocused ? colors.warningOrange : colors.gray400} 
-                style={styles.inputIcon} 
-              />
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Email</Text>
+            <View style={[styles.inputBox, emailError && styles.inputBoxError]}>
               <TextInput
                 style={styles.input}
-                placeholder="hello@example.com"
-                placeholderTextColor={colors.gray400}
+                placeholder="example@gmail.com"
+                placeholderTextColor="#999"
                 value={email}
-                onFocus={() => setIsEmailFocused(true)}
-                onBlur={() => setIsEmailFocused(false)}
-                onChangeText={(text) => {
-                  setEmail(text);
-                  setEmailError('');
-                  setApiError('');
-                }}
+                onChangeText={(text) => { setEmail(text); setEmailError(''); setApiError(''); }}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoComplete="email"
                 editable={!loading}
-                cursorColor={colors.warningOrange}
               />
             </View>
             {emailError ? <Text style={styles.fieldError}>{emailError}</Text> : null}
           </View>
-          
+
           {/* Password Input */}
-          <View style={styles.inputContainer}>
+          <View style={styles.fieldGroup}>
             <Text style={styles.label}>Password</Text>
-            <View style={[
-              styles.inputWrapper, 
-              isPasswordFocused && styles.inputWrapperFocused,
-              passwordError ? styles.inputWrapperError : null
-            ]}>
-              <Ionicons 
-                name="lock-closed-outline" 
-                size={20} 
-                color={isPasswordFocused ? colors.warningOrange : colors.gray400} 
-                style={styles.inputIcon} 
-              />
+            <View style={[styles.inputBox, passwordError && styles.inputBoxError]}>
               <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor={colors.gray400}
+                style={styles.inputPassword}
+                placeholder="****************"
+                placeholderTextColor="#999"
                 value={password}
-                onFocus={() => setIsPasswordFocused(true)}
-                onBlur={() => setIsPasswordFocused(false)}
-                onChangeText={(text) => {
-                  setPassword(text);
-                  setPasswordError('');
-                  setApiError('');
-                }}
+                onChangeText={(text) => { setPassword(text); setPasswordError(''); setApiError(''); }}
                 secureTextEntry={!showPassword}
                 autoCapitalize="none"
                 autoComplete="password"
                 editable={!loading}
-                cursorColor={colors.warningOrange}
               />
               <TouchableOpacity
-                style={styles.eyeIcon}
                 onPress={() => setShowPassword(!showPassword)}
                 disabled={loading}
                 activeOpacity={0.7}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 <Ionicons
-                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                  color={colors.gray400}
+                  name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+                  size={24}
+                  color="#1F2029"
                 />
               </TouchableOpacity>
             </View>
             {passwordError ? <Text style={styles.fieldError}>{passwordError}</Text> : null}
           </View>
-          
-          {/* Remember Me & Forgot Password */}
+
+          {/* Forgot Password Row */}
           <View style={styles.optionsRow}>
             <TouchableOpacity 
-              style={styles.rememberMeContainer}
-              onPress={() => setRememberMe(!rememberMe)}
+              disabled={loading} 
               activeOpacity={0.7}
-              disabled={loading}
+              onPress={() => router.push('/(auth)/forgot-password')}
             >
-              <View style={[styles.checkbox, rememberMe && styles.checkboxActive]}>
-                {rememberMe && <Ionicons name="checkmark" size={14} color={colors.white} />}
-              </View>
-              <Text style={styles.rememberMeText}>Remember me</Text>
-            </TouchableOpacity>
-            <TouchableOpacity disabled={loading} activeOpacity={0.7}>
-              <Text style={styles.forgotPasswordText}>Forgot password?</Text>
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
           </View>
-          
-          {/* Login Button */}
+
+          {/* Sign In Button */}
           <TouchableOpacity
-            style={[styles.button, loading ? styles.buttonDisabled : null]}
+            style={[styles.signInButton, loading && styles.signInButtonDisabled]}
             onPress={handleLogin}
             disabled={loading}
             activeOpacity={0.8}
           >
             {loading ? (
-              <ActivityIndicator color={colors.white} />
+              <ActivityIndicator color="#FFF" />
             ) : (
-              <Text style={styles.buttonText}>Log In</Text>
+              <Text style={styles.signInButtonText}>Sign In</Text>
             )}
           </TouchableOpacity>
-          
-          {/* Register Link */}
-          <View style={styles.registerContainer}>
-            <Text style={styles.registerText}>Don't have an account? </Text>
+
+          {/* Divider */}
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>Or sign in with</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          {/* Social Login Buttons */}
+          <View style={styles.socialRow}>
+            <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+              <Ionicons name="logo-apple" size={28} color="#000" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+              <GoogleLogo />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+              <Ionicons name="logo-facebook" size={28} color="#1877F2" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Sign Up Link */}
+          <View style={[styles.signUpRow, { paddingBottom: 40 }]}>
+            <Text style={styles.signUpText}>Don't have an account? </Text>
             <TouchableOpacity
               onPress={() => router.push('/(auth)/register')}
               disabled={loading}
               activeOpacity={0.7}
             >
-              <Text style={styles.registerLink}>Sign Up</Text>
+              <Text style={styles.signUpLink}>Sign Up</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -296,172 +291,183 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: '#FDFDFD', // Pure/very light background
   },
-  container: {
+  flex: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-    padding: spacing.xl,
-    paddingTop: 80,
-    paddingBottom: 40,
+    paddingHorizontal: 24,
+    paddingTop: 80, // Lots of top padding to match design
+    paddingBottom: 60, // Padding to keep it far from the bottom edge
   },
+
+  // ── Header ──
   header: {
-    marginBottom: spacing['4xl'],
     alignItems: 'center',
+    marginBottom: 40,
   },
   title: {
-    fontSize: typography.fontSize.h1,
-    fontFamily: typography.fontFamily.primary,
-    fontWeight: typography.fontWeight.bold,
-    color: colors.gray900,
-    marginBottom: spacing.sm,
-    textAlign: 'center',
-    letterSpacing: -0.5,
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 28,
+    color: '#1F2029',
+    marginBottom: 10,
   },
   subtitle: {
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
-    color: colors.gray600,
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
+    color: '#797979',
     textAlign: 'center',
-    lineHeight: typography.lineHeight.bodyLarge,
-    paddingHorizontal: spacing.lg,
+    lineHeight: 22,
   },
-  errorContainer: {
+
+  // ── Error Banner ──
+  errorBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FEF2F2',
-    padding: spacing.md,
-    borderRadius: borderRadius.large,
-    marginBottom: spacing.lg,
-    gap: spacing.sm,
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 16,
+    gap: 8,
     borderWidth: 1,
     borderColor: '#FEE2E2',
   },
-  errorText: {
+  errorBannerText: {
     flex: 1,
-    color: colors.errorRed,
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
+    color: '#EF4444',
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 13,
   },
-  inputContainer: {
-    marginBottom: spacing.lg,
+
+  // ── Form Fields ──
+  fieldGroup: {
+    marginBottom: 20,
   },
   label: {
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
-    fontWeight: typography.fontWeight.semibold,
-    color: colors.gray900,
-    marginBottom: spacing.sm,
-    marginLeft: spacing.xs,
+    fontFamily: 'Poppins_500Medium',
+    fontSize: 14,
+    color: '#1F2029',
+    marginBottom: 8,
+    marginLeft: 4,
   },
-  inputWrapper: {
+  inputBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.gray50,
-    borderWidth: 1,
-    borderColor: colors.gray100,
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.lg,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#EDEDED',
+    borderRadius: 30, // Pill shape
+    paddingHorizontal: 20,
     height: 56,
   },
-  inputWrapperFocused: {
-    borderColor: colors.warningOrange,
-    backgroundColor: colors.white,
-  },
-  inputWrapperError: {
-    borderColor: colors.errorRed,
-    backgroundColor: '#FEF2F2',
-  },
-  inputIcon: {
-    marginRight: spacing.sm,
+  inputBoxError: {
+    borderColor: '#EF4444',
   },
   input: {
     flex: 1,
-    fontSize: typography.fontSize.bodyLarge,
-    fontFamily: typography.fontFamily.primary,
-    color: colors.gray900,
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
+    color: '#1F2029',
   },
-  eyeIcon: {
-    padding: spacing.xs,
+  inputPassword: {
+    flex: 1,
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
+    color: '#1F2029',
+    letterSpacing: 2, // Spacing for asterisks
   },
   fieldError: {
-    color: colors.errorRed,
-    fontSize: typography.fontSize.caption,
-    fontFamily: typography.fontFamily.primary,
-    marginTop: spacing.xs,
-    marginLeft: spacing.md,
+    color: '#EF4444',
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 4,
   },
+
+  // ── Options (Forgot Password) ──
   optionsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing['2xl'],
-    paddingHorizontal: spacing.xs,
-  },
-  rememberMeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  checkbox: {
-    width: 22,
-    height: 22,
-    borderWidth: 2,
-    borderColor: colors.gray400,
-    borderRadius: 6,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  checkboxActive: {
-    backgroundColor: colors.warningOrange,
-    borderColor: colors.warningOrange,
-  },
-  rememberMeText: {
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
-    color: colors.gray600,
+    justifyContent: 'flex-end',
+    marginBottom: 35,
   },
   forgotPasswordText: {
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
-    color: colors.warningOrange,
-    fontWeight: typography.fontWeight.semibold,
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 13,
+    color: '#704F38', // Brown color
+    textDecorationLine: 'underline',
   },
-  button: {
-    backgroundColor: colors.warningOrange,
-    height: 56,
-    borderRadius: borderRadius.full,
-    alignItems: 'center',
+
+  // ── Sign In Button ──
+  signInButton: {
+    backgroundColor: '#704F38',
+    height: 54,
+    borderRadius: 27, // Pill shape
     justifyContent: 'center',
-    ...shadows.button,
+    alignItems: 'center',
+    marginBottom: 35,
   },
-  buttonDisabled: {
-    backgroundColor: colors.gray400,
-    ...shadows.card,
+  signInButtonDisabled: {
+    backgroundColor: '#9E9E9E',
   },
-  buttonText: {
-    color: colors.white,
-    fontSize: typography.fontSize.button,
-    fontFamily: typography.fontFamily.primary,
-    fontWeight: typography.fontWeight.bold,
+  signInButtonText: {
+    color: '#FFFFFF',
+    fontFamily: 'Poppins_400Regular', // Lighter font weight for elegance
+    fontSize: 16,
   },
-  registerContainer: {
+
+  // ── Divider ──
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#EEEEEE',
+  },
+  dividerText: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 12,
+    color: '#999',
+    marginHorizontal: 16,
+  },
+
+  // ── Social Buttons ──
+  socialRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: spacing['2xl'],
+    gap: 20,
+    marginBottom: 40,
   },
-  registerText: {
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
-    color: colors.gray600,
+  socialButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  registerLink: {
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
-    color: colors.warningOrange,
-    fontWeight: typography.fontWeight.bold,
+
+  // ── Sign Up Link ──
+  signUpRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  signUpText: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 13,
+    color: '#1F2029',
+  },
+  signUpLink: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 13,
+    color: '#704F38', // Brown color
+    textDecorationLine: 'underline',
   },
 });

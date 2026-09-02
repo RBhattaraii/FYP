@@ -1,0 +1,537 @@
+          { paddingBottom: insets.bottom + 140 },
+        {/* Top Area: Navigation and Actions */}
+        <View style={[
+          styles.topArea, 
+          { marginTop: Math.max(insets.top, spacing.md) },
+          isTabletOrWeb && { maxWidth: contentMaxWidth, alignSelf: 'center', left: 'auto', right: 'auto', width: '100%' }
+        ]}>
+          <TouchableOpacity 
+            style={styles.iconButton} 
+            onPress={() => {
+              if (router.canGoBack()) {
+                router.back();
+              } else {
+                router.replace('/');
+              }
+            }}
+          >
+            <Ionicons name="chevron-back" size={24} color={colors.gray900} />
+          </TouchableOpacity>
+          
+          <View style={styles.actionStack}>
+            <TouchableOpacity style={styles.iconButton}>
+              <Ionicons name="share-outline" size={22} color={colors.gray900} />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.iconButton, { marginTop: spacing.md }]}
+              onPress={handleAddToFavorites}
+              activeOpacity={0.7}
+            >
+              <Ionicons 
+                name={isInFavorites ? "heart" : "heart-outline"} 
+                size={22} 
+                color={isInFavorites ? colors.errorRed : colors.gray900} 
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Product Gallery Section */}
+        <View style={[styles.gallerySection, isTabletOrWeb && { backgroundColor: 'transparent', borderBottomWidth: 0 }]}>
+          <ScrollView 
+            horizontal 
+            pagingEnabled 
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+            snapToInterval={windowWidth}
+            decelerationRate="fast"
+          >
+            {productImages.map((img, index) => (
+              <View key={index} style={{ width: windowWidth, alignItems: 'center', justifyContent: 'center' }}>
+                <Image 
+                  source={{ uri: img }} 
+                  style={{ width: imageSize, height: imageSize, borderRadius: isTabletOrWeb ? borderRadius.large : 0 }} 
+                  resizeMode="contain"
+                />
+              </View>
+            ))}
+          </ScrollView>
+          
+          {/* Pagination Indicators (only show if multiple images) */}
+          {productImages.length > 1 && (
+            <View style={styles.paginationContainer}>
+              {productImages.map((_, index) => (
+                <View 
+                  key={index} 
+                  style={[
+                    styles.paginationDot, 
+                    activeImageIndex === index && styles.paginationDotActive
+                  ]} 
+                />
+              ))}
+            </View>
+          )}
+        </View>
+
+        {/* Product Information Block */}
+        <View style={styles.infoBlock}>
+          {/* Header & Title Area */}
+          <View style={styles.headerRow}>
+            <Text style={styles.brand}>{product.store_name.toUpperCase()}</Text>
+            {product.discount_percent && product.discount_percent > 0 && (
+              <View style={styles.discountBadge}>
+                <Text style={styles.discountText}>{product.discount_percent}% OFF</Text>
+              </View>
+            )}
+          
+          {/* Price Information */}
+          <View style={styles.priceRow}>
+            <Text style={styles.currentPrice}>{formattedPrice}</Text>
+            {formattedOriginalPrice && (
+              <Text style={styles.originalPrice}>{formattedOriginalPrice}</Text>
+            )}
+          </View>
+
+          {product.category && (
+            <View style={styles.categoryContainer}>
+              <Ionicons name="pricetag-outline" size={16} color={colors.gray600} />
+              <Text style={styles.categoryText}>{product.category}</Text>
+            </View>
+          )}
+
+          {/* Information Tabs */}
+            <TouchableOpacity style={styles.actionButton} onPress={openStore} activeOpacity={0.7}>
+              <Ionicons name="information-circle-outline" size={22} color={colors.primaryIndigo} />
+              <Text style={styles.actionButtonText}>View Store</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.actionButton} onPress={handlePriceHistoryPress} activeOpacity={0.7}>
+              <Ionicons name="analytics-outline" size={22} color={colors.primaryIndigo} />
+              <Text style={styles.actionButtonText}>Price History</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.actionButton} onPress={handleSetPriceAlert} disabled={isCreating} activeOpacity={0.7}>
+                <ActivityIndicator size="small" color={colors.primaryIndigo} />
+                <Ionicons name="notifications-outline" size={22} color={colors.primaryIndigo} />
+              <Text style={styles.actionButtonText}>{isCreating ? 'Creating...' : 'Set Alert'}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.actionButton, { borderRightWidth: 0 }]} onPress={handleComparePress} activeOpacity={0.7}>
+              <Ionicons name="git-compare-outline" size={22} color={colors.primaryIndigo} />
+        </View>
+
+        {/* Store Information Section */}
+        <View style={styles.storeSection}>
+          <Text style={styles.storeSectionTitle}>Available At</Text>
+          
+          {/* Main Store Card */}
+          <TouchableOpacity 
+            style={styles.storeCard}
+            onPress={openStore}
+            activeOpacity={0.7}
+          >
+            <View style={styles.storeCardTop}>
+              <Text style={styles.storeCardPrice}>{formattedPrice}</Text>
+              <View style={styles.storeInfoContainer}>
+                <Text style={styles.storeName}>{product.store_name}</Text>
+              </View>
+              <View style={styles.expandButton}>
+                <Ionicons name="chevron-forward" size={20} color={colors.gray400} />
+              </View>
+            </View>
+            
+            <View style={styles.storeCardBottom}>
+              <Text style={styles.storeVariant}>View on {product.store_name}</Text>
+              <Text style={[styles.storeStatus, styles.statusInStock]}>
+                Best Deal
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Alternative Offers Cards */}
+          {product.alternative_offers && product.alternative_offers.map((offer: any, idx: number) => {
+            const handleOpenAltStore = () => {
+              if (offer.product_url) {
+                // If it is a relative url, append base url
+                let targetUrl = offer.product_url;
+                if (targetUrl.startsWith('/')) {
+                  const key = offer.store_name.toLowerCase().replace(' store', '');
+                  const baseUrl = STORE_BASE_URLS[key] || '';
+                  targetUrl = `${baseUrl}${targetUrl}`;
+                }
+                Linking.openURL(targetUrl).catch((err) => {
+                  console.error('Failed to open link:', err);
+                  Alert.alert('Error', 'Unable to open store link.');
+                });
+              }
+            };
+            
+            return (
+              <TouchableOpacity 
+                key={idx}
+                style={[styles.storeCard, { marginTop: spacing.md }]}
+                onPress={handleOpenAltStore}
+                activeOpacity={0.7}
+              >
+                <View style={styles.storeCardTop}>
+                  <Text style={styles.storeCardPrice}>Rs {offer.price.toLocaleString()}</Text>
+                  <View style={styles.storeInfoContainer}>
+                    <Text style={styles.storeName}>{offer.store_name}</Text>
+                  </View>
+                  <View style={styles.expandButton}>
+                    <Ionicons name="chevron-forward" size={20} color={colors.gray400} />
+                  </View>
+                </View>
+                
+                <View style={styles.storeCardBottom}>
+                  <Text style={styles.storeVariant}>View on {offer.store_name}</Text>
+                  {offer.discount_percent && offer.discount_percent > 0 ? (
+                    <Text style={[styles.storeStatus, { color: colors.errorRed, backgroundColor: 'rgba(239, 68, 68, 0.08)' }]}>
+                      {offer.discount_percent}% OFF
+                    </Text>
+                  ) : (
+                    <Text style={[styles.storeStatus, styles.statusInStock]}>
+                      Available
+                    </Text>
+                  )}
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+      {/* Fixed Bottom Action Bar */}
+      <View style={[
+        styles.bottomBar, 
+        { paddingBottom: Math.max(insets.bottom, spacing.md) },
+        isTabletOrWeb && {
+          maxWidth: contentMaxWidth,
+          alignSelf: 'center',
+          left: spacing.lg,
+          right: spacing.lg,
+          borderRadius: 24,
+          bottom: 20,
+          borderWidth: 1,
+          borderColor: colors.gray200,
+          backgroundColor: colors.glassWhiteHeavy,
+          ...shadows.glow
+        }
+      ]}>
+        <TouchableOpacity 
+          style={[styles.primaryButton, { backgroundColor: colors.white, borderWidth: 1, borderColor: colors.gray300, marginRight: spacing.sm, flex: 0.8 }]}
+          onPress={handleAddToFavorites}
+        >
+          <Ionicons name="heart-outline" size={20} color={colors.gray900} style={{ marginRight: 8 }} />
+          <Text style={[styles.primaryButtonText, { color: colors.gray900 }]}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.primaryButton, { flex: 1, backgroundColor: colors.primaryIndigo }]}
+          onPress={openStore}
+        >
+          <Text style={styles.primaryButtonText}>View on Store</Text>
+    backgroundColor: colors.white,
+    paddingHorizontal: spacing.xl,
+    marginTop: spacing.md,
+    fontSize: typography.fontSize.body,
+    color: colors.gray600,
+    fontWeight: typography.fontWeight.medium,
+    fontSize: typography.fontSize.h2,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
+    fontSize: typography.fontSize.body,
+    color: colors.gray600,
+    textAlign: 'center',
+    marginBottom: spacing.lg,
+    backgroundColor: colors.primary,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+    borderRadius: borderRadius.full,
+    marginTop: spacing.md,
+    color: colors.white,
+    fontSize: typography.fontSize.button,
+    fontWeight: typography.fontWeight.semibold,
+  },
+  topArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingHorizontal: spacing.lg,
+  iconButton: {
+    backgroundColor: colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...shadows.card,
+  },
+  actionStack: {
+    alignItems: 'center',
+  },
+  gallerySection: {
+    paddingTop: 80, // Space for the absolute top area
+    alignItems: 'center',
+    backgroundColor: colors.gray50,
+    paddingBottom: spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray100,
+  },
+  imageContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  productImage: {
+    width: '100%',
+    height: '100%',
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: spacing.md,
+  },
+  paginationDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.gray200,
+    marginHorizontal: 4,
+  },
+  paginationDotActive: {
+    width: 24,
+    backgroundColor: colors.primaryIndigo,
+  },
+  infoBlock: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.sm, // Reduced space
+  },
+  title: {
+    fontSize: typography.fontSize.h2,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+    textAlign: 'left',
+    lineHeight: typography.lineHeight.h2,
+    marginTop: spacing.xs,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.xs,
+  },
+  brand: {
+    fontSize: typography.fontSize.caption,
+    color: colors.primary,
+    fontWeight: typography.fontWeight.bold,
+    letterSpacing: 1,
+  },
+  discountBadge: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs / 2,
+    borderRadius: borderRadius.small,
+  },
+  discountText: {
+    color: colors.white,
+    fontSize: typography.fontSize.caption,
+    fontWeight: typography.fontWeight.bold,
+  },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.md,
+    gap: spacing.sm,
+  },
+  currentPrice: {
+    fontSize: typography.fontSize.h2,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+  },
+  originalPrice: {
+    fontSize: typography.fontSize.body,
+    color: colors.gray400,
+    textDecorationLine: 'line-through',
+  },
+  categoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.sm,
+    gap: spacing.xs,
+    fontSize: typography.fontSize.body,
+    color: colors.gray600,
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    fontSize: typography.fontSize.body,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+    marginLeft: 4,
+  },
+  reviewsText: {
+    fontSize: typography.fontSize.caption,
+    color: colors.gray400,
+    marginLeft: 4,
+    backgroundColor: colors.white,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray100,
+    ...shadows.card,
+  },
+  bottomPriceContainer: {
+    flex: 1,
+  },
+  bottomPriceLabel: {
+    fontSize: typography.fontSize.caption,
+    color: colors.gray400,
+  },
+  bottomPriceValue: {
+    fontSize: typography.fontSize.h2,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+  },
+  primaryButton: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+    borderRadius: borderRadius.full,
+    ...shadows.button,
+  },
+  primaryButtonText: {
+    color: colors.white,
+    fontSize: typography.fontSize.button,
+    fontWeight: typography.fontWeight.semibold,
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.large,
+    paddingVertical: spacing.md,
+    marginTop: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.gray200,
+    ...shadows.card,
+    paddingHorizontal: spacing.xs,
+    borderRightColor: colors.gray100,
+    fontWeight: typography.fontWeight.semibold,
+    color: colors.gray700,
+    marginTop: spacing.xs,
+  },
+  storeSection: {
+    paddingHorizontal: spacing.lg,
+    marginTop: spacing.xs,
+  },
+  storeSectionTitle: {
+    fontSize: typography.fontSize.bodyLarge,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+    marginBottom: spacing.md,
+  },
+  storeCard: {
+    backgroundColor: colors.gray50,
+    borderRadius: borderRadius.medium,
+    padding: spacing.md,
+  },
+  storeCardTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  storeCardPrice: {
+    fontSize: typography.fontSize.h3,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+    flex: 1,
+  },
+  storeInfoContainer: {
+    flex: 2,
+    alignItems: 'flex-end',
+    paddingRight: spacing.sm,
+  },
+  storeName: {
+    fontSize: typography.fontSize.body,
+    fontWeight: typography.fontWeight.semibold,
+    color: colors.gray900,
+  },
+  expandButton: {
+    padding: spacing.xs,
+  },
+  storeCardBottom: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: spacing.sm,
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray100,
+  },
+  storeVariant: {
+    fontSize: typography.fontSize.caption,
+    color: colors.gray600,
+  },
+  storeStatus: {
+    fontSize: typography.fontSize.caption,
+    fontWeight: typography.fontWeight.bold,
+  },
+  statusInStock: {
+    color: colors.successGreen,
+  },
+  statusOut: {
+    color: colors.errorRed,
+  },
+  offersSection: {
+    paddingHorizontal: spacing.lg,
+    marginTop: spacing.xs,
+  },
+  offersHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  offersCount: {
+    fontSize: typography.fontSize.bodyLarge,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+  },
+  showAllLink: {
+    fontSize: typography.fontSize.body,
+    fontWeight: typography.fontWeight.medium,
+    color: colors.warningOrange,
+  },
+  offersList: {
+    gap: spacing.md,
+  },
+  offerCard: {
+    backgroundColor: colors.gray50,
+    borderRadius: borderRadius.medium,
+    padding: spacing.md,
+  },
+  offerCardTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  offerPrice: {
+    fontSize: typography.fontSize.h3,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.gray900,
+    flex: 1,
+  },
+  offerCardBottom: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: spacing.sm,
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray100,
+  },
+  offerVariant: {
+    fontSize: typography.fontSize.caption,
+    color: colors.gray600,
+  },
+  offerStatus: {
+    fontSize: typography.fontSize.caption,
+    fontWeight: typography.fontWeight.bold,

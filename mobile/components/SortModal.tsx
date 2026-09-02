@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, TouchableWithoutFeedback, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography, spacing, borderRadius } from '../constants/theme';
 
@@ -25,13 +25,20 @@ export default function SortModal({ visible, onClose, selectedSort, onSelectSort
     <Modal
       visible={visible}
       transparent={true}
-      animationType="fade"
+      animationType="slide"
       onRequestClose={onClose}
     >
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>
           <TouchableWithoutFeedback>
             <View style={styles.modalContainer}>
+              <View style={styles.header}>
+                <TouchableOpacity onPress={onClose} style={styles.backBtn}>
+                  <Ionicons name="close" size={24} color="#111111" />
+                </TouchableOpacity>
+                <Text style={styles.title}>Sort By</Text>
+                <View style={{ width: 24 }} />
+              </View>
               {sortOptions.map((option) => {
                 const isSelected = selectedSort === option;
                 return (
@@ -61,22 +68,33 @@ export default function SortModal({ visible, onClose, selectedSort, onSelectSort
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    alignItems: 'center',
-    paddingTop: 120, // Moved slightly up to anchor closer to search bar
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
   },
   modalContainer: {
-    width: '100%',
     backgroundColor: colors.white,
-    borderBottomLeftRadius: borderRadius.large,
-    borderBottomRightRadius: borderRadius.large,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.xl,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 5,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    width: '100%',
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEEEEE',
+    marginBottom: spacing.md,
+  },
+  backBtn: {
+    padding: spacing.xs,
+  },
+  title: {
+    fontSize: typography.fontSize.h3,
+    fontWeight: typography.fontWeight.semibold,
+    color: colors.gray900,
   },
   sortRow: {
     flexDirection: 'row',

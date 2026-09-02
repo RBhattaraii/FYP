@@ -5,7 +5,6 @@ import requests
 from bs4 import BeautifulSoup
 
 from scrapers.utils import clean_price, calculate_discount, USER_AGENT
-from scrapers.daraz.daraz_scraper import _executor
 
 async def async_scrape_neostore(search_query: str):
     """
@@ -25,7 +24,7 @@ async def async_scrape_neostore(search_query: str):
     try:
         loop = asyncio.get_event_loop()
         response = await loop.run_in_executor(
-            _executor, 
+            None, 
             lambda: requests.get(url, headers=headers, timeout=15)
         )
         

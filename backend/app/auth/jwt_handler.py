@@ -7,6 +7,10 @@ import os
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from dotenv import load_dotenv
+from fastapi import HTTPException, Depends, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from typing import Optional
+import asyncpg
 
 # Load environment variables
 load_dotenv()
@@ -16,17 +20,22 @@ JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", 60))
 ALGORITHM = "HS256"  # HMAC with SHA-256
 
+# Security scheme for FastAPI
+security = HTTPBearer()
 
-def create_access_token(user_id: str) -> str:
+
+def create_access_token(user_id: str, additional_claims: dict = None) -> str:
     """
     Create a JWT access token for a user.
     
     The token contains:
     - sub (subject): User's ID
     - exp (expiry): When the token expires
+    - any additional claims (e.g., role, email)
     
     Args:
         user_id: User's unique ID (UUID as string)
+        additional_claims: Optional dict of additional claims to include in token
     
     Returns:
         str: Encoded JWT token
@@ -34,6 +43,9 @@ def create_access_token(user_id: str) -> str:
     Example:
         token = create_access_token("550e8400-e29b-41d4-a716-446655440000")
         # Returns: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        
+        token = create_access_token("admin", {"role": "admin", "email": "admin@example.com"})
+        # Returns token with role claim
     """
     # Calculate expiry time
     expire = datetime.utcnow() + timedelta(minutes=JWT_EXPIRE_MINUTES)
@@ -44,6 +56,10 @@ def create_access_token(user_id: str) -> str:
         "sub": user_id,  # Subject: who the token is for
         "exp": expire    # Expiry: when the token expires
     }
+    
+    # Add additional claims if provided
+    if additional_claims:
+        payload.update(additional_claims)
     
     # Encode the payload into a JWT token
     token = jwt.encode(payload, JWT_SECRET, algorithm=ALGORITHM)
@@ -82,6 +98,100 @@ def verify_access_token(token: str) -> str:
         
     except JWTError:
         raise JWTError("Could not validate credentials")
+
+
+def decode_access_token(token: str) -> dict:
+    """
+    Decode a JWT token and return the full payload.
+    
+    This is similar to verify_access_token but returns the entire payload
+    instead of just the user_id. Useful when you need access to all token data.
+    
+    Args:
+        token: JWT token string
+    
+    Returns:
+        dict: Token payload containing all claims (sub, exp, etc.)
+    
+    Raises:
+        JWTError: If token is invalid or expired
+    
+    Example:
+        payload = decode_access_token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+        # Returns: {"sub": "user-id", "exp": 1234567890}
+        user_id = payload.get("user_id") or payload.get("sub")
+    """
+    try:
+        # Decode the token
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM])
+        
+        # Add user_id to payload for convenience (copy of sub)
+        if "sub" in payload:
+            payload["user_id"] = payload["sub"]
+        
+        return payload
+        
+    except JWTError as e:
+        raise JWTError(f"Could not validate credentials: {str(e)}")
+
+
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+    """
+    FastAPI dependency to get current user from JWT token.
+    This is used for protected endpoints that require authentication.
+    
+    Usage:
+        @app.get("/protected")
+        async def protected_endpoint(current_user: dict = Depends(get_current_user)):
+            user_id = current_user["user_id"]
+    
+    Returns:
+        dict: User data including user_id
+    
+    Raises:
+        HTTPException: 401 if token is invalid or missing
+    """
+    try:
+        token = credentials.credentials
+        payload = decode_access_token(token)
+        return payload
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+async def get_current_user_optional(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(HTTPBearer(auto_error=False))
+) -> Optional[dict]:
+    """
+    FastAPI dependency to optionally get current user from JWT token.
+    This is used for endpoints that work for both authenticated and anonymous users.
+    
+    Usage:
+        @app.get("/optional-auth")
+        async def optional_endpoint(current_user: Optional[dict] = Depends(get_current_user_optional)):
+            if current_user:
+                user_id = current_user["user_id"]
+                # Do something for authenticated user
+            else:
+                # Do something for anonymous user
+    
+    Returns:
+        dict or None: User data if authenticated, None if anonymous
+    """
+    if not credentials:
+        return None
+    
+    try:
+        token = credentials.credentials
+        payload = decode_access_token(token)
+        return payload
+    except JWTError:
+        # Don't raise error for optional auth - just return None
+        return None
 
 
 # ============================================================================

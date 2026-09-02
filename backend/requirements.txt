@@ -1,7 +1,6 @@
 fastapi
 uvicorn
 asyncpg
-pymongo[srv]==4.6.0
 python-jose[cryptography]
 passlib[bcrypt]
 bcrypt==4.0.1
@@ -11,3 +10,7 @@ slowapi
 python-multipart
 certifi
 playwright==1.52.0
+apscheduler==3.10.4
+aiohttp==3.9.1
+beautifulsoup4==4.12.2
+lxml==4.9.3

@@ -1,61 +1,23 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image, SafeAreaView, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { authStorage } from '../lib/authStorage';
 import { colors, typography, spacing, borderRadius, shadows } from '../constants/theme';
 import FilterModal, { FilterState } from '../components/FilterModal';
 import SortModal from '../components/SortModal';
 
-const searchHistory = ['Electronics', 'Pants', 'Long Shirt', 'Long Shirt'];
+const RECENT_SEARCHES_KEY = 'pricepilot_recent_searches';
 
-const verticalProducts = [
-  {
-    id: 'v1',
-    title: 'BMW i8 2023',
-    subtitle: 'Lisbon, Portugal',
-    price: 200,
-    unit: 'Week',
-    rating: 4.5,
-    available: true,
-    image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=400&fit=crop',
-    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop',
-    brand: 'BMW',
-    condition: 'New'
-  },
-  {
-    id: 'v2',
-    title: 'Toyota Camry',
-    subtitle: 'Porto, Portugal',
-    price: 80,
-    unit: 'Week',
-    rating: 4.8,
-    available: true,
-    image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&h=400&fit=crop',
-    avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop',
-    brand: 'Toyota',
-    condition: 'Used'
-  },
-  {
-    id: 'v3',
-    title: 'Ferrari F8',
-    subtitle: 'Faro, Portugal',
-    price: 800,
-    unit: 'Week',
-    rating: 5.0,
-    available: false,
-    image: 'https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=800&h=400&fit=crop',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-    brand: 'Ferrari',
-    condition: 'New'
-  }
-];
+const POPULAR_SEARCHES = ['Gaming Laptop', 'Wireless Earbuds', 'Smartphone', 'Mechanical Keyboard'];
 
 const initialFilterState: FilterState = {
   type: 'Products',
   platforms: [],
   categories: [],
   minPrice: '0',
-  maxPrice: '16000',
+  maxPrice: '1600000',
 };
 
 export default function SearchScreen() {
@@ -65,11 +27,69 @@ export default function SearchScreen() {
   const [isSortVisible, setIsSortVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState('Relevance');
   const [filters, setFilters] = useState<FilterState>(initialFilterState);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+
+  useEffect(() => {
+    loadRecentSearches();
+  }, []);
+
+  const loadRecentSearches = async () => {
+    try {
+      const stored = await authStorage.getItemAsync(RECENT_SEARCHES_KEY);
+      if (stored) {
+        setRecentSearches(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.error('Failed to load recent searches', e);
+    }
+  };
+
+  const saveRecentSearch = async (query: string) => {
+    if (!query.trim()) return;
+    try {
+      const updatedSearches = [query, ...recentSearches.filter(s => s !== query)].slice(0, 10);
+      setRecentSearches(updatedSearches);
+      await authStorage.setItemAsync(RECENT_SEARCHES_KEY, JSON.stringify(updatedSearches));
+    } catch (e) {
+      console.error('Failed to save recent search', e);
+    }
+  };
+
+  const clearRecentSearches = async () => {
+    try {
+      await authStorage.deleteItemAsync(RECENT_SEARCHES_KEY);
+      setRecentSearches([]);
+    } catch (e) {
+      console.error('Failed to clear recent searches', e);
+    }
+  };
+
+  const removeRecentSearch = async (query: string) => {
+    try {
+      const updated = recentSearches.filter(s => s !== query);
+      setRecentSearches(updated);
+      await authStorage.setItemAsync(RECENT_SEARCHES_KEY, JSON.stringify(updated));
+    } catch (e) {
+      console.error('Failed to remove recent search', e);
+    }
+  };
+
+  const executeSearch = (query: string) => {
+    if (query.trim().length > 0) {
+      saveRecentSearch(query.trim());
+      router.push({ 
+        pathname: '/search-results', 
+        params: { 
+          query: query.trim(),
+          filters: JSON.stringify(filters),
+          sort: selectedSort
+        } 
+      });
+    }
+  };
 
   const handleSearch = () => {
-    if (searchQuery.trim().length > 0) {
-      router.push({ pathname: '/search-results', params: { query: searchQuery } });
-    }
+    executeSearch(searchQuery);
   };
 
   const handleApplyFilters = (newFilters: FilterState) => {
@@ -80,121 +100,100 @@ export default function SearchScreen() {
 
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.headerIcon}>
-            <Ionicons name="chevron-back" size={24} color={colors.gray900} />
+          <TouchableOpacity 
+            onPress={() => {
+              if (router.canGoBack()) {
+                router.back();
+              } else {
+                router.replace('/');
+              }
+            }} 
+            style={styles.headerIcon}
+          >
+            <Ionicons name="arrow-back" size={20} color={'#111111'} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Search</Text>
-          <TouchableOpacity style={styles.headerIcon}>
-            <Ionicons name="notifications-outline" size={24} color={colors.gray900} />
-          </TouchableOpacity>
+          <View style={styles.headerPlaceholder} />
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           {/* Search Input */}
           <View style={styles.searchBarContainer}>
-            <TouchableOpacity style={styles.sortActionIcon} onPress={() => setIsSortVisible(true)}>
-              <Ionicons name="options-outline" size={20} color={colors.gray900} />
-            </TouchableOpacity>
-            
+            <Ionicons name="search-outline" size={20} color={'#757575'} style={styles.searchIcon} />
             <TextInput
               style={styles.searchInput}
-              placeholder="Search your item"
-              placeholderTextColor={colors.gray400}
+              placeholder="Search"
+              placeholderTextColor={'#BDBDBD'}
               value={searchQuery}
               onChangeText={setSearchQuery}
               onSubmitEditing={handleSearch}
               returnKeyType="search"
               autoFocus
             />
-            <TouchableOpacity style={styles.actionIcon} onPress={() => setIsFilterVisible(true)}>
-              <Ionicons name="funnel-outline" size={20} color={'#E53935'} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionIcon} onPress={handleSearch}>
-              <Ionicons name="search-outline" size={20} color={colors.gray900} />
-            </TouchableOpacity>
           </View>
 
-          {/* Recent Comparisons */}
+          {!searchQuery.trim() && (
+            <>
+              {/* Popular Searches */}
               <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Recent Comparisons</Text>
-                <TouchableOpacity>
-                  <Text style={styles.clearText}>All Clear</Text>
-                </TouchableOpacity>
+                <Text style={styles.sectionTitle}>Popular Searches</Text>
               </View>
-
-              <View style={styles.historyContainer}>
-                {searchHistory.map((item, index) => (
-                  <TouchableOpacity key={index} style={styles.historyPill}>
-                    <Text style={styles.historyText}>{item}</Text>
-                    <Ionicons name="close" size={16} color={colors.gray400} style={styles.closeIcon} />
+              <View style={styles.popularTagsContainer}>
+                {POPULAR_SEARCHES.map((item, index) => (
+                  <TouchableOpacity 
+                    key={index} 
+                    style={styles.popularTag}
+                    onPress={() => {
+                      setSearchQuery(item);
+                      executeSearch(item);
+                    }}
+                  >
+                    <Text style={styles.popularTagText}>{item}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
 
-              {/* Trending Comparisons (New Vertical Design) */}
-              <View style={[styles.sectionHeader, styles.recentlySearchHeader]}>
-                <Text style={styles.sectionTitle}>Trending Comparisons</Text>
-                <TouchableOpacity>
-                  <Text style={styles.viewAllText}>View all</Text>
-                </TouchableOpacity>
-              </View>
+              <View style={styles.divider} />
 
-              <View style={styles.verticalListContainer}>
-                {verticalProducts.length === 0 && <Text style={styles.emptyText}>No items found.</Text>}
-                {verticalProducts.map((product) => (
-                  <View key={product.id} style={styles.verticalCard}>
-                    {/* Top Section */}
-                    <View style={styles.topSection}>
-                      <Image source={{ uri: product.image }} style={styles.carImage} />
-                      
-                      {/* Rating Pill */}
-                      <View style={styles.ratingPill}>
-                        <Image source={{ uri: product.avatar }} style={styles.avatar} />
-                        <Text style={styles.ratingPillText}>{product.rating}</Text>
-                        <Ionicons name="star" size={12} color={colors.gray900} />
-                      </View>
-
-                      {/* Heart Icon */}
-                      <TouchableOpacity style={styles.heartButton}>
-                        <Ionicons name="heart-outline" size={18} color={colors.gray900} />
-                      </TouchableOpacity>
-
-                      {/* Pagination Dots */}
-                      <View style={styles.paginationDots}>
-                        {[1, 2, 3, 4, 5, 6].map((dot, index) => (
-                          <View key={index} style={[styles.dot, index === 1 && styles.activeDot]} />
-                        ))}
-                      </View>
-                    </View>
-
-                    <View style={styles.separator} />
-
-                    {/* Bottom Section */}
-                    <View style={styles.bottomSection}>
-                      <View style={styles.titleRow}>
-                        <Text style={styles.verticalTitle}>{product.title}</Text>
-                        <View style={styles.availabilityContainer}>
-                          <Text style={styles.availabilityText}>{product.available ? 'Available' : 'Unavailable'}</Text>
-                          {product.available && <View style={styles.availabilityDot} />}
-                        </View>
-                      </View>
-
-                      <View style={styles.subtitleRow}>
-                        <Text style={styles.verticalSubtitle}>{product.subtitle} • {product.condition}</Text>
-                      </View>
-
-                      <View style={styles.priceRow}>
-                        <Text style={styles.verticalPrice}>€ {product.price}</Text>
-                        <Text style={styles.verticalUnit}>{product.unit}</Text>
-                      </View>
-                    </View>
+              {/* Recent Searches */}
+              {recentSearches.length > 0 && (
+                <>
+                  <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>Recent Searches</Text>
+                    <TouchableOpacity onPress={clearRecentSearches}>
+                      <Text style={styles.clearText}>Clear</Text>
+                    </TouchableOpacity>
                   </View>
-                ))}
-              </View>
+                  <View style={styles.historyList}>
+                    {recentSearches.map((item, index) => (
+                      <View key={index} style={styles.historyItem}>
+                        <TouchableOpacity 
+                          style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
+                          onPress={() => {
+                            setSearchQuery(item);
+                            executeSearch(item);
+                          }}
+                        >
+                          <Ionicons name="time-outline" size={18} color={'#BDBDBD'} style={{ marginRight: 12 }} />
+                          <Text style={styles.historyText}>{item}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                          style={styles.closeIconCircle}
+                          onPress={() => removeRecentSearch(item)}
+                        >
+                          <Ionicons name="close" size={14} color="#757575" />
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </View>
+                </>
+              )}
+            </>
+          )}
 
         </ScrollView>
         <FilterModal 
@@ -218,7 +217,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.white,
-    paddingTop: Platform.OS === 'android' ? 25 : 0,
   },
   container: {
     flex: 1,
@@ -228,97 +226,111 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+    paddingHorizontal: 24,
+    paddingBottom: 16,
+    paddingTop: 8,
   },
   headerTitle: {
-    fontSize: typography.fontSize.h2,
-    fontWeight: typography.fontWeight.semibold,
-    color: colors.gray900,
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 16,
+    color: '#111111',
   },
   headerIcon: {
-    width: 40,
+    width: 40, // Slightly smaller to match screenshot
     height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  headerPlaceholder: {
+    width: 40, // Matches headerIcon to perfectly center the title
   },
   scrollContent: {
-    paddingBottom: spacing.xl,
+    paddingBottom: 40,
   },
   searchBarContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.gray50,
-    marginHorizontal: spacing.lg,
-    borderRadius: borderRadius.medium,
-    height: 50,
-    paddingHorizontal: spacing.md,
-    marginTop: spacing.sm,
-    marginBottom: spacing.xl,
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 24,
+    borderRadius: 9999,
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
+    height: 48, // Slightly shorter, like the screenshot
+    paddingHorizontal: 16,
+    marginTop: 12, // Tighter margin
+    marginBottom: 24, // Tighter margin
   },
   searchIcon: {
-    marginRight: spacing.sm,
+    marginRight: 10,
   },
   searchInput: {
     flex: 1,
-    fontSize: typography.fontSize.body,
-    color: colors.gray900,
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
+    color: '#111111',
     height: '100%',
-  },
-  actionIcon: {
-    padding: spacing.xs,
-    marginLeft: spacing.xs,
-  },
-  sortActionIcon: {
-    padding: spacing.xs,
-    marginRight: spacing.sm,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    marginBottom: spacing.md,
-  },
-  recentlySearchHeader: {
-    marginTop: spacing.xl,
+    paddingHorizontal: 24,
+    marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: typography.fontSize.bodyLarge,
-    fontWeight: typography.fontWeight.bold,
-    color: colors.gray900,
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 16,
+    color: '#111111',
   },
   clearText: {
-    fontSize: typography.fontSize.body,
-    color: colors.gray600,
+    fontFamily: 'Poppins_500Medium',
+    fontSize: 14,
+    color: '#111111', // Changed to black to match the monochromatic theme
   },
-  viewAllText: {
-    fontSize: typography.fontSize.body,
-    color: colors.primary,
+  divider: {
+    height: 1,
+    backgroundColor: '#EEEEEE',
+    marginHorizontal: 24,
+    marginBottom: 12,
   },
-  historyContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: spacing.lg,
-    gap: spacing.sm,
+  historyList: {
+    paddingHorizontal: 24,
   },
-  historyPill: {
+  historyItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderWidth: 1,
-    borderColor: colors.gray100,
-    borderRadius: borderRadius.medium,
-    backgroundColor: colors.white,
+    justifyContent: 'space-between',
+    paddingVertical: 12, // Tighter vertical spacing
   },
   historyText: {
-    fontSize: typography.fontSize.body,
-    color: colors.gray600,
-    marginRight: spacing.sm,
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
+    color: '#757575',
   },
-  closeIcon: {
-    opacity: 0.5,
+  closeIconCircle: {
+    padding: spacing.xs,
+  },
+  popularTagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 24,
+    marginBottom: 20,
+    gap: 8,
+  },
+  popularTag: {
+    backgroundColor: '#F5EBE1', // Theme light brown
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  popularTagText: {
+    fontFamily: 'Poppins_500Medium',
+    fontSize: 12,
+    color: '#704F38', // Theme dark brown
   },
   productsGrid: {
     flexDirection: 'row',

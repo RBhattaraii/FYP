@@ -1,0 +1,59 @@
+// PricePilot — System Architecture
+// Paste into https://app.eraser.io (Code mode)
+
+Presentation Layer [color: black] {
+  React Native App (Expo) [color: black] {
+    Product Search [color: black]
+    Price Comparison [color: black]
+    Wishlist Management [color: black]
+    Price Drop Alerts [color: black]
+    Points and Rewards [color: black]
+  }
+}
+
+Application Layer [color: black] {
+  FastAPI Backend [color: black] {
+    API Handler [color: black]
+    JWT Auth Module [color: black]
+  }
+  Price Alert Service [color: black]
+  Entity Resolution Service [color: black]
+  Price Forecasting Service [color: black]
+}
+
+Data Acquisition Layer [color: black] {
+  Multi-Platform Scraping Pipeline [color: black] {
+    Platform Connectors [color: black]
+    Background Scheduler [color: black]
+    Data Extraction Engine [color: black]
+    Retry and Error Handling [color: black]
+  }
+}
+
+Data Layer [color: black] {
+  Relational Store [color: black] {
+    Supabase (PostgreSQL) [color: black]
+    Users, Products, Prices, Wishlists, Alerts, Points [color: black]
+  }
+  Document Store [color: black] {
+    Cloud DB (MongoDB Atlas) [color: black]
+    Raw Scraped Records, Unprocessed Listings [color: black]
+  }
+}
+
+// ==================== CONNECTIONS ====================
+
+React Native App (Expo) > FastAPI Backend: REST API / HTTPS + JWT
+
+API Handler > Price Alert Service: Alert Notifications
+API Handler > Entity Resolution Service: Product Matching
+API Handler > Price Forecasting Service: Price Trends
+
+Data Acquisition Layer > FastAPI Backend: Scraped Product Data
+
+Price Alert Service > Relational Store: User Data and Wishlists
+Price Forecasting Service > Relational Store: Historical Price Data
+Entity Resolution Service > Relational Store: Normalized Products
+Entity Resolution Service > Document Store: Raw Records
+
+Data Extraction Engine > Document Store: Raw Scraped Records

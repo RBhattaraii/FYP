@@ -10,38 +10,39 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import * as SecureStore from 'expo-secure-store';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import Svg, { Path } from 'react-native-svg';
 import { API_URL } from '../../constants/api';
-import { colors, typography, spacing, borderRadius, shadows } from '../../constants/theme';
+import { authStorage } from '../../lib/authStorage';
+
+// Google Logo SVG Component
+const GoogleLogo = () => (
+  <Svg width="22" height="22" viewBox="0 0 48 48">
+    <Path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z" />
+    <Path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+    <Path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+    <Path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+  </Svg>
+);
 
 export default function RegisterScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   
   // State for form inputs
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // Defaulting to true to match the design's visual state
+  const [agreeTerms, setAgreeTerms] = useState(true);
 
-  // Focus states
-  const [isFirstNameFocused, setIsFirstNameFocused] = useState(false);
-  const [isLastNameFocused, setIsLastNameFocused] = useState(false);
-  const [isEmailFocused, setIsEmailFocused] = useState(false);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
-  
   // State for validation errors
-  const [firstNameError, setFirstNameError] = useState('');
-  const [lastNameError, setLastNameError] = useState('');
+  const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [confirmPasswordError, setConfirmPasswordError] = useState('');
   
   // State for API call
   const [loading, setLoading] = useState(false);
@@ -53,20 +54,13 @@ export default function RegisterScreen() {
   const validateForm = () => {
     let isValid = true;
     
-    setFirstNameError('');
-    setLastNameError('');
+    setNameError('');
     setEmailError('');
     setPasswordError('');
-    setConfirmPasswordError('');
     setApiError('');
     
-    if (!firstName.trim()) {
-      setFirstNameError('First name is required');
-      isValid = false;
-    }
-    
-    if (!lastName.trim()) {
-      setLastNameError('Last name is required');
+    if (!fullName.trim()) {
+      setNameError('Name is required');
       isValid = false;
     }
     
@@ -88,12 +82,9 @@ export default function RegisterScreen() {
       setPasswordError('Password must contain at least one number');
       isValid = false;
     }
-    
-    if (!confirmPassword) {
-      setConfirmPasswordError('Please confirm your password');
-      isValid = false;
-    } else if (password !== confirmPassword) {
-      setConfirmPasswordError('Passwords do not match');
+
+    if (!agreeTerms) {
+      setApiError('Please agree to the Terms & Conditions');
       isValid = false;
     }
     
@@ -107,6 +98,10 @@ export default function RegisterScreen() {
     setApiError('');
     
     try {
+      const names = fullName.trim().split(' ');
+      const first_name = names[0];
+      const last_name = names.length > 1 ? names.slice(1).join(' ') : ' ';
+
       const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
@@ -115,457 +110,419 @@ export default function RegisterScreen() {
         body: JSON.stringify({
           email: email.trim(),
           password: password,
-          full_name: `${firstName.trim()} ${lastName.trim()}`,
+          first_name: first_name,
+          last_name: last_name,
         }),
       });
       
       const data = await response.json();
       
       if (response.ok) {
-        await SecureStore.setItemAsync('token', data.token);
-        await SecureStore.setItemAsync('email', email.trim());
-        router.replace('/(tabs)/home');
+        await authStorage.setItemAsync('token', data.token);
+        await authStorage.setItemAsync('email', email.trim());
+        await authStorage.setItemAsync('full_name', fullName.trim());
+        if (data.phone) {
+          await authStorage.setItemAsync('phone', data.phone);
+        }
+        
+        router.replace('/(auth)/complete-profile');
       } else {
         if (data.detail) {
           if (typeof data.detail === 'string') {
-            setApiError(data.detail);
+            if (data.detail.toLowerCase().includes('email')) {
+              setEmailError(data.detail);
+            } else {
+              setApiError(data.detail);
+            }
           } else if (Array.isArray(data.detail)) {
-            const errorMessages = data.detail.map((err: any) => err.msg).join(', ');
-            setApiError(errorMessages);
+            let hasFieldError = false;
+            data.detail.forEach((err: any) => {
+              const field = err.loc && err.loc.length > 0 ? err.loc[err.loc.length - 1] : '';
+              if (field === 'password') { setPasswordError(err.msg); hasFieldError = true; }
+              else if (field === 'email') { setEmailError(err.msg); hasFieldError = true; }
+              else if (field === 'first_name' || field === 'last_name') { setNameError(err.msg); hasFieldError = true; }
+            });
+            if (!hasFieldError) {
+              const errorMessages = data.detail.map((err: any) => err.msg).join(', ');
+              setApiError(errorMessages);
+            }
           } else {
             setApiError('Registration failed. Please try again.');
           }
         } else {
           setApiError('Registration failed. Please try again.');
         }
-        setPassword('');
-        setConfirmPassword('');
       }
     } catch (error) {
       setApiError('Unable to connect to server. Please check your connection.');
-      setPassword('');
-      setConfirmPassword('');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={[styles.safeArea, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+      <Stack.Screen options={{ headerShown: false }} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
+        style={styles.flex}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Back Button */}
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-            disabled={loading}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="arrow-back" size={24} color={colors.gray900} />
-          </TouchableOpacity>
-          
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.title}>Create Account</Text>
             <Text style={styles.subtitle}>
-              Sign up to start comparing prices and finding the best deals on products.
+              Fill your information below or register{'\n'}with your social account.
             </Text>
           </View>
-          
+
           {/* API Error Message */}
           {apiError ? (
-            <View style={styles.errorContainer}>
-              <Ionicons name="alert-circle" size={20} color={colors.errorRed} />
-              <Text style={styles.errorText}>{apiError}</Text>
+            <View style={styles.errorBanner}>
+              <Ionicons name="alert-circle" size={18} color="#EF4444" />
+              <Text style={styles.errorBannerText}>{apiError}</Text>
             </View>
           ) : null}
-          
-          {/* Name Row */}
-          <View style={styles.nameRow}>
-            {/* First Name Input */}
-            <View style={styles.nameInputContainer}>
-              <Text style={styles.label}>First Name</Text>
-              <View style={[
-                styles.inputWrapper, 
-                isFirstNameFocused && styles.inputWrapperFocused,
-                firstNameError ? styles.inputWrapperError : null
-              ]}>
-                <Ionicons 
-                  name="person-outline" 
-                  size={20} 
-                  color={isFirstNameFocused ? colors.warningOrange : colors.gray400} 
-                  style={styles.inputIcon} 
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="John"
-                  placeholderTextColor={colors.gray400}
-                  value={firstName}
-                  onFocus={() => setIsFirstNameFocused(true)}
-                  onBlur={() => setIsFirstNameFocused(false)}
-                  onChangeText={(text) => {
-                    setFirstName(text);
-                    setFirstNameError('');
-                    setApiError('');
-                  }}
-                  autoCapitalize="words"
-                  autoComplete="name-given"
-                  editable={!loading}
-                  cursorColor={colors.warningOrange}
-                />
-              </View>
-              {firstNameError ? <Text style={styles.fieldError}>{firstNameError}</Text> : null}
-            </View>
-            
-            {/* Last Name Input */}
-            <View style={styles.nameInputContainer}>
-              <Text style={styles.label}>Last Name</Text>
-              <View style={[
-                styles.inputWrapper, 
-                isLastNameFocused && styles.inputWrapperFocused,
-                lastNameError ? styles.inputWrapperError : null
-              ]}>
-                <Ionicons 
-                  name="person-outline" 
-                  size={20} 
-                  color={isLastNameFocused ? colors.warningOrange : colors.gray400} 
-                  style={styles.inputIcon} 
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Doe"
-                  placeholderTextColor={colors.gray400}
-                  value={lastName}
-                  onFocus={() => setIsLastNameFocused(true)}
-                  onBlur={() => setIsLastNameFocused(false)}
-                  onChangeText={(text) => {
-                    setLastName(text);
-                    setLastNameError('');
-                    setApiError('');
-                  }}
-                  autoCapitalize="words"
-                  autoComplete="name-family"
-                  editable={!loading}
-                  cursorColor={colors.warningOrange}
-                />
-              </View>
-              {lastNameError ? <Text style={styles.fieldError}>{lastNameError}</Text> : null}
-            </View>
-          </View>
-          
-          {/* Email Input */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email address</Text>
-            <View style={[
-              styles.inputWrapper, 
-              isEmailFocused && styles.inputWrapperFocused,
-              emailError ? styles.inputWrapperError : null
-            ]}>
-              <Ionicons 
-                name="mail-outline" 
-                size={20} 
-                color={isEmailFocused ? colors.warningOrange : colors.gray400} 
-                style={styles.inputIcon} 
-              />
+
+          {/* Name Input */}
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Name</Text>
+            <View style={[styles.inputBox, nameError && styles.inputBoxError]}>
               <TextInput
                 style={styles.input}
-                placeholder="hello@example.com"
-                placeholderTextColor={colors.gray400}
+                placeholder="John Doe"
+                placeholderTextColor="#999"
+                value={fullName}
+                onChangeText={(text) => { setFullName(text); setNameError(''); setApiError(''); }}
+                autoCapitalize="words"
+                autoComplete="name"
+                editable={!loading}
+              />
+            </View>
+            {nameError ? <Text style={styles.fieldError}>{nameError}</Text> : null}
+          </View>
+
+          {/* Email Input */}
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Email</Text>
+            <View style={[styles.inputBox, emailError && styles.inputBoxError]}>
+              <TextInput
+                style={styles.input}
+                placeholder="example@gmail.com"
+                placeholderTextColor="#999"
                 value={email}
-                onFocus={() => setIsEmailFocused(true)}
-                onBlur={() => setIsEmailFocused(false)}
-                onChangeText={(text) => {
-                  setEmail(text);
-                  setEmailError('');
-                  setApiError('');
-                }}
+                onChangeText={(text) => { setEmail(text); setEmailError(''); setApiError(''); }}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoComplete="email"
                 editable={!loading}
-                cursorColor={colors.warningOrange}
               />
             </View>
             {emailError ? <Text style={styles.fieldError}>{emailError}</Text> : null}
           </View>
-          
+
           {/* Password Input */}
-          <View style={styles.inputContainer}>
+          <View style={styles.fieldGroup}>
             <Text style={styles.label}>Password</Text>
-            <View style={[
-              styles.inputWrapper, 
-              isPasswordFocused && styles.inputWrapperFocused,
-              passwordError ? styles.inputWrapperError : null
-            ]}>
-              <Ionicons 
-                name="lock-closed-outline" 
-                size={20} 
-                color={isPasswordFocused ? colors.warningOrange : colors.gray400} 
-                style={styles.inputIcon} 
-              />
+            <View style={[styles.inputBox, passwordError && styles.inputBoxError]}>
               <TextInput
-                style={styles.input}
-                placeholder="••••••••"
-                placeholderTextColor={colors.gray400}
+                style={styles.inputPassword}
+                placeholder="****************"
+                placeholderTextColor="#999"
                 value={password}
-                onFocus={() => setIsPasswordFocused(true)}
-                onBlur={() => setIsPasswordFocused(false)}
-                onChangeText={(text) => {
-                  setPassword(text);
-                  setPasswordError('');
-                  setApiError('');
-                }}
+                onChangeText={(text) => { setPassword(text); setPasswordError(''); setApiError(''); }}
                 secureTextEntry={!showPassword}
                 autoCapitalize="none"
                 autoComplete="password-new"
                 editable={!loading}
-                cursorColor={colors.warningOrange}
               />
               <TouchableOpacity
-                style={styles.eyeIcon}
                 onPress={() => setShowPassword(!showPassword)}
                 disabled={loading}
                 activeOpacity={0.7}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 <Ionicons
-                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                  color={colors.gray400}
+                  name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+                  size={22}
+                  color="#1F2029"
                 />
               </TouchableOpacity>
             </View>
             {passwordError ? <Text style={styles.fieldError}>{passwordError}</Text> : null}
           </View>
-          
-          {/* Confirm Password Input */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Confirm Password</Text>
-            <View style={[
-              styles.inputWrapper, 
-              isConfirmPasswordFocused && styles.inputWrapperFocused,
-              confirmPasswordError ? styles.inputWrapperError : null
-            ]}>
-              <Ionicons 
-                name="lock-closed-outline" 
-                size={20} 
-                color={isConfirmPasswordFocused ? colors.warningOrange : colors.gray400} 
-                style={styles.inputIcon} 
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="••••••••"
-                placeholderTextColor={colors.gray400}
-                value={confirmPassword}
-                onFocus={() => setIsConfirmPasswordFocused(true)}
-                onBlur={() => setIsConfirmPasswordFocused(false)}
-                onChangeText={(text) => {
-                  setConfirmPassword(text);
-                  setConfirmPasswordError('');
-                  setApiError('');
-                }}
-                secureTextEntry={!showConfirmPassword}
-                autoCapitalize="none"
-                autoComplete="password-new"
-                editable={!loading}
-                cursorColor={colors.warningOrange}
-              />
-              <TouchableOpacity
-                style={styles.eyeIcon}
-                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                disabled={loading}
-                activeOpacity={0.7}
-              >
-                <Ionicons
-                  name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                  color={colors.gray400}
-                />
-              </TouchableOpacity>
+
+          {/* Terms & Conditions Checkbox */}
+          <TouchableOpacity
+            style={styles.termsRow}
+            onPress={() => setAgreeTerms(!agreeTerms)}
+            activeOpacity={0.7}
+            disabled={loading}
+          >
+            <View style={[styles.checkbox, agreeTerms && styles.checkboxChecked]}>
+              {agreeTerms && <Ionicons name="checkmark" size={16} color="#FFF" />}
             </View>
-            {confirmPasswordError ? <Text style={styles.fieldError}>{confirmPasswordError}</Text> : null}
-          </View>
-          
+            <Text style={styles.termsText}>
+              Agree with <Text style={styles.termsLink}>Terms & Condition</Text>
+            </Text>
+          </TouchableOpacity>
+
           {/* Sign Up Button */}
           <TouchableOpacity
-            style={[styles.button, loading ? styles.buttonDisabled : null]}
+            style={[styles.signUpButton, loading && styles.signUpButtonDisabled]}
             onPress={handleRegister}
             disabled={loading}
             activeOpacity={0.8}
           >
             {loading ? (
-              <ActivityIndicator color={colors.white} />
+              <ActivityIndicator color="#FFF" />
             ) : (
-              <Text style={styles.buttonText}>Sign Up</Text>
+              <Text style={styles.signUpButtonText}>Sign Up</Text>
             )}
           </TouchableOpacity>
-          
-          {/* Login Link */}
-          <View style={styles.loginContainer}>
-            <Text style={styles.loginText}>Already have an account? </Text>
+
+          {/* Divider */}
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>Or sign up with</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          {/* Social Login Buttons */}
+          <View style={styles.socialRow}>
+            <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+              <Ionicons name="logo-apple" size={24} color="#000" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+              <GoogleLogo />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+              <Ionicons name="logo-facebook" size={24} color="#1877F2" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Sign In Link */}
+          <View style={[styles.signInRow, { paddingBottom: 40 }]}>
+            <Text style={styles.signInText}>Already have an account? </Text>
             <TouchableOpacity
               onPress={() => router.push('/(auth)/login')}
               disabled={loading}
               activeOpacity={0.7}
             >
-              <Text style={styles.loginLink}>Log In</Text>
+              <Text style={styles.signInLink}>Sign In</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: '#FFFFFF', // Pure white background
   },
-  container: {
+  flex: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-    padding: spacing.xl,
-    paddingTop: 20,
-    paddingBottom: 40,
+    paddingHorizontal: 28,
+    paddingTop: 60,
+    paddingBottom: 80, // Massive padding to keep it far from the bottom edge
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    marginBottom: spacing.lg,
-  },
+
+  // ── Header ──
   header: {
-    marginBottom: spacing['2xl'],
+    alignItems: 'center',
+    marginBottom: 40,
   },
   title: {
-    fontSize: typography.fontSize.h1,
-    fontFamily: typography.fontFamily.primary,
-    fontWeight: typography.fontWeight.bold,
-    color: colors.gray900,
-    marginBottom: spacing.sm,
-    letterSpacing: -0.5,
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 28,
+    color: '#1F2029',
+    marginBottom: 10,
   },
   subtitle: {
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
-    color: colors.gray600,
-    lineHeight: typography.lineHeight.bodyLarge,
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
+    color: '#797979',
+    textAlign: 'center',
+    lineHeight: 22,
   },
-  errorContainer: {
+
+  // ── Error Banner ──
+  errorBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FEF2F2',
-    padding: spacing.md,
-    borderRadius: borderRadius.large,
-    marginBottom: spacing.lg,
-    gap: spacing.sm,
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 16,
+    gap: 8,
     borderWidth: 1,
     borderColor: '#FEE2E2',
   },
-  errorText: {
+  errorBannerText: {
     flex: 1,
-    color: colors.errorRed,
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
+    color: '#EF4444',
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 13,
   },
-  nameRow: {
-    flexDirection: 'row',
-    gap: spacing.md,
-    marginBottom: spacing.lg,
-  },
-  nameInputContainer: {
-    flex: 1,
-  },
-  inputContainer: {
-    marginBottom: spacing.lg,
+
+  // ── Form Fields ──
+  fieldGroup: {
+    marginBottom: 20,
   },
   label: {
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
-    fontWeight: typography.fontWeight.semibold,
-    color: colors.gray900,
-    marginBottom: spacing.sm,
-    marginLeft: spacing.xs,
+    fontFamily: 'Poppins_500Medium',
+    fontSize: 14,
+    color: '#1F2029',
+    marginBottom: 8,
+    marginLeft: 4,
   },
-  inputWrapper: {
+  inputBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.gray50,
-    borderWidth: 1,
-    borderColor: colors.gray100,
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.lg,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#EDEDED',
+    borderRadius: 30, // Pill shape
+    paddingHorizontal: 20,
     height: 56,
   },
-  inputWrapperFocused: {
-    borderColor: colors.warningOrange,
-    backgroundColor: colors.white,
-  },
-  inputWrapperError: {
-    borderColor: colors.errorRed,
-    backgroundColor: '#FEF2F2',
-  },
-  inputIcon: {
-    marginRight: spacing.sm,
+  inputBoxError: {
+    borderColor: '#EF4444',
   },
   input: {
     flex: 1,
-    fontSize: typography.fontSize.bodyLarge,
-    fontFamily: typography.fontFamily.primary,
-    color: colors.gray900,
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
+    color: '#1F2029',
   },
-  eyeIcon: {
-    padding: spacing.xs,
+  inputPassword: {
+    flex: 1,
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
+    color: '#1F2029',
+    letterSpacing: 2, // Spacing for asterisks
   },
   fieldError: {
-    color: colors.errorRed,
-    fontSize: typography.fontSize.caption,
-    fontFamily: typography.fontFamily.primary,
-    marginTop: spacing.xs,
-    marginLeft: spacing.md,
+    color: '#EF4444',
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 4,
   },
-  button: {
-    backgroundColor: colors.warningOrange,
-    height: 56,
-    borderRadius: borderRadius.full,
+
+  // ── Terms Checkbox ──
+  termsRow: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 35,
+    marginTop: 4,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#704F38',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
-    marginTop: spacing.sm,
-    ...shadows.button,
+    alignItems: 'center',
+    marginRight: 10,
   },
-  buttonDisabled: {
-    backgroundColor: colors.gray400,
-    ...shadows.card,
+  checkboxChecked: {
+    backgroundColor: '#704F38',
+    borderColor: '#704F38',
   },
-  buttonText: {
-    color: colors.white,
-    fontSize: typography.fontSize.button,
-    fontFamily: typography.fontFamily.primary,
-    fontWeight: typography.fontWeight.bold,
+  termsText: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
+    color: '#1F2029',
   },
-  loginContainer: {
+  termsLink: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 14,
+    color: '#704F38', // Brown color for link
+    textDecorationLine: 'underline',
+  },
+
+  // ── Sign Up Button ──
+  signUpButton: {
+    backgroundColor: '#704F38',
+    height: 54,
+    borderRadius: 27,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 35,
+  },
+  signUpButtonDisabled: {
+    backgroundColor: '#9E9E9E',
+  },
+  signUpButtonText: {
+    color: '#FFFFFF',
+    fontFamily: 'Poppins_400Regular', // Lighter font weight
+    fontSize: 16,
+  },
+
+  // ── Divider ──
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#EEEEEE',
+  },
+  dividerText: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 12,
+    color: '#999',
+    marginHorizontal: 16,
+  },
+
+  // ── Social Buttons ──
+  socialRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: spacing['2xl'],
+    gap: 20,
+    marginBottom: 40,
   },
-  loginText: {
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
-    color: colors.gray600,
+  socialButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  loginLink: {
-    fontSize: typography.fontSize.body,
-    fontFamily: typography.fontFamily.primary,
-    color: colors.warningOrange,
-    fontWeight: typography.fontWeight.bold,
+
+  // ── Sign In Link ──
+  signInRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  signInText: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 13,
+    color: '#1F2029',
+  },
+  signInLink: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 13,
+    color: '#704F38', // Brown color
+    textDecorationLine: 'underline',
   },
 });

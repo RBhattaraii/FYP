@@ -1,32 +1,40 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import FullImageCard from './FullImageCard';
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView } from 'react-native';
+import DealCard from './DealCard';
 import { colors, typography, spacing } from '../constants/theme';
 
 interface TrendingItem {
   id: string;
   title: string;
-  subtitle: string;
   imageUrl: string;
+  price: number;
+  originalPrice?: number;
+  discountPercent?: number;
+  storeName?: string;
 }
 
 interface TrendingSectionProps {
+  title?: string;
   items: TrendingItem[];
   onItemPress: (itemId: string) => void;
   onSeeAllPress: () => void;
 }
 
 export default function TrendingSection({
+  title = "Top Price Drops",
   items,
   onItemPress,
   onSeeAllPress,
 }: TrendingSectionProps) {
+  const { width } = useWindowDimensions();
+  const visibleCardsCount = width > 768 ? 3.5 : 2.15;
+  const cardWidth = (width - spacing.lg * 2 - spacing.md * (Math.ceil(visibleCardsCount) - 1)) / visibleCardsCount;
+
   return (
     <View style={styles.container}>
       {/* Section Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Top Price Drops</Text>
+        <Text style={styles.title}>{title}</Text>
         <TouchableOpacity
           style={styles.seeAllButton}
           onPress={onSeeAllPress}
@@ -37,23 +45,28 @@ export default function TrendingSection({
         </TouchableOpacity>
       </View>
 
-      {/* Cards */}
-      <ScrollView
-        horizontal
+      <ScrollView 
+        horizontal 
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        snapToInterval={cardWidth + spacing.md}
         decelerationRate="fast"
       >
         {items.map((item) => (
-          <FullImageCard
-            key={item.id}
-            title={item.title}
-            subtitle={item.subtitle}
-            imageUrl={item.imageUrl}
-            onPress={() => onItemPress(item.id)}
-            width={240}
-            height={280}
-          />
+          <View key={item.id} style={{ width: cardWidth }}>
+            <DealCard
+              title={item.title}
+              imageUrl={item.imageUrl}
+              price={item.price}
+              originalPrice={item.originalPrice}
+              discountPercent={item.discountPercent}
+              storeName={item.storeName}
+              badgeLabel={item.discountPercent ? `${item.discountPercent}% OFF` : undefined}
+              width={cardWidth}
+              onPress={() => onItemPress(item.id)}
+              onAddPress={() => onItemPress(item.id)}
+            />
+          </View>
         ))}
       </ScrollView>
     </View>
@@ -83,10 +96,12 @@ const styles = StyleSheet.create({
   seeAllText: {
     fontSize: typography.fontSize.body,
     fontWeight: typography.fontWeight.regular,
-    color: colors.gray600,
+    color: '#704F38',
   },
   scrollContent: {
     paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.sm,
+    flexDirection: 'row',
     gap: spacing.md,
   },
 });

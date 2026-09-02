@@ -49,7 +49,7 @@ export default function SimpleTabBar({ state, descriptors, navigation }: BottomT
         if (route.name === 'home') iconName = isFocused ? 'home' : 'home-outline';
         if (route.name === 'explore') iconName = isFocused ? 'search' : 'search-outline';
         if (route.name === 'offers') iconName = isFocused ? 'pricetag' : 'pricetag-outline';
-        if (route.name === 'wishlist') iconName = isFocused ? 'heart' : 'heart-outline';
+        if (route.name === 'favorites') iconName = isFocused ? 'heart' : 'heart-outline';
         if (route.name === 'profile') iconName = isFocused ? 'person-circle' : 'person-circle-outline';
 
         return (

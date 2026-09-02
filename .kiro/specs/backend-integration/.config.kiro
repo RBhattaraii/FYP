@@ -1,0 +1,4 @@
+# Backend Integration Spec Configuration
+
+workflow: fast-task
+propertyBasedTesting: false

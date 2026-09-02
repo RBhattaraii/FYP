@@ -99,10 +99,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     elevation: 999,
     zIndex: 999,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
+    ...Platform.select({
+      web: {
+        boxShadow: '0px -2px 10px rgba(0, 0, 0, 0.5)',
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 10,
+      },
+    }) as any,
   },
   debugBanner: {
     backgroundColor: '#FFFF00',

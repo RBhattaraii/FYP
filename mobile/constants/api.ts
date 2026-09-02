@@ -10,31 +10,43 @@ import { Platform } from 'react-native';
 // Get the local network URL from Expo's debug server
 // This automatically uses the same IP as your Expo dev server
 const getApiUrl = () => {
-  // Android emulator uses 10.0.2.2 to reach host machine's localhost
-  // Check if we're on Android and if the debuggerHost is localhost/127.0.0.1
-  const debuggerHost = Constants.expoConfig?.hostUri;
+  const overrideUrl =
+    (Constants.expoConfig as any)?.extra?.API_URL ||
+    (typeof process !== 'undefined' ? process.env?.EXPO_PUBLIC_API_URL : undefined);
 
-  if (debuggerHost) {
-    // Extract IP address from debuggerHost (format: "192.168.x.x:8081")
-    const ip = debuggerHost.split(':')[0];
-
-    // If running on Android emulator, the LAN IP won't work.
-    // Use 10.0.2.2 which is the special alias for host machine's localhost.
-    if (Platform.OS === 'android' && (ip === '127.0.0.1' || ip === 'localhost')) {
-      return 'http://10.0.2.2:8000';
-    }
-
-    return `http://${ip}:8000`;
+  if (overrideUrl) {
+    return overrideUrl;
   }
 
-  // If no debuggerHost is available (common in Android emulator builds),
-  // use the emulator-specific address on Android, LAN IP otherwise
+  const debuggerHost = Constants.expoConfig?.hostUri || Constants.manifest?.debuggerHost;
+  const getHostFromDebug = (hostUri?: string) => {
+    if (!hostUri || typeof hostUri !== 'string') {
+      return null;
+    }
+    return hostUri.split(':')[0].replace('localhost', '127.0.0.1');
+  };
+
+  if (Platform.OS === 'web') {
+    const hostname = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+    const webHost = hostname === 'localhost' || hostname === '127.0.0.1' ? hostname : 'localhost';
+    console.warn(`Using web API host ${webHost} for backend requests. If your backend runs elsewhere, set EXPO_PUBLIC_API_URL.`);
+    return `http://${webHost}:8000`;
+  }
+
+  const hostIp = getHostFromDebug(debuggerHost);
+  if (hostIp) {
+    if (Platform.OS === 'android' && (hostIp === '127.0.0.1' || hostIp === 'localhost')) {
+      return 'http://10.0.2.2:8000';
+    }
+    return `http://${hostIp}:8000`;
+  }
+
   if (Platform.OS === 'android') {
     return 'http://10.0.2.2:8000';
   }
 
-  // Fallback for production or if debuggerHost is not available
-  return "http://192.168.50.1:8000";
+  // Force local IP for physical devices testing Expo
+  return 'http://192.168.1.94:8000';
 };
 
 export const API_URL = getApiUrl();
@@ -61,7 +73,7 @@ export const fetchWithTimeout = async (
     return response;
   } catch (error: any) {
     if (error.name === 'AbortError') {
-      throw new Error('Request timed out. Make sure your backend server is running.');
+      throw new Error(`Request timed out after ${timeoutMs}ms while calling ${url}. Make sure your backend server is running.`);
     }
     throw error;
   } finally {

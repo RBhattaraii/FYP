@@ -6,6 +6,7 @@ No SQLAlchemy, No ORM - Direct SQL queries only
 import os
 import asyncpg
 from dotenv import load_dotenv
+from fastapi import HTTPException
 from typing import Optional
 
 # Load environment variables from .env file
@@ -18,71 +19,73 @@ pool: Optional[asyncpg.Pool] = None
 async def create_pool():
     """
     Create a connection pool to PostgreSQL database.
-    
-    Connection pool maintains multiple database connections that can be reused,
-    which is more efficient than creating a new connection for each request.
-    
-    This function should be called once when the FastAPI app starts.
+
+    If the database host is unreachable, the API still starts and routes can
+    return a 503/HTTPException when they need database access.
     """
     global pool
-    
-    # Get database URL from environment variables
+
     database_url = os.getenv("DATABASE_URL")
-    
+
     if not database_url:
-        raise ValueError("DATABASE_URL not found in environment variables")
-    
-    # Create connection pool
-    # min_size: minimum number of connections to keep open
-    # max_size: maximum number of connections allowed
-    # statement_cache_size: 0 for Supabase Transaction Pooler compatibility
-    pool = await asyncpg.create_pool(
-        database_url,
-        min_size=2,      # Keep at least 2 connections open
-        max_size=10,     # Allow up to 10 concurrent connections
-        command_timeout=60,  # Timeout for queries (60 seconds)
-        statement_cache_size=0  # Disable prepared statements for pgbouncer compatibility
-    )
-    
-    print("✅ PostgreSQL connection pool created successfully")
+        print("[WARN] DATABASE_URL not found; PostgreSQL disabled")
+        pool = None
+        return None
+
+    try:
+        pool = await asyncpg.create_pool(
+            database_url,
+            min_size=2,
+            max_size=10,
+            command_timeout=60,
+            statement_cache_size=0,
+        )
+    except Exception as exc:
+        pool = None
+        print(f"[WARN] PostgreSQL unavailable: {exc}")
+        return None
+
+    print("[OK] PostgreSQL connection pool created successfully")
     return pool
 
 
 async def close_pool():
     """
     Close the connection pool.
-    
+
     This function should be called when the FastAPI app shuts down
     to properly close all database connections.
     """
     global pool
-    
+
     if pool:
         await pool.close()
-        print("✅ PostgreSQL connection pool closed")
+        pool = None
+        print("[OK] PostgreSQL connection pool closed")
 
 
 async def get_db() -> asyncpg.Connection:
     """
     Get a database connection from the pool.
-    
+
     This function is used as a dependency in FastAPI routes.
     It acquires a connection from the pool and returns it.
-    
+
     Usage in routes:
         async def my_route(db = Depends(get_db)):
             result = await db.fetch("SELECT * FROM users")
-    
+
     Returns:
         asyncpg.Connection: A database connection from the pool
     """
     global pool
-    
+
     if not pool:
-        raise RuntimeError("Database pool not initialized. Call create_pool() first.")
-    
-    # Acquire a connection from the pool
-    # The connection will be automatically returned to the pool when done
+        raise HTTPException(
+            status_code=503,
+            detail="Database unavailable. PostgreSQL connection could not be established.",
+        )
+
     async with pool.acquire() as connection:
         yield connection
 

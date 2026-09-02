@@ -1,79 +1,37 @@
 import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../../constants/theme';
+import CustomTabBar from '../../components/CustomTabBar';
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.warningOrange,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          display: 'none',
+        },
       }}
+      tabBar={(props) => <CustomTabBar {...props} />}
     >
-      <Tabs.Screen 
-        name="home" 
-        options={{ 
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons 
-              name={focused ? 'home' : 'home-outline'} 
-              size={24} 
-              color={color} 
-            />
-          ),
-        }} 
+      <Tabs.Screen
+        name="home"
+        options={{ title: 'Home' }}
       />
-      <Tabs.Screen 
-        name="explore" 
-        options={{ 
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons 
-              name={focused ? 'search' : 'search-outline'} 
-              size={24} 
-              color={color} 
-            />
-          ),
-        }} 
+      <Tabs.Screen
+        name="explore"
+        options={{ title: 'Brands' }}
       />
-      <Tabs.Screen 
-        name="offers" 
-        options={{ 
-          title: 'Offers',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons 
-              name={focused ? 'pricetag' : 'pricetag-outline'} 
-              size={24} 
-              color={color} 
-            />
-          ),
-        }} 
+      <Tabs.Screen
+        name="offers"
+        options={{ href: null }}
       />
-      <Tabs.Screen 
-        name="cart" 
-        options={{ 
-          title: 'Cart',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons 
-              name={focused ? 'cart' : 'cart-outline'} 
-              size={24} 
-              color={color} 
-            />
-          ),
-        }} 
+      <Tabs.Screen
+        name="favorites"
+        options={{ title: 'Favorites' }}
       />
-      <Tabs.Screen 
-        name="profile" 
-        options={{ 
-          title: 'Profile',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons 
-              name={focused ? 'person-circle' : 'person-circle-outline'} 
-              size={24} 
-              color={color} 
-            />
-          ),
-        }} 
+      <Tabs.Screen
+        name="profile"
+        options={{ title: 'Profile' }}
       />
     </Tabs>
   );

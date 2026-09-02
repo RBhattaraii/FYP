@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, FlatList, ScrollView, Platform, NativeSyntheticEvent, NativeScrollEvent, Dimensions, Text, TouchableOpacity, Image, Animated, Easing } from 'react-native';
+import { View, StyleSheet, FlatList, ScrollView, Platform, NativeSyntheticEvent, NativeScrollEvent, Text, TouchableOpacity, Image, Animated, Easing, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -18,7 +18,7 @@ const BRAND_OFFERS = [
   { id: 'brand4', name: 'Samsung', offer: 'FREE BUDS', logo: 'https://cdn-icons-png.flaticon.com/512/5969/5969116.png' },
   { id: 'brand5', name: 'Adidas', offer: '50% OFF', logo: 'https://cdn-icons-png.flaticon.com/512/732/732148.png' },
   { id: 'brand6', name: 'Puma', offer: 'FLAT 30%', logo: 'https://cdn-icons-png.flaticon.com/512/732/732238.png' },
-  { id: 'brand7', name: 'LG', offer: 'CASHBACK', logo: 'https://cdn-icons-png.flaticon.com/512/882/882750.png' },
+  { id: 'brand7', name: 'LG', offer: 'CASHBACK', logo: 'https://cdn-icons-png.flaticon.com/512/882/882753.png' },
 ];
 
 const MOCK_BANNERS = [
@@ -48,23 +48,15 @@ const MOCK_BANNERS = [
   }
 ];
 
-const screenWidth = Dimensions.get('window').width;
 
-const PROMO_BADGES = ['5% OFF', '10% OFF', 'Save ₹100', 'Buy 1 Get 1', 'Limited Time Offer'];
 
-const MOCK_PRODUCTS = ALL_PRODUCTS.map((p, index) => ({
-  id: p.id,
-  name: p.title,
-  price: p.price,
-  rating: p.rating,
-  imageUrl: p.images[0],
-  inWishlist: false,
-  promotionalBadge: PROMO_BADGES[index % PROMO_BADGES.length],
-}));
+import { fetchHomeScreenProducts, Product } from '../../services/api';
 
 export default function OffersScreen() {
   const router = useRouter();
-  const [products, setProducts] = useState(MOCK_PRODUCTS);
+  const { width } = useWindowDimensions();
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeBanner, setActiveBanner] = useState(0);
   const activeBannerRef = useRef(0);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -91,7 +83,7 @@ export default function OffersScreen() {
       if (nextIndex >= MOCK_BANNERS.length) {
         nextIndex = 0;
       }
-      scrollViewRef.current?.scrollTo({ x: nextIndex * screenWidth, animated: true });
+      scrollViewRef.current?.scrollTo({ x: nextIndex * width, animated: true });
     }, 4000);
   };
 
@@ -103,12 +95,34 @@ export default function OffersScreen() {
 
   useEffect(() => {
     startAutoScroll();
+    loadOffers();
     return () => stopAutoScroll();
   }, []);
 
+  const loadOffers = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchHomeScreenProducts();
+      // Use best deals for the offers grid
+      const formatted = data.best_deals.map((p: Product) => ({
+        id: p.id ? p.id.toString() : p.title,
+        name: p.title,
+        price: p.price,
+        imageUrl: p.image_url,
+        inWishlist: false,
+        promotionalBadge: p.discount_percent ? `${p.discount_percent}% OFF` : undefined,
+      }));
+      setProducts(formatted);
+    } catch (err) {
+      console.error('Failed to load offers:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = event.nativeEvent.contentOffset.x;
-    const index = Math.round(offsetX / screenWidth);
+    const index = Math.round(offsetX / width);
     if (index !== activeBanner && index >= 0 && index < MOCK_BANNERS.length) {
       setActiveBanner(index);
       activeBannerRef.current = index;
@@ -129,10 +143,7 @@ export default function OffersScreen() {
 
   const renderHeader = () => (
     <View>
-      <Header 
-        title="Offers" 
-        showBackBtn={false}
-      />
+      <Header />
       
       {/* Offer Banner Carousel */}
       <View style={styles.bannerContainer}>
@@ -148,13 +159,13 @@ export default function OffersScreen() {
           onScrollEndDrag={startAutoScroll}
         >
           {MOCK_BANNERS.map((banner) => (
-            <View key={banner.id} style={{ width: screenWidth, paddingHorizontal: spacing.lg }}>
+            <View key={banner.id} style={{ width: width, paddingHorizontal: spacing.lg }}>
               <FullImageCard
                 title={banner.title}
                 subtitle={banner.subtitle}
                 imageUrl={banner.imageUrl}
                 onPress={() => console.log('Banner pressed', banner.id)}
-                width={screenWidth - 2 * spacing.lg}
+                width={width - 2 * spacing.lg}
                 height={160}
               />
             </View>
@@ -173,28 +184,6 @@ export default function OffersScreen() {
         </View>
       </View>
 
-      {/* Brand Offers Section */}
-      <View style={styles.brandSectionContainer}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Top Brand Offers</Text>
-          <TouchableOpacity>
-            <Text style={styles.seeAllText}>See all</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.marqueeContainer}>
-          <Animated.View style={[styles.marqueeInner, { transform: [{ translateX: marqueeAnim }] }]}>
-            {[...BRAND_OFFERS, ...BRAND_OFFERS].map((brand, index) => (
-              <TouchableOpacity key={`${brand.id}-${index}`} style={styles.brandItem} activeOpacity={0.7}>
-                <View style={styles.brandLogoCircle}>
-                   <Image source={{ uri: brand.logo }} style={styles.brandLogoImage} resizeMode="contain" />
-                </View>
-                <Text style={styles.brandItemOffer} numberOfLines={1}>{brand.offer}</Text>
-                <Text style={styles.brandItemName} numberOfLines={1}>{brand.name}</Text>
-              </TouchableOpacity>
-            ))}
-          </Animated.View>
-        </View>
-      </View>
     </View>
   );
 
@@ -246,7 +235,7 @@ const styles = StyleSheet.create({
   },
   activeDot: {
     width: 16,
-    backgroundColor: colors.warningOrange,
+    backgroundColor: colors.primaryIndigo,
   },
   brandSectionContainer: {
     marginTop: spacing.sm,
@@ -266,8 +255,8 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: typography.fontSize.body,
-    color: colors.warningOrange,
-    fontWeight: typography.fontWeight.medium,
+    color: colors.primaryIndigo,
+    fontWeight: typography.fontWeight.semibold,
   },
   marqueeContainer: {
     overflow: 'hidden',
@@ -302,12 +291,12 @@ const styles = StyleSheet.create({
   brandItemOffer: {
     fontSize: 11,
     fontWeight: '800',
-    color: colors.warningOrange,
+    color: colors.primary,
     textAlign: 'center',
   },
   brandItemName: {
     fontSize: 10,
-    color: colors.gray500,
+    color: colors.gray400,
     marginTop: 2,
     textAlign: 'center',
   },

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, TouchableWithoutFeedback, ScrollView, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography, spacing, borderRadius } from '../constants/theme';
+import RangeSlider from './RangeSlider';
 
 export interface FilterState {
   type: string;
@@ -18,14 +19,14 @@ interface FilterModalProps {
   initialFilters: FilterState;
 }
 
-const THEME_RED = '#E53935';
+const THEME_COLOR = '#6E4B3A';
 
 export default function FilterModal({ visible, onClose, onApply, initialFilters }: FilterModalProps) {
   const [type, setType] = useState(initialFilters.type || 'Products');
   const [platforms, setPlatforms] = useState<string[]>(initialFilters.platforms || []);
   const [categories, setCategories] = useState<string[]>(initialFilters.categories || []);
   const [minPrice, setMinPrice] = useState(initialFilters.minPrice || '0');
-  const [maxPrice, setMaxPrice] = useState(initialFilters.maxPrice || '16000');
+  const [maxPrice, setMaxPrice] = useState(initialFilters.maxPrice || '160000');
 
   useEffect(() => {
     if (visible) {
@@ -33,7 +34,7 @@ export default function FilterModal({ visible, onClose, onApply, initialFilters 
       setPlatforms(initialFilters.platforms || []);
       setCategories(initialFilters.categories || []);
       setMinPrice(initialFilters.minPrice || '0');
-      setMaxPrice(initialFilters.maxPrice || '16000');
+      setMaxPrice(initialFilters.maxPrice || '1600000');
     }
   }, [visible, initialFilters]);
 
@@ -86,71 +87,54 @@ export default function FilterModal({ visible, onClose, onApply, initialFilters 
               
               <View style={styles.header}>
                 <TouchableOpacity onPress={onClose} style={styles.backBtn}>
-                  <Ionicons name="chevron-back" size={24} color={colors.gray900} />
+                  <Ionicons name="close" size={24} color="#111111" />
                 </TouchableOpacity>
-                <Text style={styles.title}>Filter by</Text>
-                <View style={{ width: 24 }} />
+                <Text style={styles.title}>Filter</Text>
+                <TouchableOpacity onPress={() => {
+                  setPlatforms([]);
+                  setCategories([]);
+                  setMinPrice('0');
+                  setMaxPrice('1600000');
+                }}>
+                  <Text style={styles.resetText}>Reset</Text>
+                </TouchableOpacity>
               </View>
 
               <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-                
-                {/* Type Toggle */}
-                <View style={styles.toggleRow}>
-                  <TouchableOpacity 
-                    style={[styles.toggleBtn, type === 'Products' && styles.toggleBtnActive]}
-                    onPress={() => setType('Products')}
-                  >
-                    <View style={styles.radioOuter}>
-                      {type === 'Products' && <View style={styles.radioInner} />}
-                    </View>
-                    <Text style={[styles.toggleText, type === 'Products' && styles.toggleTextActive]}>By Products</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity 
-                    style={[styles.toggleBtn, type === 'Stores' && styles.toggleBtnActive]}
-                    onPress={() => setType('Stores')}
-                  >
-                    <View style={styles.radioOuter}>
-                      {type === 'Stores' && <View style={styles.radioInner} />}
-                    </View>
-                    <Text style={[styles.toggleText, type === 'Stores' && styles.toggleTextActive]}>By Stores</Text>
-                  </TouchableOpacity>
-                </View>
+                {/* Type toggle removed */}
 
                 {/* Platforms Section */}
                 <View style={styles.section}>
                   <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>Platform</Text>
-                    <Ionicons name="chevron-down" size={20} color={colors.gray600} />
                   </View>
-                  {renderPills(['Daraz', 'Hamrobazar', 'Sastodeal', 'Amazon', 'eBay', 'AliExpress'], platforms, togglePlatform)}
+                  {renderPills(['Daraz', 'CG Digital', 'Hukut', 'KoreanBP', 'Oliz'], platforms, togglePlatform)}
                 </View>
 
                 {/* Categories Section */}
                 <View style={styles.section}>
                   <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>Category</Text>
-                    <Ionicons name="chevron-down" size={20} color={colors.gray600} />
                   </View>
-                  {renderPills(['Electronics', 'Fashion', 'Home Decor', 'Beauty', 'Sports', 'Toys'], categories, toggleCategory)}
+                  {renderPills(['Laptops', 'Phones', 'Audio', 'Gaming', 'Accessories', 'Components'], categories, toggleCategory)}
                 </View>
 
                 {/* Price Section */}
                 <View style={styles.section}>
                   <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>Price</Text>
-                    <Ionicons name="chevron-down" size={20} color={colors.gray600} />
+                    <Text style={styles.sectionTitle}>Price Range</Text>
                   </View>
-                  <Text style={styles.priceRangeText}>0.00 - 16000.00</Text>
-                  
-                  {/* Slider Visual */}
-                  <View style={styles.sliderContainer}>
-                    <View style={styles.sliderTrack}>
-                      <View style={styles.sliderActiveTrack} />
-                      <View style={[styles.sliderKnob, { left: '10%' }]} />
-                      <View style={[styles.sliderKnob, { left: '60%' }]} />
-                    </View>
-                  </View>
+                  <RangeSlider
+                    min={0}
+                    max={1600000}
+                    step={1000}
+                    initialMin={isNaN(parseInt(minPrice, 10)) ? 0 : parseInt(minPrice, 10)}
+                    initialMax={isNaN(parseInt(maxPrice, 10)) ? 1600000 : parseInt(maxPrice, 10)}
+                    onValuesChange={(min, max) => {
+                      setMinPrice(min.toString());
+                      setMaxPrice(max.toString());
+                    }}
+                  />
                 </View>
 
               </ScrollView>
@@ -158,7 +142,7 @@ export default function FilterModal({ visible, onClose, onApply, initialFilters 
               {/* Footer */}
               <View style={styles.footer}>
                 <TouchableOpacity style={styles.applyBtn} onPress={handleApply}>
-                  <Text style={styles.applyText}>Apply</Text>
+                  <Text style={styles.applyText}>Apply Filter</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -172,168 +156,135 @@ export default function FilterModal({ visible, onClose, onApply, initialFilters 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'flex-end',
   },
   modalContainer: {
-    backgroundColor: colors.white,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    height: '85%',
+    backgroundColor: '#FFFFFF',
+    flex: 1,
     width: '100%',
+    paddingTop: 20, // To avoid status bar
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
-    paddingBottom: spacing.md,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F5F5F5',
   },
   title: {
-    fontSize: typography.fontSize.h3,
-    fontWeight: typography.fontWeight.bold,
-    color: colors.gray900,
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 18,
+    color: '#111111',
+  },
+  resetText: {
+    fontFamily: 'Poppins_500Medium',
+    fontSize: 14,
+    color: '#757575',
   },
   backBtn: {
-    padding: spacing.xs,
+    padding: 4,
   },
   scrollContent: {
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.xl,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 40,
   },
   toggleRow: {
     flexDirection: 'row',
-    marginBottom: spacing.xl,
-    gap: spacing.md,
+    marginBottom: 32,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 9999,
+    padding: 4,
   },
   toggleBtn: {
-    flexDirection: 'row',
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 9999,
     alignItems: 'center',
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
-    borderColor: colors.gray200,
-    backgroundColor: colors.gray50,
+    justifyContent: 'center',
   },
   toggleBtnActive: {
-    backgroundColor: THEME_RED,
-    borderColor: THEME_RED,
-  },
-  radioOuter: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.gray300,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: spacing.sm,
-  },
-  radioInner: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: THEME_RED,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   toggleText: {
-    fontSize: typography.fontSize.body,
-    color: colors.gray600,
-    fontWeight: typography.fontWeight.medium,
+    fontFamily: 'Poppins_500Medium',
+    fontSize: 14,
+    color: '#757575',
   },
   toggleTextActive: {
-    color: colors.white,
-    fontWeight: typography.fontWeight.bold,
+    fontFamily: 'Poppins_600SemiBold',
+    color: '#111111',
   },
   section: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.gray100,
-    paddingBottom: spacing.lg,
-    marginBottom: spacing.lg,
+    marginBottom: 32,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: spacing.md,
+    marginBottom: 16,
   },
   sectionTitle: {
-    fontSize: typography.fontSize.bodyLarge,
-    fontWeight: typography.fontWeight.bold,
-    color: colors.gray900,
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 16,
+    color: '#111111',
   },
   pillsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing.sm,
+    gap: 12,
   },
   pill: {
-    backgroundColor: colors.gray50,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderRadius: borderRadius.medium,
+    backgroundColor: '#F5F5F5',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 9999,
+    borderWidth: 1,
+    borderColor: '#F5F5F5',
   },
   pillSelected: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: THEME_RED,
+    backgroundColor: THEME_COLOR,
+    borderColor: THEME_COLOR,
   },
   pillText: {
-    color: colors.gray600,
-    fontSize: typography.fontSize.body,
+    fontFamily: 'Poppins_400Regular',
+    color: '#111111',
+    fontSize: 14,
   },
   pillTextSelected: {
-    color: THEME_RED,
-    fontWeight: typography.fontWeight.bold,
-  },
-  priceRangeText: {
-    fontSize: typography.fontSize.body,
-    color: colors.gray600,
-    marginBottom: spacing.xl,
-  },
-  sliderContainer: {
-    paddingHorizontal: spacing.sm,
-    paddingBottom: spacing.md,
-  },
-  sliderTrack: {
-    height: 4,
-    backgroundColor: colors.gray200,
-    borderRadius: 2,
-    position: 'relative',
-    width: '100%',
-  },
-  sliderActiveTrack: {
-    position: 'absolute',
-    left: '10%',
-    width: '50%',
-    height: '100%',
-    backgroundColor: THEME_RED,
-  },
-  sliderKnob: {
-    position: 'absolute',
-    top: -8,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: THEME_RED,
+    fontFamily: 'Poppins_500Medium',
+    color: '#FFFFFF',
   },
   footer: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    paddingBottom: spacing.xl,
-    backgroundColor: colors.white,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#F5F5F5',
   },
   applyBtn: {
-    backgroundColor: THEME_RED,
+    backgroundColor: THEME_COLOR,
     paddingVertical: 16,
-    borderRadius: 30,
+    borderRadius: 9999,
     alignItems: 'center',
+    shadowColor: THEME_COLOR,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   applyText: {
-    color: colors.white,
-    fontSize: typography.fontSize.bodyLarge,
-    fontWeight: typography.fontWeight.bold,
+    fontFamily: 'Poppins_600SemiBold',
+    color: '#FFFFFF',
+    fontSize: 16,
   },
 });

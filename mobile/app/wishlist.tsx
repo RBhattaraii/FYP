@@ -1,19 +1,81 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { colors, typography, spacing, borderRadius, shadows } from '../constants/theme';
-import { ALL_PRODUCTS } from '../data/mockData';
 import Header from '../components/Header';
+import { useFavorites } from '../context/FavoritesContext';
 
-const INITIAL_WISHLIST = ALL_PRODUCTS.slice(0, 4).map(p => ({
-  ...p,
-  inWishlist: true,
-  imageUrl: p.images[0]
-}));
+export default function WishlistScreen() {
+  const router = useRouter();
+  const { items, removeItem } = useFavorites();
 
+  const handleRemoveWishlist = (id: string) => {
+    removeItem(id);
+  };
 
+  const handleCompare = (item: any) => {
+    // Show an alert with price comparison info for now
+    // In a real app, this would show a modal or navigate to comparison page
+    Alert.alert(
+      'Price Comparison',
+      `${item.title}\n\nCurrent Price: Rs ${item.price}\nStore: ${item.brand}\n\nCompare across multiple stores to find the best deal!`,
+      [
+        { 
+          text: 'View on Store', 
+          onPress: () => {
+            // In a real app, this would open the product URL
+            Alert.alert('Navigate to Store', `Would open: ${item.product_url || 'Store URL'}`);
+          }
+        },
+        { text: 'Cancel', style: 'cancel' }
+      ]
+    );
+  };
+
+  const handleProductPress = (id: string, productUrl: string) => {
+    router.push(`/product/${encodeURIComponent(id)}`);
+  };
+
+  const renderItem = ({ item }: { item: any }) => (
+    <WishlistCard
+      item={{
+        ...item,
+        brand: item.storeName,
+        rating: 4.9, // Default
+        store_name: item.storeName,
+        product_url: item.productUrl,
+        inWishlist: true
+      }}
+      onPress={() => handleProductPress(item.id, item.productUrl)}
+      onRemove={() => handleRemoveWishlist(item.id)}
+      onCompare={() => handleCompare({
+        title: item.title,
+        price: item.price,
+        brand: item.storeName,
+        product_url: item.productUrl
+      })}
+    />
+  );
+
+  return (
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <Header />
+
+      {items.length === 0 ? (
+        <EmptyState onExplore={() => router.navigate('/(tabs)/explore')} />
+      ) : (
+        <FlatList
+          data={items}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+    </SafeAreaView>
+  );
+}
 
 const EmptyState = ({ onExplore }: { onExplore: () => void }) => (
   <View style={styles.emptyContainer}>
@@ -63,9 +125,9 @@ const WishlistCard = ({
         {/* Badges */}
         <View style={styles.badgesRow}>
           <View style={styles.stockBadge}>
-            <Text style={styles.stockBadgeText}>3+ Offers</Text>
+            <Text style={styles.stockBadgeText}>Live Prices</Text>
           </View>
-          {item.price > 200 && (
+          {item.price > 1000 && (
             <View style={styles.promoBadge}>
               <Text style={styles.promoBadgeText}>Best Deal</Text>
             </View>
@@ -75,8 +137,8 @@ const WishlistCard = ({
         {/* Bottom Row: Price & Action */}
         <View style={styles.bottomRow}>
           <View style={styles.priceContainer}>
-            <Text style={styles.priceLabel}>From </Text>
-            <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+            <Text style={styles.priceLabel}>Rs </Text>
+            <Text style={styles.price}>{item.price}</Text>
           </View>
           <TouchableOpacity style={styles.cartButton} onPress={onCompare} activeOpacity={0.7}>
             <Ionicons name="pricetags-outline" size={16} color={colors.gray900} style={{ marginRight: 4 }} />
@@ -87,55 +149,6 @@ const WishlistCard = ({
     </TouchableOpacity>
   );
 };
-
-export default function WishlistScreen() {
-  const router = useRouter();
-  const [wishlistItems, setWishlistItems] = useState(INITIAL_WISHLIST);
-
-  const handleRemoveWishlist = (id: string) => {
-    setWishlistItems(prev => prev.filter(item => item.id !== id));
-  };
-
-  const handleCompare = (id: string) => {
-    // In a real app, this might navigate specifically to a comparison tab inside the product details
-    router.push(`/product/${id}`);
-  };
-
-  const handleProductPress = (id: string) => {
-    router.push(`/product/${id}`);
-  };
-
-  const renderItem = ({ item }: { item: any }) => (
-    <WishlistCard
-      item={item}
-      onPress={() => handleProductPress(item.id)}
-      onRemove={() => handleRemoveWishlist(item.id)}
-      onCompare={() => handleCompare(item.id)}
-    />
-  );
-
-  return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
-      <Header
-        title="Wishlist"
-        showBackBtn={true}
-        onBackPress={() => router.back()}
-      />
-
-      {wishlistItems.length === 0 ? (
-        <EmptyState onExplore={() => router.navigate('/(tabs)/explore')} />
-      ) : (
-        <FlatList
-          data={wishlistItems}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
-    </SafeAreaView>
-  );
-}
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -154,6 +167,12 @@ const styles = StyleSheet.create({
   },
   emptyIcon: {
     marginBottom: spacing.lg,
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.xl,
   },
   emptyTitle: {
     fontSize: typography.fontSize.h2,

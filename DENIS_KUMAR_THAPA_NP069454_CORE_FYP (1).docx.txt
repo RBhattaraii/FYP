@@ -1,0 +1,1417 @@
+FINAL YEAR PROJECT
+AI Multimodal Medical Data Fusion for Disease Prediction
+By
+Denis Kumar Thapa
+NP069454
+NP3F2409IT
+A report presented as partial requirement of degree course of Bachelor of Science (Hons) in Information Technology at Asia Pacific University of Technology and Innovation.
+Supervised By: Prof. (Dr.) R N Thakur
+2nd Marker: Mrs. Garima Giri
+August 2025
+Acknowledgement 
+I would express my sincere thanks to Prof. (Dr.) R. N. Thakur, who has been my Supervisor, Module Leader, and the Dean of LBEF College, and has provided his expert supervision, helpful advice, and constant support during the creation of this Final Year Project. His expertise and guidance in the area of Artificial Intelligence and research work in higher academia were key to helping this research technically and philosophically. 
+I also heartily acknowledge the help of Mrs. Garima Giri, my Second Marker, who helped me with her observation, good judgments, and structured feedback at every step of this research. Her input played an essential role in making sure that the project was not biased towards either extreme of the study or application levels of the project 
+I would like to particularly thank all the faculty, and other personnel at Lord Buddha Education Foundation (LBEF), Kathmandu, Nepal, and Asia Pacific University of Technology and Innovation (APU), Malaysia, for providing an academically sound atmosphere, which stimulated an innovative thought process, and critical analysis and technical exploration. 
+Also, I would like to acknowledge the medical workers, patients, and people participating in a survey and providing valuable insights into the process of collecting and validating data. This made their contribution useful and applicable in the design of the system. 
+Finally, I would like to express my gratitude to my friends and family who supported and encouraged me on my way of conducting the research. Their faith in me encouraged me and they made me through the tough period; they ensured that I did not lose focus and tried my best to accomplish this major step of my studies.
+Abstract
+Early identification of diseases is critical in improving the chances of survival of patients, saving on healthcare expenses, and enabling care providers to act promptly in cases that require medical attention. Nevertheless, classical healthcare systems are based on isolated streams of data like texts or isolated imaging, which hinders the diagnostic performance and slows down the treatment. In this project, these drawbacks are overcome with the suggestion to create an AI-based system capable of combining and interpreting multimodal medical data (clinical notes, medical imaging (e.g., X-rays, MRIs), physiological signals, etc.) to more accurately forecast the likelihood of disease. The given system is suggested using the CRISP-DM approach to the whole procedure resolution: the identification of healthcare issues and the collection of multimodal data, the implementation of machine learning and deep learning algorithms to classify the disease. In the AI pipeline, Convolutional Neural Networks (CNNs) are used to interpret images, Recurrent Neural Networks (RNNs) to learn temporal trends in patient history and Naive Bayes are used as classic classifiers to structured data. Such varied modalities are then combined at the decision level in order to improve reliability of prediction. This AI-based solution should dramatically help medical institutions in low-resource locations once deployed, as it will allow making fast data-based decisions and develop individual treatment regimens. 
+Keywords: Disease Prediction, Multimodal Data Fusion, Deep Learning, Artificial Intelligence in Health care, CRISP-DM, CNN, RNN
+SDG 3: Good Health and Wellbeing
+Provision of healthy lives and well-being of all ages of every population.
+Table of Contents
+Acknowledgement4
+Abstract5
+Table of Contents6
+List of Figures12
+List of Tables15
+CHAPTER 1:INTRODUCTION TO THE STUDY17
+1.1Introduction17
+1.2Problem Background18
+1.3Project Aim20
+1.4Objectives20
+1.5Scope20
+1.5.1Tasks to be executed20
+1.5.2Constraints21
+1.5.3In-Scope22
+1.5.4Out-of-Scope22
+1.6Potential Benefits22
+1.6.1Tangible Benefits22
+1.6.2Intangible Benefits23
+1.6.3Target Users23
+1.7Deliverables – Functionalities of the Proposed Study24
+1.7.1Healthcare Professional (Users)24
+1.7.2For Administrators25
+1.8Overview of IR26
+1.9Project Plan27
+CHAPTER 2:Literature Review29
+2.1Introduction29
+2.2Domain Research29
+2.3Similar Systems32
+2.3.1IDx-DR32
+2.3.2Google Health’s Breast Cancer Detection System33
+2.3.3IBM Watson for Oncology34
+2.4Technical Research35
+2.4.1System Requirements Analysis35
+2.5Programming Language Chosen36
+2.5.1Python36
+2.5.2Comparison Between Programming Languages37
+2.5.3IDE Chosen – VS Code38
+2.6Database Management System Chosen – PostgreSQL39
+2.6.1Comparing Proposed Database Management Systems40
+2.7Operating System Chosen – MacBook Air M141
+2.7.1Web Server Chosen – Apache HTTP Server41
+2.7.2Web Browser Chosen – Google Chrome42
+2.8Summary43
+CHAPTER 3:METHODOLOGY44
+3.1System Development Methodology44
+3.2Methodology Chosen45
+3.2.1Comparing Agile Methodology & Waterfall Methodology46
+3.3Agile Methodology Stages47
+3.3.1Planning47
+3.3.2Requirement Analysis47
+3.3.3Design48
+3.3.4Implementation48
+3.3.5Testing49
+3.3.6Deployment49
+3.3.7Evaluation & Feedback50
+3.4Research Methodology50
+3.4.1Qualitative Research (Surveys)50
+3.4.2Quantitative Research (Interviews/Discussion)51
+3.5Data Gathering Design51
+3.5.1Data Gathering Techniques51
+3.6Analysis54
+3.6.1Frequency of using technology to serve health purposes54
+3.6.2Comfort With Posting Medical Records to AI Systems54
+3.6.3Best Attributes of an AI Healthcare Product54
+3.6.4Significance of the ease of use in healthcare applications55
+3.6.5Preferred Devices to connect with the System55
+3.6.6Better accessibility through Language preferences55
+3.6.7Faith in AI-based Med tools55
+3.6.8Value of Explainability in trust building55
+3.6.9Readiness to Provide Medical Data to AI Systems56
+3.6.10Recommended Focus Areas of Disease Diagnosis56
+3.6.11Preferred Feedback Type by AI Systems56
+3.6.12Feedback Campus Openness to System Improvement56
+3.6.13Internet Availability by Respondents56
+3.6.14Present obstacles to quality healthcare57
+3.6.15Likelihood to utilize an AI Health System on a mobile device57
+3.7Final Users Requirements List58
+CHAPTER 4:DESIGN & IMPLEMENTATION60
+4.1Introduction60
+4.2System Design61
+4.2.1Introduction61
+4.2.2System Architecture Diagram61
+4.2.3Use Case Diagram62
+4.2.4Use Case Specification63
+4.2.5Sequence Diagram74
+4.2.6Activity Diagram78
+4.3Database Design84
+4.3.1Entity Relationship Diagram (ER Diagram)84
+4.3.2PostgreSQL Data Dictionary86
+4.4Interface Design91
+4.4.1Wireframes92
+4.4.2UI Screenshots97
+4.5Execution102
+4.5.1Testing & Discussion of the System104
+4.6Summary105
+CHAPTER 5:RESULT & DISCUSSION106
+5.1Introduction106
+5.2Testing Plan107
+5.2.1Unit Testing107
+5.2.2User Acceptance Testing (UAT)114
+5.3Summary118
+CHAPTER 6:CONCLUSION119
+6.1Critical Evaluation119
+6.2Limitation120
+6.3Recommendation120
+References122
+APPENDICES126
+Appendix A: PPF (Proposal Form)126
+Appendix B: Ethic Form (Fast Track)131
+Appendix C: Log Sheets135
+Appendix D: Poster141
+Appendix E: Gantt Chart142
+Appendix F: Sample Code Implementation144
+Appendix G: Respondents Demographic Profile148
+Appendix H: Survey Response Charts149
+List of Figures
+Figure 1 Project Plan of IR27
+Figure 2 FYP Project Plan28
+Figure 3 Homepage of IDx-DR32
+Figure 4 Homepage of Google Health’s Breast Cancer Detection System33
+Figure 5 Homepage of IBM Watson34
+Figure 6 Python Logo36
+Figure 7 VS Code Logo38
+Figure 8 PostgreSQL Logo39
+Figure 9 MacOS41
+Figure 10 APACHE HTTP Server Logo41
+Figure 11 Google Chrome Logo42
+Figure 12 Agile Methodology45
+Figure 13 Users List58
+Figure 14 System Architecture Diagram61
+Figure 15 Use case Diagram of AI Multimodal System62
+Figure 16 User Interaction with System75
+Figure 17 Disease Prediction Workflow76
+Figure 18 Data Interaction & Management77
+Figure 19 User Registration & Login activity diagram79
+Figure 20 Patient Data Input & Upload80
+Figure 21 Data Preprocessing81
+Figure 22 AI Inference & Prediction82
+Figure 23 Data Storage & Record Management83
+Figure 24 Result Display & Text-to-Speech84
+Figure 25 Database Diagram85
+Figure 26 Wireframe of Login Page92
+Figure 27 Wireframe of Signup Page93
+Figure 28 Wireframe of Home Page of Multimodal system94
+Figure 29 Wireframe of Medical Insight/Report95
+Figure 30 Wireframe of Health Analytics Dashboard96
+Figure 31 Homepage of the system97
+Figure 32 Signup Page of the System99
+Figure 33 Login Page of the system100
+Figure 34 Health Checkup & Report Generator of the system101
+Figure 35 Health Analytics of the system102
+Figure 36 PPF126
+Figure 37 Ethic Form131
+Figure 38 Meeting Log Sheets135
+Figure 39 Poster141
+Figure 40 Gantt Chart IR142
+Figure 41 Gantt Chart FYP143
+Figure 42 Environment & Library Imports144
+Figure 43 Analytics Generation Function144
+Figure 44 Speech-to-Text Module145
+Figure 45 Database Configuration and ORM Models146
+Figure 46 Signup & Login Implementation147
+Figure 47 Respondents Profile148
+Figure 48 Survey Charts Response149
+List of Tables
+Table 1 Tabular Overview of System Requirements35
+Table 2 Comparing Programming Languages37
+Table 3 Comparing DB Systems40
+Table 4 Agile & Waterfall Methodology Comparison46
+Table 5 Use Case Specification for Registration64
+Table 6 Use Case Specification for Login/Logout65
+Table 7 Use Case Specification for View Homepage66
+Table 8 Use Case Specification for Browse Health Check-up Page67
+Table 9 Use Case Specification for Upload Medical Image68
+Table 10 Use Case Specification for Enter Lab Results/Patient Profile Data69
+Table 11 Use Case Specification Provide Voice Input70
+Table 12 Use Case Specification for View Disease Prediction Results71
+Table 13 Use Case Specification for Listen to Text-to- Speech72
+Table 14 Use Case Specification for Access Patient Records/Reports73
+Table 15 User Table86
+Table 16 Patient Table87
+Table 17 Medical Image Table88
+Table 18 Lab Result Table89
+Table 19 Prediction Result Table90
+Table 20 Unit Testing - Registration108
+Table 21 Unit Testing – Login/Logout109
+Table 22 Unit Testing – Upload Medical Image110
+Table 23 Unit Testing – Enter Lab Results110
+Table 24 Unit Testing – Voice Input111
+Table 25 Unit Testing – Prediction112
+Table 26 Unit Testing - Record Access113
+Table 27 Unit Testing - Text-to-Speech Output113
+Table 28 UAT – Registration & Login/Logout115
+Table 29 UAT – Upload Medical Image & Enter Lab Results116
+Table 30 UAT – Voice Input & Prediction117
+Table 31 UAT – Record Access & Text-to-Speech118
+ INTRODUCTION TO THE STUDY 
+Introduction 
+Medical diagnosis has been in a revolutionizing phase with the implementation of artificial intelligence (AI) that enhances and increases the accuracy, speed, and accessibility of medical diagnosis. Conventional diagnostic processes tend to rely on fragmented diagnostic information or single sources of data, e.g., radiology images, or laboratory data (Krittanawong et al., 2020). Although these techniques have worked to a certain degree, they are still weak in terms of giving the complete picture of a patient. Such fragmentation has the potential of slowing down interventions and may decrease efficiency leading to greater cost of healthcare services. The platform is powered by a high throughput AI inferencing platform that brings high execution speeds and minimal latency to completion of complex models which allow quicker feedback of diagnostic results (Mo et al., 2025). The medical image interpretation and visual reasoning is applied with a vision-based processing unit in order to analyze diagnostic scans, i.e. MRIs and X-rays. Transcription to speech functions can digitalize and record clinical observations as they are uttered in real time, and text to speech systems can synthesize easy to understand and natural sounding speech to communicate with patients and provide feedback to the system. The web-based interactive interface allows healthcare professionals to easily interact with the system, and the core backend (built in Python) ensures the ease of integrating all components and ensures secure management of data (Licorish, Understanding the Effect of Agile Practice Quality on Software Product Quality, 2024). 
+The combination of these technologies has the potential of helping the system in three respects by providing better diagnostic precision using multimodal analysis, providing better accessibility by making the system voice enabled, and by reducing delays in clinical workflows due to high performance inferences. The solution is not meant to substitute the medical professionals but to complement their decision-making process. Finally, the strategy is also in line with future goals of using AI to deliver accessible, understandable, and efficient healthcare assistance in a vast number of medical settings.
+Problem Background
+Healthcare systems all over the world are getting pressured to handle the complexity, volume and the variety of medical data being created. Such traditional types of diagnosis are frequently performed on a per-data basis many isolated data points: a specific radiology image, lab result or even physician note, instead of aggregating these data points into an individualized picture of the patient a holistic one. This disjointed system usually leads to partial observations, reduced swiftness in decision making and in certain instances, faulty diagnosis (Ansari et al., 2025). An example of this is that an abnormality on a scan such as MRI or CT scan may be detected however, that finding alone may not give the complete picture in isolation and in combination with laboratory findings, clinical observations and patient history. Their urgency to or timely diagnosis then increases the problem (Avgeriou, 2024). In a life-threatening situation like cancer, heart condition or nervous illness, even a slight delay in the detection of symptoms can have serious implications for treatment. The process of manual analysis of a large set of data, such as images, test results, and patient records, is tedious and subject to human error because of fatigue, workload, or lack of availability of specialists. Research shows that diagnostic errors happen in almost every 10th patient and healthcare system delay in diagnosis is one of the most common types of preventable harm in healthcare (Li, 2024). 
+In resource-constrained settings, the problems are even more serious, since the access to skilled specialists and advanced testing equipment is limited, which further decreases the probability of timely intervention. The other major dilemma is in the heightening complexity of medical data. More health care organizations are generating large quantities of omnipresent data such as structured databases, unstructured clinical notes, and images, and even voice-based input. However, the majority of available diagnostic tools can be used to process a single type of data, i.e. images or text. This disintegration will not allow healthcare professionals to use the available information to the maximum to make their decisions comprehensive and reliable (Holvitie, 2021). It therefore follows that the prospect of multimodal data towards enhancing diagnostic outcomes is unexploited. Accessibility is another issue of concern as well A substantial part of the higher end diagnostic systems are restricted to large hospitals and other research centers with the budget to bear the consumption of high end computing systems. Smaller clinics and hospitals and those in remote areas do not have access to such resources and this leaves large populations underserved (Zhang et al., 2025). Also, in most cases, diagnostic devices are not inclined to natural human-computer interaction. To give an example, although most of the physicians involved in clinical note dictation are used to using speech to dictate notes, few of the systems include an option to seamlessly convert speech to text, or vice versa, in order to dictate or proofread, making them more difficult and time-consuming. Recent international research identifies the AI capability in medical healthcare diagnostics. Studies point out that an AI can decrease diagnostic time by up to 90% , which means that clinicians will be able to make decisions quicker, and diagnostic precision can increase up to 30% over traditional methods. In some areas, AI-based tools have also shown an accurate level of above 90% in identifying a particular condition thereby increasing the chances of catching a missed diagnosis. These gains do not only improve patient outcomes but also bring cost-saving and efficiency to healthcare systems all over the world.
+Project Aim
+To create an AI-based system with the capability of embarking on multimodal medical data incorporation, such as images, lab results, and patient profiles, to allow for enhanced and early identification of diseases with a high level of precision.
+Objectives
+Following are the core objectives of the project:
+To develop a multimodal AI-based framework that combines medical images, lab test results, and patient records to analyze the disease.
+To create a convenient web client with a speech-to-text and text-to-speech option.  
+To be scalable and to request a large amount of data and new disease detection requirements. 
+To design a simple but low-cost system which can be utilized in real clinical settings.
+Scope
+This project is focused on the design and development of a multimodal machine learning-based disease predictor and monitor. Medical images, laboratory results and profile data on each patient will be consolidated and indexed into one analysis system, allowing better and earlier detection of illness. The project will be rounded off with the design of an interactive web-based interface capable of speech-to-text and text-to-speech conversions to make the project usable by health professionals.
+Tasks to be executed
+Synthesis/Obtained a collection of multimodal medical data (diagnostic images, laboratory results, and patient demographic / profile data) from synthetic / open-source data. 
+Preprocessing of input data (such as image resizing and enhancement) and the structured formatting of lab reports, the normalization of patient records to become consistent. 
+The ability to integrate AI modules that perform image analysis (vision engine), speech recognition (speech-to-text) and speech synthesis (text-to-speech) into one coherent system process. 
+Designing and programming an online prototype interface which allows physicians to upload patient information, get predictions and communicate through voice input and output. 
+Patient information stored and managed in a secure and scalable relational database to ensure retrieval and analysis is efficient. 
+Checking the quality of the work of the AI system based on testing data and in terms of accuracy, precision, recall, and F1-score indicators. 
+Usability testing, and the gathering of feedback on the site by the survey/interview method with the target users (healthcare professionals). 
+Writing a report of the work on the system architecture, schematization, and implementation process supporting results of the evaluation process.
+Constraints
+Projects will have to be done within the academic timeline, restricting the amount of experimentation and iteration that can be done. 
+Use publicly available small or limited sample data rather than real hospital data because of privacy and ethical prohibitions. 
+It can require limited machine size and scale of the dataset depending on the available hardware and cloud resources. 
+The system will be used as a proof-of-concept prototype (as opposed to a fully certified medical diagnostic tool). 
+Use less robust tools, open-source frameworks and academic material instead of enterprise-level tools.
+In-Scope
+Multimodal medical data integration (images, lab results, patient profile). 
+Artificial intelligence-based development of disease detection. Web based user interface, voice interaction capabilities. 
+Database management to safely and at a large scale store data. 
+Testing ways of the system work and ease of use in the simulated conditions.
+Out-of-Scope
+Real applications in actual hospitals and clinics. 
+Processing of very sensitive regulatory compliance (e.g. HIPAA, GDPR certification).
+Additional and robust image segmentation or deeply specialized pipelines through deep learning beyond-prototype requirements.
+Incorporation with external hospital information systems, or electronic health record (EHR) systems.
+Potential Benefits
+Tangible Benefits
+Better diagnostic results by incorporating medical image, laboratory tests, and other demographic data. 
+Early detection of life threatening diseases like cancer, diabetes and cardiovascular diseases. 
+Early medical assistance which assists in decreasing the amount of money spent on healthcare. 
+A modular system with the adequate capacity to handle large volumes of data and accommodate new diseases. 
+Cost effective diagnostic support which is useful in resource strained settings. 
+Automated data processing where manual aspects are reduced which has minimized the human error in data management. 
+Enhanced efficiency in the process of clinical decision-making. Friendly insertion in the current healthcare infrastructures, making implementation easier.
+Intangible Benefits
+Safer use of AI tools by providing understandable and clear results. 
+Good patient morals and quality of life result in early and accurate detection. 
+Equipping the medical professionals with higher-level diagnostics support.  
+Decreasing the barriers to the healthcare access of groups, which have been marginalized or underserved. 
+Encouraging AI into healthcare by amplifying openness and trust. 
+Promoting the development of health equity by ensuring the dissemination of diagnostic technologies globally. 
+Fostering the cooperation of AI specialists and medical professionals. 
+Societal well-being, which leads to long-term improvement in the health of the people.
+Target Users
+Doctors and Radiologists – Verify AI-generated diagnosis and provide professional opinions and feedback, to help improve AI-guided accuracy. 
+Medical Researchers – Contribute by developing diagnostic models, testing the performance of systems and validating the results on real clinical data. 
+Hospital IT Administrators – Maintain seamless transfer of the system to the hospital infrastructure, data safety and all the healthcare compliances.
+Patients – Act as the source of data and written consent, as well as usability feedback and healthcare experience. 
+Regulatory Authorities – Formulate healthcare compliance standards, regulate ethical considerations and authorize the system to be deployed after checking on the compliance with the regulation. 
+General Users (Stakeholders) – General Users will interact with the system to make sure its functionalities are reliable, accurate and seamless to all stakeholders to whom it is built.
+Deliverables – Functionalities of the Proposed Study
+This is an early disease detection system powered by artificial intelligence that will be dedicated to providing healthcare professionals, system administrators, and end-users with the timely, high-quality, and explainable diagnostic results by combining multimodal medical data (images, reports, and patient history). It creates a gap between sophisticated AI functions and actual healthcare demands as well as enabling clinical practicality and technological expandability. It also intends to be highly resource-efficient in nature due to its lightweight and web-based design to be applicable in resource-constrained environments.
+Healthcare Professional (Users) 
+A web-based interface in which hospital personnel may attach multiple types of records (e.g., X-rays, laboratory reports, patient demographics) and access results of diagnoses. 
+A user-friendly interface to access results of diagnosing tasks, interpretability opportunities (i.e., heatmaps, charts of feature-importance), and tools to manage patient data. 
+Automated report generation that allows professionals to download complete diagnostic summaries to use clinically. 
+Personalized diagnostic recommendations that are generated in AI using multimodal medical data. 
+History tracking and visualization of past history of diagnostic of patients to support longitudinal care.
+For Administrators
+A user management dashboard to manage the users, track data uploads, and to have an overview of the diagnostic results. 
+A feature of knowledge sharing to post updates, medical guidelines, and findings of the research. 
+Wrappers to maintain and update a centralized medical records store of multimodal records. 
+Measure the accuracy rate and use of the system identification metrics to be assessed and enhanced continuously. 
+To the System (Technical Deliverables AI-based early disease detection providing the combination of imaging, laboratory results, and patient demographics in one diagnostics process. 
+Centralized storage architecture that facilitates effective retrieval, filtering and search across multimodal data. 
+Data preparation processes that clean, normalize and enrich heterogeneous data stream towards converting it into a source that performs optimally with the model.
+The ability to work with large and extensive datasets and dynamic response to new diseases with minimal retraining. 
+The scalable deployment solutions suited to cost-restricted health care delivery.
+An in-built validation system to perform validation in accuracy, scale, usability, and compliance. 
+Full documentation in form of user manuals, technical reports and deployment guidelines.
+Overview of IR
+The key part of this study is the development and design of the Early Disease Detection System based on Artificial Intelligence and utilization of multimodal health information. The system should improve clinical decision-making by substantially lessening media diagnoses. Contrary to old methodology that is subject to human error, involves manual steps, and only a single source of data, this method incorporates multiple medical inputs, creating a more extensive evaluation of patients health status. The suggested system integrates radiological imaging, medical record, and physiological assessments to build a picture of the whole picture of patient conditions. The system allows patient data remotely at a higher efficiency by using a web-based interface, cloud storage, and real-time analytics. Furthermore, patients are involved in proactive messages that will provide them with information regarding possible threats to their health condition, which contributes to the practice of preventive care. Even though the system has such potential, it has some technical, ethical and infrastructural issues. These are data privacy issues and interpretability of the model as well as challenges in assimilating existing healthcare systems. The general aim is to create a progressive healthcare system that would help in early intervention, curb mortality due to early identification and improve the level of healthcare accessibility especially in places like Nepal where Quality diagnostic services are lacking and delayed due to various reasons. 
+Project Plan
+Figure 1Project Plan of IR
+Figure 2FYP Project Plan
+ Literature Review
+Introduction 
+This section presents an overview of current research in the area of multimodal machine intelligence systems, explainable artificial intelligence and low-cost diagnosis technologies. The purpose is to determine what existing developments there are, what research gaps remain, and what innovations might be potentially possible. Based on the analysis of the recent academic work and practice, the review will form the solid base where an AI-powered system designed to aid early disease detection and solve real-world healthcare challenges can be established (Licorish, 2024).
+Domain Research
+Multimodal data fusion is becoming increasingly important in healthcare professionals as it enables multiple sources of clinical information, including imaging results, lab results, and patient history to be incorporated. The philosophy also offers a bigger outlook on the condition of the body, which enables more accurate assessment of a multifaceted illness such as cancer and heart diseases. To illustrate, using MRI analysis together with clinical data aids in the identification of brain tumors because certain patterns that may not be recognized in single-mode study are visible when containing both forms of data. This process is complex to manage because the data formats differ, the data may be of varied resolution, and there is the presence of noise (Salunke S. V., 2024).
+Medical imaging technologies have demonstrated exceptional success in projects like tumor detection and anomaly detection, through the adoption of state-of-the-art deep learning methods. These devices are very useful in X-rays examination, MRI scans and in the eye where they can identify very minute details that the human eye cannot identify with. Although these kinds of models are well suited to deal with single data sources, they fail to account multiple modalities due to which they are not suitable as a comprehensive tool of understanding patient conditions (Han, 2024).
+With a view to overcoming interpretability issues, healthcare professionals have started utilizing the services of explainable AI (XAI). Such tools enable healthcare professionals to know how models work by showing the most significant features in decision-making. Increasing the transparency of AI systems enables physicians to develop trust when using AI systems to support clinical decisions. However, at the same time, integration of such explainable systems into the current practices of healthcare presents a considerable challenge (Quality, 2023).
+Transformer-based architecture has gained popularity in recent years and especially Vision Transformers (ViTs) have demonstrated their potential to process complex visual data and mix different data modalities. Their capabilities to extract relations between various types of inputs make them more multipurpose than classical convolutional models. But these systems usually involve cumbersome datasets and computing resources, so they might not be easy to use within resource-limited healthcare settings (Saabith, 2021).
+There are also attempts to produce diagnostic tools that are cost effective and applicable even in low-resource settings. Examples of this include mobile-based retinal imaging that provides broader availability of diabetic retinopathy screening. The potential affordability of such innovations in terms of their ability to increase access to healthcare is observed; however, there is also a continuing need to ensure accuracy, consistency, and standardizing such innovation across populations (Sobieraj, 2024).
+Edge computing has also enhanced the implementation of AI in healthcare because they can process data locally. This minimizes latency, reduces expenses and provides greater patient privacy, which is of particular benefit in remote or underserved communities. Light AI systems used on portable devices have proven the possibility of point-of-care diagnostics that do not need permanent internet access (Jeyaraj, 2022).
+Fairness of AI models is another hot field of focus. When training data are biased, a mismatched treatment recommendation can be made, which can perpetuate existing healthcare disparities. This can be avoided by avoiding homogeneous and non-representative datasets, and subsequent monitoring to identify inequitable performance by group (Raschka, 2020).
+Along with scalability and adaptability, AI systems are essential to deal with emerging diseases and operating big data. Other strategies like modular system design and transfer learning have worked well, giving these models the ability to transfer knowledge gained through previous tasks into new tasks without having to complete intensive retraining (Gains, 2025).
+To eventually produce human-centered AI systems, their development must involve a steady effort on the part of healthcare providers and patients. The assimilation of medical professional feedback into the design process makes the tools practical and user-friendly and ensures that the tools are clinically-based. By engaging people in this participatory approach, ADNI increases the usability of AI systems and makes the insights produced by these systems actionable and trustworthy in the real-life healthcare context (Group, 2025).
+Similar Systems 
+IDx-DR
+Figure 3Homepage of IDx-DR
+IDx-DR is a retinal imager system approved in the US by FDA to identify diabetic retinopathy based on retinal images performed on the system. It has a high performance level upon detecting eye diseases but is also limited to the processing of imaging data. It fails to incorporate the other valuable information like the laboratory results and medical history of the patients which limits its scope. It also has a degree of possible improvement in that rather than basing its diagnosis on a single methodology, use of multimodal data would lead to a more complete and more accurate diagnosis (System), 2025).
+Google Health’s Breast Cancer Detection System
+Figure 4Homepage of Google Health’s Breast Cancer Detection System
+Google Health has been working on AI models that screen breast cancers by analyzing mammograms and demonstrated promise in detecting malignant tumors. Nevertheless, there are two major issues that limit its adaptation into traditional healthcare. The first weakness is the impossibility of explaining its behavior, and the second one is the challenges of integrating the system into the established clinical practices (McKinney S. M., 2020).
+IBM Watson for Oncology
+Figure 5Homepage of IBM Watson
+IBM Watson Oncology uses artificial intelligence to help healthcare professionals design cancer treatment based on structured patient information. Although innovative, its requirement of structured data and the computer intensity associated with it has placed a restriction on its adoption. All this has a bearing on its application in low-resource healthcare settings, where cost-effectiveness and ease of access are the key factors in making deployments practicably possible (Yun, 2021).
+Technical Research
+System Requirements Analysis
+To provide reliable and scalable performance of the Early Disease Detection System based on the application of AI, the hardware and software requirements are thoroughly determined. To guarantee the possibility of working with complex medical data and superior models training, such resources are needed.
+Table 1Tabular Overview of System Requirements
+Components 
+Specification 
+Justification
+Hardware 
+MacBook Air with the Apple M1 Chip, 8-core CPU, 8GB of memory and 256GB of storage
+Can take on programming duties and simple model training, macOS complements this with Unix-like stability and has good performance 
+Operating System 
+macOS (Development) Ubuntu Server (Deployment)
+Unix-based development environment accessible to AI frameworks and Ubuntu has been determined to be one of the richest open-source environments.
+IDE
+Visual Studio Code
+A powerful development interface with Python language and Docker and Git support opportunities.
+Browser 
+Google Chrome
+It includes sophisticated development and debugging tools (DevTools) and can empower such frontend testing frameworks as Streamlit and Gradio.
+Programming Language Chosen 
+The backend logic and the development of the AI model are programming in Python, and both elements of the system use its ecosystem extensively. The frontend interface is created with the help of Streamlit, a framework written in Python, but JavaScript can be added to the application as well to add further sophistication.
+Python 
+Figure 6Python Logo
+Python is the platform of selection since it enjoys high uptake of AI and machine learning across other sectors. Three key strengths of its popularity are: a rich ecosystem of libraries and frameworks, its simplicity and readable syntax, and good community support. The Python language provides the project with the most significant advantages because of a wide range of AI/ML tools, a rich collection of libraries with narrowly focused functionality, and adaptability to be deployed on various platforms (Lukasczyk S. K., 2023). Even though R is very effective in statistical analysis and research, it lacks end- to- end full-stack support. Likewise, JavaScript is particularly good with frontend code development yet does not serve the backend logic very well or in AI applications (McKinney W. , 2022).
+Comparison Between Programming Languages
+Table 2Comparing Programming Languages
+Feature
+Python (Chosen)
+R
+Javascript
+Libraries
+Extensive (TensorFlow, PyTorch, scikit-learn)
+Strong (caret, randomForest)
+Limited (TensorFlow.js)
+Syntax Simplicity
+High
+Moderate
+Moderate
+Data Analysis Capabilities
+Excellent
+Excellent
+Basic
+Web Development Support
+Full-stack (Django, Flask)
+Limited (Shiny only)
+Excellent (React, Node.js)
+Deployment Flexibility
+High (cloud, APIs, containers)
+Moderate
+High (frontend-focused)
+Community & Ecosystem
+Large and active
+Strong in academia/statistics
+Very large (web-centric)
+Note: The table above is a comparison between Python (selected), R and JavaScript noting important differences and reasons why we selected Python as the development platform of the AI-powered early disease detection system.
+Justification: The programming language of Python was chosen to develop a project on the basis of its unmatched suitability to artificial intelligence (AI) and machine learning (ML) development along with its usability and simplicity, and extensive library and framework support. Python offers powerful frameworks like TensorFlow, Py Torch and scikit-learn that are today industry standards in predictive modeling development and training that is vital in the early detection of diseases. Although R is an excellent tool in statistical analysis and data visualization, being used widely in biomedical research, it is not sufficient to develop a scalable and fully-integrated healthcare application. Its backend and deployment options are weak and therefore it is not appropriate to be used in the kind of system that would be addressed at the production level (Smytzek, 2023). JavaScript, despite its predominance in frontend web development and its high efficiency in building interactive user interfaces, does not provide competitive merits in server-side code or AI/ML models building. Although there are libraries such as TensorFlow.js they are not as well fleshed out or powerful as their Python variants. Due to requirements of an undisrupted relationship between the AI modeling, backend services, and potential future integration in cloud platforms, Python seems like the best combination of power and versatility. Its flexibility allows it to be used end-to-end: to preprocess the data, train the model, create the APIs and deploy it into the system, making it the best choice in the AI-driven healthcare solution (Lukasczyk S. &., 2022).
+IDE Chosen – VS Code
+Figure 7VS Code Logo
+Justification: VS Code development environment is chosen to be used. The tool is light, but highly capabilities and integrates well with Python, Docker, and Git. It provides efficient backend development, and AI model building, therefore, it can serve as a very useful tool on this project. VS Code is chosen as the IDE of this project because of its portability, effective debugging, and its favorable Python development features. Through the provided features such as built-in IntelliSense, colors, and syntax highlighting, version control support via Git, VS Code makes the coding process efficient and increases productivity (Ecosystem, 2024). Also, VS Code is compatible with Docker providing the possibility to containerize the program and, thus, make it more consistent and easily adjusted to various environments. Extensions like Python, Pylance, Jupyter and GitLens offer state-of-the-art features in AI models development, testing and collaboration. Its platform-independent features and communities offer it an excellent place for both group and individual development (Code, 2021).
+Database Management System Chosen – PostgreSQL
+Figure 8PostgreSQL Logo
+The system uses PostgreSQL as database management system. It is an advanced DBMS, free of charge, open-source, and high-performance, reliable, and scalable. Its strong querying functionality makes it a good fit when the same is needed in health care applications given the need to ensure security, large-scale, and accurate data processing (Salunke S. V., 2024).
+Comparing Proposed Database Management Systems
+Table 3Comparing DB Systems
+Feature
+PostgreSQL (Chosen)
+MySQL
+MongoDB
+Type
+Relational (RDBMS)
+Relational (RDBMS)
+NoSQL (Document-based)
+Performance (Complex Queries)
+Excellent complex queries
+Good joins, limited
+Unsuitable in relation questions
+Scalability
+High (To be used in big systems)
+High
+High
+ACID Compliance
+Completely ACID-C compliant
+Possibly, (depends on storage engine)
+Limited support
+Security Features
+Powerful, and endowed with user-specific affordances
+Good
+Flexible, and less traditional
+Data Structure
+Stressing on minimal data (tables)
+Tabular data
+Unstructured / semi-structured
+Justification for choosing PostgreSQL: We will use PostgreSQL because it is reliable, highly secure, and can be flexible. It is also ACID compliant, and this is critical to processing medical and patient data. Advanced operations queries including analytics, security-based role access and JSON (Douglas, 202). In addition, PostgreSQL can handle the load of a growing system well, and its open-source design at the same time makes it non-expensive and flexible which further proves its fitness to operate healthcare information in the long-term perspective (Felius, 2022).
+Operating System Chosen – MacBook Air M1
+Figure 9MacOS
+Justification: Mac OS was chosen as the development operating system due to the fact that it is very stable, has good security and can use various development tools. It offers a Unix style environment which is perfect for software and AI development and has most open-sources libraries available by default. The operating system is also credibly renowned for offering smooth multi-tasking, reliable terminal, and optimized performance, which adds up to smooth developing opportunities (Wieruch, 2025).
+Web Server Chosen – Apache HTTP Server 
+Figure 10APACHE HTTP Server Logo
+Justification: Apache HTTP Server was selected as web server because of its open-source status, flexibility and the vast community of developers it has. It has compatible installations to various platforms such as macOS and high security modules crucial in the processing of sensitive data especially in healthcare. Apache is also flexible on the approach to authentication and can handle large volumes of traffic making it very accommodative on a healthcare-based website (Server, 2024).
+Web Browser Chosen – Google Chrome
+Figure 11Google Chrome Logo
+Justification: Google Chrome has been chosen as the main browser to develop and test because of its speed, reliability and advanced developer tools. Debugging, performance testing, and optimization of web applications can be performed using features such as Inspect Element and Lighthouse efficiently. Its regularity in updates, adherence to the current web standards, also supports its compatibility to the development of healthcare systems alongside testing (Browser, 2023).
+Summary 
+In short, the system development was enabled through a chosen set of tools that balance in terms of performance, security and scalability. macOS allowed us to develop in an efficient and consistent atmosphere, Apache was used to deliver secure high performance web serving, and chrome has been used to debug and test the platform. This suite of tools, in addition to PostgreSQL which was used as a database management system, permitted the successful and scalable deployment of the project both to ensure that it is usable and that it is also secure. 
+ METHODOLOGY
+System Development Methodology
+The development of an early disease detection system based on AI and using multimodal medical data should involve a carefully constructed procedure that will guarantee reliability, adaptability, and transparency. The system incorporates artificial intelligence with medical imaging, tabular data sets, and real-time feedback of healthcare professionals and patients through all phases, including requirement gathering, model training, model testing, deployment and constant adjustment. A suitable methodology will present clarity in schedules, involve stakeholders, maintain conformity with concerns related to data privacy and should include error checking automation. As the AI models require regular retraining with new data, it is also necessary to have a methodology that quickly adapts to changes, is iterative, and continuously incorporates feedback. The traditional Waterfall model was replaced with Agile methodology since it is more flexible, enables continuous collaboration with stakeholders and provides the opportunity to test prototypes at each development stage quickly, resulting in a speedy adaptation and the achievement of desirable results (Bhuvan Unhelker, 2022).
+Methodology Chosen
+Figure 12Agile Methodology
+In this project, the Agile development methodology was used because of its high-adaptability and team-centered structure, which has been proven to be ideal in dealing with the technical demands of a healthcare AI system: complicated and continuously changing. Compared to Waterfall approach, Agile permits the iterative development by using successive turns and does not require the complete set of specifications in advance (al., 2021). The ability to shift and be able to adjust the AI models using the available data, suggestions by medical professionals, and model performance is critical especially in the integration of medical images, patient records, and clinical reports.
+Comparing Agile Methodology & Waterfall Methodology
+Table 4Agile & Waterfall Methodology Comparison
+Methodology
+Waterfall
+Agile(Chosen)
+Development Style
+Linear and sequential
+Iterative and incremental
+Flexibility
+Rigid changes are difficult after planning
+Highly flexible changes welcomed at any stage
+User Involvement
+Limited to beginning and end
+Continuous involvement throughout development
+Risk Management
+Higher risk due to late testing and feedback
+Lower risk  issues identified early through frequent testing
+Suitability for AI Projects
+Poor does not support dynamic, data-driven iterations
+Excellent  supports frequent model updates and retraining
+Delivery
+One time delivery at project end
+Frequent, smaller deliveries via sprints
+Testing
+Performed after development phase
+Continuous testing integrated in each sprint
+Documentation
+Heavy and completed upfront
+Light but updated continuously
+Justification: Agile allows constant assessment as well as intensive feedback provided by the stakeholders so that the developers can make changes that can translate to effectiveness under real life conditions without necessarily prolonging the project duration. The importance of partnering with domain experts such as radiologists and other healthcare practitioners in the domain should not be ignored when it comes to the success of the system. With Agile the discussion techniques enable these professionals to attend regular meetings, and review comprises of the Couch Sprints and share their knowledge enabling the software to be aligned to clinical practices and conforming to medical requirements (Zaveri, 2024). Constant feedback should be made to avoid the development of systems that are efficient technologically but do not suit the user needs and overall usability package. The TensorFlow or PyTorch network can be built on an AI prediction model, the backend can be programmed in Flask or FastAPI, and the front end can be developed in Streamlit or Gradio. Agile would be best to use in this healthcare AI project since it facilitates a flexible methodology, human-friendly approach of design, and continuous development (Ali, 2021).
+Agile Methodology Stages
+Planning 
+The foundation of the project began in the planning phase. The system was specified to pick up diseases precisely and at an early stage by the integration of various types of medical data, such as radiological images, clinical test results, and histories record of a patient. At this stage, the development team formalized the overall system design as well as what the principal functional components would be. These involved the development of AI models, architecting data ingestion pipelines, backend using Flask or FastAPI and frontend visualization in Gradio.
+Requirement Analysis
+This stage was aimed at the collection of detailed functional and non-functional requirements. Structured interviews and surveys of healthcare professionals that were approached on three medical positions: radiologists, general physicians, and laboratory technicians. There was also a collection of patient perspectives that was an element of determining how prepared the patient is for an AI-assisted diagnostic system (Martin, 2021). The key findings were the necessity to retain high prediction accuracy, support medical images and present explainable results using visual heatmaps of affected areas. The security of data became a major factor of consideration leading to the introduction of anonymization and encryption to be used. Prior to system design, the team concluded requirement documentation and a group input and where ethical approvals were obtained by the team supervisors.
+Design
+In the design process, technical framework of the system was worked out. The architecture comprised three principal layers: the AI and related data processing layer, the backend API and business logic layer and the frontend user interaction layer. Data flow charts explained how the inputs of the patient are converted to practical diagnostic data. AI pipeline included four steps of data preparation, model training, validation, and interpretation of results. UI mockups containing the reporting of the predictions, the historical management of the patients, the reports, and the predictions were available to the doctors and the patients via Flask- and FastAPI-based backend endpoints. The relational database scheme addressed both forms of data, the structure and the unstructured in a very efficient manner. Reviewers were recruited to assess the development in terms of technical feasibility and clinical relevance (Freeman, 2021).
+Implementation 
+The implementation of the system was done using iterative development cycles whereby each component was built and tested in intervals. The AI model was implemented on Python, and its training was on some of the available publicly accessible medical data. The backend consisted of Flask to control endpoint management, authenticating users, addition and uploading of data and the prediction process. The front end was built using Streamlit which allows doctors and patients to interact in real time. Modular design allowed individual testing, debugging and upgrading of each of the component systems. Docker was utilized to achieve its portability and ease its deployment to diverse local, cloud and hospital environments. Version control and the documentation of the project was done in GitHub.
+Testing 
+The validation of the software was done through vast testing of components. The AI model was evaluated on the basis of diagnostic measure metrics of precision, accuracy, recall, F1-score, and ROC-AUC to guarantee reliable predictions. Unit tests were written in automation, and Postman was used to test both functionality and robustness of backend endpoints. The interface was tested in terms of usability, clarity and responsiveness by technical and non-technical users including doctors. Full system integration testing was done to ensure that the processes of image input into prediction output were correct. Data protection and access control practices were checked in security testing to ensure they are met. Test results were ranked in order to inform the fix and improvement actions that would be implemented in later development sprints.
+Deployment 
+The system was implemented on secure cloud computing, e.g. GPU-enabled instances within GCP or AWS, to execute AI model inference. Docker containers normalized both deployments in the testing and in the production environment. The AI model was designed as a microservice, and APIs were used to connect frontend and backend services. Users got access to the system through a web-based interface developed with Streamlit Sharing or a custom-written web server. CI/CD pipes, which are implemented in GitHub Actions, automatic updates, testing, and bug elimination. The security controls comprised firewalls, SSL encryption, and authentication mechanisms and were in compliance with the regulations of healthcare.
+Evaluation & Feedback
+The system has been tested in real life, including doctors and voluntary patients. Physicians used the system to check the accuracy and validated model predictions and explanations. They were used to obtain feedback on the usability of the system and ease of reading selected reports and interface design. Recommendations were to put in place improved report presentation, language adaptability, user assistance features, and better explanations of the model. It was also recommended that there be better integration with electronic health records (EHR) with feedback. Feedback rounds on the developer between the developers and the healthcare team were critical in ensuring the improvement of the quality of the system, usability, and user satisfaction.
+Research Methodology
+Quantitative and qualitative research approaches had to be cohesively applied in the development of an AI-powered system to conduct early disease detection. The combination of these methods promoted the retrieval of extensive data sets, which contained quantifiable data with rich understandings of user requirement, clinical considerations, and anticipated issues in collecting data. Such a strategy guarantees a comprehensive approach in terms of both technical and practical demands when developing a powerful AI system (Neves, 2024).
+Qualitative Research (Surveys)
+Quantitative data were collected by structured surveys that were done to healthcare professionals, medical data analysts, and patients. This primary aim was the acquisition of statistical data on the practice of early disease detection and the assessment of the rate of adoption of the AI tool by professional staff in their work in medicine. A majority of clinicians showed a preference to use AI systems that gathered both visual and written healthcare data, including medical images, as well as laboratory reports and physician notes in order to evaluate their patients holistically. This understanding led to the establishment of a harmonized solution that was able to manage both the structured and non-structured health information effectively (Wiradarma, 2025). 
+Quantitative Research (Interviews/Discussion)
+Complementary qualitative studies were conducted with the help of interviewing and discussions with radiologists, physicians, and healthcare IT specialists. The aim was to find out what practitioners actually do, what the problem of trust in AI, with references to patient data privacy and preferred system interfaces. These discussions identified important demands such as the necessities to utilize explainable AI capable of visually and textually explaining any predictions and explaining the rationale used by the model and being able to support the legal and clinical interpretation of AI results. The resulting observations of this qualitative research have been used to inform the formulation of AI modules that present clear visual heat maps and descriptive comments on each prediction. Quantitative surveys and qualitative interviews were used in the project in a way that allowed gathering evidence-based information and at the same time take into consideration possible realities in a practical setting of healthcare (Arif, 2022).
+Data Gathering Design
+Data Gathering Techniques
+Data collection was essential in order to realize the ideas of medical staff on their expectations and concerns about such AI-driven systems to be involved in multimodal early disease detection. Surveys were selected as the major data-collection instrument after the comparison of the possible methods.
+Surveys 
+Research has been carried out with the aid of Google Forms to obtain feedback from key stakeholders, such as medical professionals, IT workers, and patients. The questionnaire contained quantitative questions and subjective responses about possibilities to diagnose diseases early using AI, the required features, and the aspects of data security and usability. The input of more than thirty validated participants created a well-established background to the user-centered system developments. Participants such as medical personnel of varied post-doctors, nurses, laboratory technicians, IT personnel in healthcare facilities and patients of different knowledge levels regarding medical technology were invited. This broad-based sample provided the project team with comprehensive feedback on usability and adoption of the system both clinical and end-user perspectives.
+Surveys Questionnaires
+The questionnaire was to garner important feedback on what users expect, or the concerns they have, and the improvements they think can be made to the AI-based system used to help with early disease detection. Questions were set in a multiple choice and Likert scale format and covered the views regarding the significance of early diagnosis, the trust in the AI system and interface choice, data privacy needs and the overall system satisfaction. This systematic procedure made analysis easy, and the input of the medical practitioners and patients was thorough and constructive.
+Respondent Demographics
+Age Group
+Analysis of survey data also showed that most respondents (57.6%) were aged between 18 and 30 years, meaning that younger adults are more conversant with the use of digital health technologies. Age groups between 31 and 45 years comprised 24.2, 46 to 60 years was 12.1 and under 18 was 6.1. This population sample consisted of both uncleansed and skilled users that would give a fair judgment.
+Gender
+Out of 30 + participants about 80 percent identified as males and 20 percent identified as females. By including female respondents, diverse life experiences and the perspectives were taken into consideration in developing the system.
+Residence Area
+Geographical information indicated that 54.5 percent of the respondents were living in metropolitan regions where proper health institutions were available. The other individuals involved were 18.2 percent in the rural areas, 15.2 percent in the urban regions and 12.1 percent in sub-metropolitan locations. This diversity enabled cross-contextual learning.
+Roles in Health Care System
+Loyalty among the participants of the healthcare ecosystem was represented by multiple types of healthcare professionals. The 19 survey participants were patients and/or general population, and their input was necessary as end-users. Health workers were physicians/specialists, four medical researchers, a hospital administrator, a health policymaker, and two radiologists. The involvement of service providers and recipients promoted the design of optimal systems and ensured effectiveness to the demands of the healthcare world.
+Analysis
+Based on the findings of the research, we can see that users use health technology alternately and show readiness to share their medical record with AI systems under the condition that their privacy is not compromised. The most important aspects of the users are convenient visual explanations and the accessibility using mobile devices. Trust in AI tools will rise in case systems are transparent and users are willing to share their health data to diagnose common diseases like cardiovascular diseases and cancer. The three challenges that the AI-based healthcare system is going to solve include high expenses, geographical limitation, and delays.
+Frequency of using technology to serve health purposes 
+Majority of the users had occasional interactions with health technology platforms with a percentage of 42.4. There was a use of platforms weekly among 30.3 percent of the adults and a daily use of 21.2 percent. A tiny proportion (6.1%) did not use health technology. Overall, 83.9 percent of respondents actively using digital health solutions indicate an area of opportunity to make them more usable and functional.
+Comfort With Posting Medical Records to AI Systems
+To the patients, the comfort level of submitting their medical data to an AI system was moderate. Twenty one percent of the participants were somewhat comfortable with sharing the data, 66.7 percent were comfortable, and 12.1 percent opted not to share. This implies that user adoption is still governed by the issues of trust and privacy.
+Best Attributes of an AI Healthcare Product
+Most of the respondents preferred to use visual explanation tools like heatmaps and charts as well as to download the medical reports. It was important for users to have features on the site that enable them to post the results of diagnostic checkups and track their health history. Although secure access and AI-generated recommendations were given relatively less attention, they still are quite important. The insights give direction over the areas of focus in system design.
+Significance of the ease of use in healthcare applications
+The ease of use is very important to the users with 48.5 percent and even more likely important to 27.3 percent. The user interface is vital in the adoption of a system as well as the positive user experience.
+Preferred Devices to connect with the System
+Among respondents, smartphones were the device of choice with 54.5 percent of the respondents, laptops or PC with 33.3 percent, and tablets with 12.1 percent. This implies that mobile integration must be put on agenda during development of the systems.
+Better accessibility through Language preferences
+Participants also reported the necessity of bilingual assistance, namely, English and Nepali, where some of the participants expressed the need only in English or only in Nepali. It is necessary to provide language options in case of accessibility and a broader range of people.
+Faith in AI-based Med tools
+Trust in AI systems was high, with 42.4% agreeing that they completely trust the systems and another 42.4% agreeing that they trust it to a lesser degree. A small number (15.2%) of them were not sure and no one said he/she did not trust them at all. This shows a general attitude towards use of AI in medical practices.
+Value of Explainability in trust building
+Majority (87.9%) of the users claimed that reading clear explanations of the AI prediction would make them more trusting. Interpretable and explainable outputs are essential in order to gain trust with the AI-aided medical approaches.
+Readiness to Provide Medical Data to AI Systems
+Respondents have shown interest in exchanging beyond health care data such as doctor notes, lab results, and radiology data, as long as there is trust between the parties. Sharing of all data requires proving the reliability of the system and privacy protection.
+Recommended Focus Areas of Disease Diagnosis
+Early diagnosis of heart disease (78.8%) and cancer (66.7%) and diabetes (48.5%) were deemed emergent by participants. These are the areas which correspond to the main health concerns of the region and on the basis of which the system attention should be focused.
+Preferred Feedback Type by AI Systems
+Text-based summaries of DACS were the most desired format of feedback (36.4 percent). Other inclinations were video tutorials (33.3 percent), audio explanations (18.2 percent), and other visual aids like charts and heat maps (12.1 percent). This implies that there needs to be a multimodal feedback system to accommodate demands of various users.
+Feedback Campus Openness to System Improvement
+There is a strong willingness of the user to provide feedback, something that is essential in improving the performance of the system. More than three-quarters of the respondents (78.8%) stated that they were willing to make suggestions and comments. This implies that the iteration and incremental development driven by users is possible, since most respondents are willing to share their input that can be used to update and improve the system.
+Internet Availability by Respondents
+A majority (72.7%) have fast internet services and thus they can interact easily with internet based health services. There are 24.2% limitations with the availability of data and 3% have inconsistent connectivity. On the one hand, the majority of users can have appropriate access to healthcare systems developed with the use of the Internet, but a part of the population might welcome the lightweight versions of systems available due to restricted bandwidth conditions.
+Present obstacles to quality healthcare
+The biggest difficulties that hinder access to quality healthcare are high expenses (69.7%), long wait (60.65%), and far traveling distances (42.4%). Other challenges that can be encountered include the lack of medical specialists, the imperfection or absence of patient records. These barriers need to be addressed so that effective implementation of AI-driven healthcare solutions could be achieved, that is and in which the system can be developed to counter these barriers, which are common to all systems.
+Likelihood to utilize an AI Health System on a mobile device
+The likelihood of participants using a mobile-based AI health system that offers free services rising to the level of very likely, with 42.4 percent of participants, followed by moderate likelihood, which was also expressed by an equal proportion of participants. This shows that there is a high level of interest in the implementation of AI healthcare systems through smartphones and therefore, the use of mobile-compatible systems should be emphasized to make them more widely accessible and used.
+Final Users Requirements List
+Figure 13Users List
+ DESIGN & IMPLEMENTATION
+Introduction 
+The stage of design and implementation is an important  process in this project since it is translated into an operational system the research findings and concepts proposed. In the case of an AI-based medical solution, the design process has to provide all the modules with the logically developed structure, interoperability, and scalability according to the current and further needs of the sphere of healthcare. This chapter reports on the entire process of system architecture, implementation, and execution; the blueprint, database, and user-interface layouts are discussed. Preliminary work in this chapter is the system design, which depicts the general structure of the framework in form of activity diagram, use case diagram and sequence diagrams. These plots present a visualization of the medical image/laboratory outcome and patient base data computational process paths towards the formation of a single predictive output. This is then proceeded by the database design that explains how the data will be structured, stored and picked up using PostgreSQL in order to promote efficiency, security and scalability in storing multimodal healthcare information.
+Thereafter, the interface design is addressed in which user-friendly layouts are displayed. The interface design is crucial to usability, in that healthcare professionals can employ it while transitioning along with it with ease via the logical navigation and visualization of the output and features like speech-to-text and text-to-speech features. The implementation section details the period of integrating tools, framework, and APIs, including the use of the inference engine, the vision analysis framework, speech recognition and synthesis modules, the Python-based backend as well as web interface. Lastly, the screenshots and illustrations of the system are given to confirm the implementation process.
+System Design 
+Introduction 
+Design The overall project structure is determined by design which converts conceptual requirements into a set of well-structured models and diagrams. In this project, design addresses the way medical images, laboratory results, patient profile data and audio inputs are processed in the various modules of the multimodal AI framework. Its aim is to maintain a seamless movement of data through all the elements, such as preprocessing of data, inference of AI, storage and user-interface. In order to accomplish this a number of Design approaches to systems have been used, i.e. Activity Diagrams, Use Case Diagrams and Sequence Diagrams. All these images contribute to visualizing and validating the system in different ways: data flow, people interaction and process running (Hananto, 2020).
+System Architecture Diagram
+Figure 14System Architecture Diagram
+Use Case Diagram
+Figure 15Use case Diagram of AI Multimodal System
+A Use Case Diagram uses boxes to show graphically how a user or actor within Unified Modeling Language (UML) interacts with a system in terms of functionality requirements and an external view of an application. It can be used to determine the users who will access the system, what are the core activities they will perform, thus the design will be in line with user expectations. The Healthcare Professional is the main user of the system, who would access the system to perform various actions such as uploading medical images (X-ray, MRI, or skin condition pictures), entering or uploading laboratory results and patient profile information, providing voice input to facilitate faster interaction, viewing disease prediction results and the explanations that the system generates, listening to text-to-voice outputs, and accessing stored patient records in the database (Bass, 2021). Secondly, the System Administrator is an auxiliary actor and his/her roles are connected with maintaining data set storage and backups, tracking the work of AI inference models, updating system with new data sets in order to improve accuracy and provide a guarantees of the data security and accessibility.
+Use Case Specification
+A document containing a written description explaining how different users (actors) may interact with a system to accomplish an objective is  Use-case Specification . As opposed to a basic Use case Diagram, which depicts a pictorial summary of the actors and their interaction, the specification goes further explaining the key points of each use case. These are the name of use-case, the actors, the precondition which must be true before the use case is run, the main flow of events describing step-by-step interactions, possible alternate flows in case something goes wrong or follows a different path and the post-conditions which represent a state of the system after the use case is completed. Such an organized perspective will provide a clear view of system operations as perceived by the users and will assist in producing precise and user-centered solutions.
+Table 5Use Case Specification for Registration
+Use case 
+Register
+Actor
+Unregistered Healthcare Professional (primary)
+Description 
+New users (doctors, nurses) must create an account to access the system functionalities.
+Priority 
+High
+Status
+Open
+Pre-condition
+Users must have basic details (name, email, password, designation).
+Pre-condition(s)
+ A new user account has been created, and the user can log in.
+Main flow
+• User navigates to “Register” page.• User enters name, email, password, and role.• System validates details.• If valid, account is created successfully.
+Alternate flow
+If email already exists, system prompts us to use another.Password length < 8 → system requests stronger password.
+Exceptional flow 
+If system error occurs during registration → show error message and retries option.
+Table 6Use Case Specification for Login/Logout
+Use case 
+Login/Logout
+Actor 
+Medical professionals / Admin
+Description
+Allows an encrypted user log-in and log-out process.
+Priority
+High
+Status 
+Open
+Pre-condition 
+A valid user account must exist.
+Main Flow
+•⁠  ⁠User provides email and password.
+•⁠  ⁠System checks credentials.
+•⁠  ⁠If valid, users are granted access.
+•⁠  ⁠User may log out anytime.
+Alternate Flow
+⁠If password is incorrect → system displays "Invalid Credentials".
+Exceptional Flow 
+⁠If multiple failed attempts occur → account is temporarily locked.
+Table 7Use Case Specification for View Homepage
+Use Case
+View Homepage
+Actor(s)
+Registered User
+Description
+Displays dashboard with system overview and navigation to features.
+Priority
+Medium
+Status
+Open
+Pre-Condition
+User must be logged in.
+Post-Condition(s)
+Homepage loads with dashboard view and menus.
+Main Flow
+User logs in.
+⁠System opens homepage with available menus.
+⁠User navigates through features.
+Alternate Flow
+If server is slow → system displays loading spinner.
+Exceptional Flow
+If homepage fails → error message is shown.
+Table 8Use Case Specification for Browse Health Check-up Page
+Use Case
+Browse Health Check-up Page
+Actor(s)
+Healthcare Professional
+Description
+Provides access to multimodal health check-up features.
+Priority
+High
+Status
+Open
+Pre-Condition
+User must be logged in.
+Post-Condition(s)
+Users can choose data upload methods (image, lab data, voice).
+Main Flow
+⁠User clicks on "Health Check-up".
+⁠System opens the health check-up page.
+⁠Options for data upload are displayed.
+Alternate Flow
+If incomplete data → system prompts "Upload at least one modality".
+Exceptional Flow
+⁠If network error occurs → options fail to load.
+Table 9Use Case Specification for Upload Medical Image
+Use Case
+Upload Medical Image
+Actor(s)
+Healthcare Professional
+Description
+Uploads X-ray, MRI, or skin condition images for AI analysis.
+Priority
+High
+Status
+Open
+Pre-Condition
+Valid image file (JPG/PNG/DICOM).
+Post-Condition(s)
+Image stored in system and preprocessed.
+Main Flow
+User selects upload options.
+User browses and uploads images.
+System validates format.
+Image stored in database.
+Alternate Flow
+Unsupported file format → error shown.
+Exceptional Flow
+Upload fails due to server issue.
+Table 10Use Case Specification for Enter Lab Results/Patient Profile Data
+Use Case
+Enter Lab Results/Patient Profile Data
+Actor(s)
+Healthcare Professional
+Description
+Allows patients entering vitals and lab reports.
+Priority
+High
+Status
+Open
+Pre-Condition
+Patient details available.
+Post-Condition(s)
+Data saved to patient record.
+Main Flow
+User opens “Lab Results”.
+Enters patient vitals & reports.
+System validates fields.
+Data stored successfully.
+Alternate Flow
+Missing field → prompt to fill.
+Exceptional Flow
+System error → failed entry.
+Table 11Use Case Specification Provide Voice Input
+Use Case
+Provide Voice Input
+Actor(s)
+Healthcare Professional
+Description
+Accepts symptoms through voice and converts to text.
+Priority
+Medium
+Status
+Open
+Pre-Condition
+Microphones are enabled.
+Post-Condition(s)
+Voice converted to structured text.
+Main Flow
+User clicks “Voice Input”.
+Speaks into microphone.
+System records & transcribes.
+Text stored in database.
+Alternate Flow
+Noise detected → request repeat.
+Exceptional Flow
+No microphone access → error shown.
+Table 12Use Case Specification for View Disease Prediction Results
+Use Case
+View Disease Prediction Results
+Actor(s)
+Healthcare Professional
+Description
+Displays predicted disease with confidence score.
+Priority
+High
+Status
+Open
+Pre-Condition
+At least one modality uploaded.
+Post-Condition(s)
+AI prediction results displayed.
+Main Flow
+• System analyzes uploaded data.• Fusion layer combines results.• Prediction with explanation shown to user.
+Alternate Flow
+Insufficient data → warning message.
+Exceptional Flow
+AI model failure → retry required.
+Table 13Use Case Specification for Listen to Text-to- Speech
+Use Case
+Listen to Text-to-Speech Output
+Actor(s)
+Healthcare Professional
+Description
+Convert prediction text into audio speech.
+Priority
+Medium
+Status
+Open
+Pre-Condition
+Prediction results available.
+Post-Condition(s)
+Audio playback delivered.
+Main Flow
+• User clicks “Play”.• System generates audio.• User listens through speaker/headset.
+Alternate Flow
+If sound muted → system shows “Enable sound”.
+Exceptional Flow
+TTS service down → error shown.
+Table 14Use Case Specification for Access Patient Records/Reports
+Use Case
+Access Patient Records / Reports
+Actor(s)
+Healthcare Professional
+Description
+Retrieves and displays patient history and past predictions.
+Priority
+High
+Status
+Open
+Pre-Condition
+Patient record exists in database.
+Post-Condition(s)
+Patient details displayed successfully.
+Main Flow
+• User opens “Patient Records”.• System fetches stored reports.• Results shown on dashboard.
+Alternate Flow
+No records found → system shows empty list.
+Exceptional Flow
+Database error → retrieval fails.
+Sequence Diagram
+A Sequence Diagram is one of UML diagrams that demonstrates how objects or components of a system connect with another and execute the process over time. It focuses on the sequence of messages sent and received by the system components and when these messages take place, which is a vivid representation of the dynamism of the system. The sequence diagram in the scope of the disease prediction process shows the flow of the process, user input, conversion to the disease prediction and the result. The Healthcare Professional initial uploads an X-ray picture or leaves voice or text message, which is transferred by the Interface Module to the Preprocessing Module. The preprocessed data is then transferred to the AI Inference Engine, where images are processed by the Vision Engine, lab reports analyzed in the Text Engine and spoken text correctly recognized by the Voice Engine. The Fusion Layer synthesizes such outputs to produce a single diagnostic prediction that is saved in the Database Module to maintain records. Finally the Output Module reflects back the prediction to the user through the web interface, and with the choice of text-to-speech, the Healthcare Professional can view or hear the prediction. The illustrated diagram will point out the energetic interactions between system components and clarify when and in what order functions should be performed.
+Figure 16User Interaction with System  
+Figure 17Disease Prediction Workflow
+Figure 18Data Interaction & Management
+Note: The above 3 sequence diagrams together create a blueprint of how the system will work together- Multimodal AI-based disease prediction to complete user cycle and secure data management. The two demonstrate the manner in which medical data is processed, combined and stored so as to ensure that proper predictions, usability and adherence to healthcare standards.
+Activity Diagram
+An Activity Diagram is a UML diagram denoting the flow of activities or tasks within a system which shows how processes flow between one step and other in a system, including decisions, and parallel activities and how they are systematically organized. The activity diagram of AI-powered multimodal data fusion system of disease prediction indicates the entire workflow, including but not limited to data input, where the Healthcare Professional uploads an X-ray image or voice/text input. The data are then preprocessed, e.g., by image enhancement, speech-to-text conversion, or text normalization. The processed data is then passed through the AI Inference Engine via the Vision, Text and Voice modules and its outputs are merged in the Fusion Layer to give a diagnostic prediction. The data are saved in the Database Module as a record of the results and only ultimately displayed to the user either visually or audibly through the Output Module. The diagram is a good representation of the flow and sequence of the activities, decision points as well as parallel processes whereby it is easy to understand the workflow of the system in terms of activities within.
+Figure 19User Registration & Login activity diagram
+Figure 20Patient Data Input & Upload
+Figure 21Data Preprocessing
+Figure 22AI Inference & Prediction
+Figure 23Data Storage & Record Management
+Figure 24Result Display & Text-to-Speech
+Note: These activity diagrams are a brief overview of the patient data input, preprocessing, AI-based prediction, resulting result presentation enabled by audio support, and secure database storage and management end to end workflow of the system. They emphasize the lean procedures of proper, well-efficient and easy-user healthcare information management.
+Database Design 
+Entity Relationship Diagram (ER Diagram)
+The ER Diagram (Entity Relationship Diagram) of the AI-powered multimodal data fusion system provides the main entities and the relationships in the database. The main entities are Patient, Medical Record, Lab Test, and Predictions. Patient holds personal and demographic data, and Medical Record holds more detailed clinical history connected with the patient. Lab Test entity stores laboratory test results and diagnostic reports with references to the medical record in which they belong. Last, the Predictions entity contains AI generated predictions of disease based on multimodal inputs on the patient. The connection between these entities, i.e., each patient having multiple medical records or tests, and each prediction relating back to one patient and one record, makes the system effective to organize, retrieve and analyze medical data to reliably perform disease prediction.
+Figure 25Database Diagram
+PostgreSQL Data Dictionary 
+Table 15User Table
+Field Name
+Data Type
+Field Constraint
+Description
+user_id
+SERIAL
+PRIMARY KEY
+Unique ID for each registered user.
+role
+VARCHAR(50)
+NOT NULL
+Role of user (Doctor / Admin).
+full_name
+VARCHAR(100)
+NOT NULL
+User’s full name.
+email
+VARCHAR(100)
+UNIQUE, NOT NULL
+User’s email (login).
+password
+VARCHAR(255)
+NOT NULL
+Encrypted password.
+contact_no
+VARCHAR(15)
+User’s contact number.
+joined_date
+TIMESTAMP
+DEFAULT CURRENT_TIMESTAMP
+Date/time when user registered.
+status
+VARCHAR(20)
+DEFAULT 'Active'
+Status of user (Active / Inactive).
+Table 16Patient Table
+Field Name
+Data Type
+Field Constraint
+Description
+patient_id
+SERIAL
+PRIMARY KEY
+Unique ID for patient.
+patient_name
+VARCHAR(100)
+NOT NULL
+Name of the patient.
+gender
+VARCHAR(10)
+CHECK (gender IN ('Male', 'Female', 'Other'))
+Patient gender.
+date_of_birth
+DATE
+NULL
+Patient date of birth.
+contact_no
+VARCHAR(15)
+NULL
+Patient’s phone number.
+address
+TEXT
+NULL
+Patient’s address.
+medical_history
+TEXT
+NULL
+Medical history summary.
+created_by
+INT
+FOREIGN KEY REFERENCES User(user_id)
+Doctor/Admin who created record.
+Table 17Medical Image Table
+Field Name
+Data Type
+Field Constraint
+Description
+image_id
+SERIAL
+PRIMARY KEY
+Unique ID for uploaded image.
+patient_id
+INT
+FOREIGN KEY REFERENCES Patient(patient_id)
+Links to patient.
+file_path
+VARCHAR(255)
+NOT NULL
+Path/URL of stored image.
+modality
+VARCHAR(50)
+CHECK (modality IN ('X-ray', 'MRI', 'Skin', 'Other'))
+Image type.
+upload_date
+TIMESTAMP
+DEFAULT CURRENT_TIMESTAMP
+Date image uploaded.
+uploaded_by
+INT
+FOREIGN KEY REFERENCES User(user_id)
+User who uploaded image.
+Table 18Lab Result Table
+Field Name
+Data Type
+Field Constraint
+Description
+lab_id
+SERIAL
+PRIMARY KEY
+Unique ID for lab report.
+patient_id
+INT
+FOREIGN KEY REFERENCES Patient(patient_id)
+Links report to patient.
+report_type
+VARCHAR(50)
+NOT NULL
+Type of test (Blood, ECG, etc.).
+report_details
+TEXT
+NULL
+Report description and values.
+report_date
+DATE
+NULL
+Date of test/report.
+uploaded_by
+INT
+FOREIGN KEY REFERENCES User(user_id)
+User who uploaded report.
+Table 19Prediction Result Table
+Field Name
+Data Type
+Field Constraint
+Description
+prediction_id
+SERIAL
+PRIMARY KEY
+Unique ID for prediction.
+patient_id
+INT
+FOREIGN KEY REFERENCES Patient (patient_id)
+Links prediction to patient.
+input_type
+VARCHAR(50)
+CHECK (input_type IN ('Image',' Lab', 'Voice', 'Fusion'))
+Type of data used.
+predicted_disease
+VARCHAR(100)
+NOT NULL
+Disease predicted by system.
+confidence_score
+NUMERIC(5,2)
+CHECK (confidence_score >= 0 AND confidence_score <= 100)
+Prediction confidence in %.
+generated_date
+TIMESTAMP
+DEFAULT CURRENT_TIMESTAMP
+When prediction was generated.
+generated_by
+INT
+FOREIGN KEY REFERENCES User(user_id)
+User who initiated prediction.
+Interface Design
+The process of producing the layout, the visual and interactive elements that make users interact with system in efficient manner. It pays attention to the ease of usage, reliability, and the fluent user experience and guarantees that users can use the service with little effort and negligible mistakes. In the case of the AI-enabled multimodal medical data fusion model on the disease prediction, the interface design entails several wireframes to assist the healthcare professionals in their job. Doctors can upload patient information to Data Upload Screen, e.g. X-ray images, lab reports, voice recordings, etc. in an easy structured form. The Prediction Result Screen will show the disease prediction made by the AI (with a confidence percentage level) and an option to have the result read out, via a text-to-speech feature. The Speech Interaction Screen allows the physicians to dictate notes of their patients, which are interpreted by the system and are integrated into the workflow of diagnosis being stored in the database. This interface design will provide a smooth experience since there will be consistent interaction between healthcare professionals and the system, which promotes efficiency, accuracy, and usability.
+Wireframes 
+Figure 26Wireframe of Login Page
+Figure 27Wireframe of Signup Page
+Figure 28Wireframe of Home Page of Multimodal system
+Figure 29Wireframe of Medical Insight/Report 
+Figure 30Wireframe of Health Analytics Dashboard
+UI Screenshots
+Home Page
+Figure 31Homepage of the system
+Note: Home Page is the gateway to different opportunities to log in to the system and sign up. It has a center banner with a headline focusing on the AI enabled capacities in regards to health consultation, and cards with co-ordinated titles explaining key features, which include AI Consultation, Image Analysis, Voice Interaction, and Audio Output. Thesection Understanding the Mechanism of How it Works describes the three-stage process of uploading medical data, receiving the AI analysis and getting clear feedback, whereas user feedback shows reliability. A frequently asked questions (FAQ) panel at the bottom covers the most common questions, making it user friendly, intuitive, as well as informative to both first-time and returning users.
+Signup Page
+Figure 32Signup Page of the System
+Note: The Signup Page enables medical professionals to sign-up by filling in some important information, including Name, Email, Password, and Role (e.g. Doctor, Nurse). The system also does validation data integrity tests where it checks that the email is not already registered and the password fulfils the required strength criterion. A confirmation message is sent on a successful submission, and the user can securely access the system.
+Login Page
+Figure 33Login Page of the system
+Note: The Login Page allows registered members to enter the system at the point of obtaining their credentials to access the system using their email address and passwords. It grants a flawless authentication procedure and redirects user to their dashboard after a successful log in. The page is also well handled on errors since clear messages are given in cases where the credentials entered were not correct or the user is not registered thus making them aware of the problem during the log in process.
+Health Checkup
+Figure 34Health Checkup & Report Generator of the system
+Note: Health care professionals can use this page to record copious patient information like the medical images and lab results as well as leave voice notes on clinical observations. It contains validation processes to accommodate errors like unrecognized file formats, high image size or incomplete lab data to provide sound and precise data entry to be utilized in the problem-solving approach.
+Health Analytics
+Figure 35Health Analytics of the system
+The Health Analytics Dashboard gives a view of the patient data, predictions, and clinical insights in the form of visualizations such as charts and graphs. It presents the predictions of the disease and gives confidence scores and can converse freely with the user. The text-to-speech has also been incorporated in the page so that the predicted results can be audio and thus help healthcare providers make informed decisions within the limited time available.
+Execution 
+The implementation of the proposed AI Multimodal Medical Data Fusion system was carried out using a modular and well-structured development approach to ensure scalability, maintainability, and usability. The system was primarily built with Gradio to provide an intuitive, web-based user interface that supports real-time interactions. Core AI integration combines Groq API for high-performance inference, Speech Processing Engine for speech-to-text transcription, and Vision-based Analysis Module for multimodal medical data analysis.
+To ensure safe and stable storage, the system will employ the use of PostgreSQL/SQLite databases stored by SQLAlchemy ORM and user authentication and password manipulation will be done under implementation of Passlib/Bcrypt as a security. Several tools, APIs and libraries were used at various project phases. Data manipulation and visualization used Pandas and NumPy, with Plotly, Matplotlib, and Seaborn forming part of the visualization process of both static and interactive visualizations. Kaleido helped to export charts to be incorporated into reports and ReportLab to create automated invoice reports with visualizations embedded in them. The web and UI aspects enabled interventions to be chained easily and interaction design through event-driven programming in Gradio.
+The implementation was carried out in a modular style within six different dedicated modules: user interface, an AI with processing, data handling, authentication, visualization, and reporting modules. This made clean communication between layers and made maintenance easy. The system built-in several essential features such as multimodal consultation (voice and image analysis), real-time analytics dashboard (presenting a variety of chart types), programmed PDF report generation, and authentication/secure session management. Attribute To overcome the performance bottleneck, asynchronous processing was incorporated to avoid UI blocking, the temporary files processing capability was streamlined and powerful DataFrame operations were enabled to access large datasets. Additionally, strong error handling mechanisms were established, to offer an elegant degradation in case of errors. Comprehensively, the development of the in-build modern AI model, a robust database, trusted authentication, and an interactive user interface are meritoriously integrated during the implementation phase to achieve a fully-functional system that can provide the service of disease prediction and professional reporting in medicine.
+Testing & Discussion of the System
+Unit Testing and User Acceptance Testing (UAT) were used to ensure that the system worked and was correct and used to make sure that the system was easy to use. Module level testing was also done to test each of the core features against their expectations. The performance of key functionalities including registration, log in/out, medical image upload, lab results entry, voice input, disease prediction, access to their records, and text- to- speech conversion was also being tested. To ensure system robustness, valid and invalid inputs were presented in each of the test cases. The results were as follows: all of the critical features passed their desired outcomes and that there were the proper error messages when non-valid or incomplete data was provided (Beck, 2022).
+After validation of the system in unit level, User Acceptance Testing was conducted as a way of considering the system its end users. Healthcare professionals simulated patients and system administrators were put to tests to make the interface user-friendly and responses repetitive. Testing revealed that medical images and laboratory reports were uploaded correctly, and disease predictions were created with confidence levels and reports could be retrieved and played as audio. The UAT also confirmed that the system enabled the appropriateness of security measures like no duplication of entries, unauthorized users could not access patient records and proper handling of user sessions.
+The results of all the tests revealed that the system is stable, reliable, and works effectively in fulfilling its intended features. The multimodal disease prediction had predictable outputs and accuracy when used with complete data (image lab results) and could gracefully accept incomplete or error data inputs. Error handling mechanisms were also in top form and helped the user to get feedback in a clear and actionable manner. Generally, the testing implementation process confirmed that the combination of AI-models, databases and web interface are functional and in unison with each other, and the results proved that the system could achieve its design goals in real-life medical utility support practices.
+Summary
+Design and Implementation describes the architectural framework of the system and the successive development of the system in conceptual and technical details. It will contain  Use Case Diagrams and Specifications to indicate how users interact with the system and what capabilities it will have and Sequence Diagrams to be able to see how the system processes will flow with time. Presenting the chapter is Database Design, ER Diagrams and Database Table Structures to provide efficiencies in terms of storage and integrity of the medical data with support of PostgreSQL Data Dictionary as a technical reference. Last but not least, implementation paragraph explains in detail how the front-end, back-end, database and AI components were developed and incorporated to give a complete picture of how the AI Multimodal Medical System runs within efficiencies.
+ RESULT & DISCUSSION
+Introduction
+This chapter is a detailed presentation of results and discussion of the AI based multimodal medical data fusion system that was developed to predict the disease. Evaluating the performance, reliability and usability of the system using systematic testing and analysis is the main purpose of this chapter. The purpose is to evaluate the efficiency of the system in processing multimodal medical data, such as X-ray images, body laboratory text reports, and the voice data of the patient, and converting them into sound diagnostic recommendations. The review of the technical functionality along with user experience allows us to mark the strength of the preprocessing modules, AI Inference Engine (Vision, Text, and Voice modules), Fusion Layer and the Output Module. It also focuses on the communication between healthcare professionals and the system, whether the interface is convenient, the result of predictions is definite and valuable and whether the text to speak feature conveys this convenience further. Moreover, the chapter explains how the database and storage modules of the system store patient information in an integrity manner so that the past records can be easily retrieved to use in decision making. The discussion does not only highlight quantitative data of unit tests and other performance assessments but also incorporates the qualitative assessment of the end users in the User Acceptance Testing stage of the discussion in a real world usefulness and relevance. In general, the chapter offers a close look at the performance efficiency of the discussed system as well as identifies and identifies the areas that can be improved and shows how the system in question can be used with clinical decision making to combine multimodal medical information into a unified, trustworthy framework of predicting disease occurrences.
+ The two primary testing methods chosen to test  the technical performance of this project as well as a user experience are the Unit Testing and the User Acceptance Testing (UAT). Unit Testing also used to test all parts of the system, such as the Preprocessing Module, AI Inference Engine (Vision, Text, and Voice engines), Fusion Layer, Database Module, and Output Module and deliver correct accuracy in their respective capacities. The UAT was performed with medical experts as the target audience in mind to identify any gaps in usability and functionality that exist between the real world and system under test. 
+Testing Plan
+A Testing Plan is an organized and descriptive document that specifies the program or project of testing a system of activities, including their strategy, aims, resources, time-line, and scope. It stipulates how the system will be analyzed in order to determine whether it fits functional, performance or usability requirements, types of tests to be undertaken, the target audience and the basis of success or Failure. In case of an AI-based multimodal approach to data fusion in the medical domain of disease prediction, the test plan will check the technical accuracy of each module of the system, the combination of multimodal data, and the overall experience of the healthcare professional user. The plan will achieve a resilient system able to work with actual medical inputs and accurate, interpretable, useful medical predictions. A comprehensive testing template will also be in place to record test cases, input data, anticipated results, and practical results that will allow a structure assessment and easy tracking of problems (M. Dakhel, 2023).
+Unit Testing
+Unit Testing is an approach that checks individual components or blocks of a system, outside a system. At the framework of this project, the Unit Testing was conducted on each module in the AI-powered disease prediction system, such as Preprocessing Module, AI Inference Engine (Vision, Text and Voice engines), Fusion Layer, Database Module and Output Module (Ramler, 2025). The modules were tested individually in using sample medical images, lab reports and voice data to ascertain that they are working as they should. As an illustration, they tested the Preprocessing Module to verify the correct processing of image enhancement and text normalization, tested the Voice Engine to ensure the correct speech-to-text conversion, and tested the Fusion Layer to verify the correct multimodal outputs fusion. The Unit Testing reduced the errors as a number of errors were revealed and corrected in the early phases of development before the components were getting together in the fully functioning system (Zhang Q. F., 2025).
+Table 20Unit Testing - Registration
+Test Case ID
+Test Case
+ Description
+Test Data
+Expected Outcome
+Pass/Fail Criteria
+REG001
+Successful registration of healthcare professional
+Role: Doctor, Email: doc1@gmail.com, Password: StrongPass123
+Account created, success message shown
+Pass
+REG002
+Registration with existing email
+Email: doc1@gmail.com
+Error: "Email already exists"
+Pass
+REG003
+Weak password entry
+Email: nurse1@gmail.com, Password: 12345
+Error: "Password must be at least 8 characters"
+Pass
+REG004
+Missing required field
+Email missing
+Error: "Email is required"
+Pass
+Table 21Unit Testing – Login/Logout
+Test Case ID
+Test Case Description
+Test Data
+Expected 
+Outcome
+Pass/Fail Criteria
+LOG001
+Successful login with valid credentials
+Email: doc1@gmail.com, Password: StrongPass123
+Redirected to dashboard
+Pass
+LOG002
+Login with invalid password
+Email: doc1@gmail.com, Password: WrongPass
+Error: "Invalid email or password"
+Pass
+LOG003
+Login with unregistered email
+Email: test@gmail.com
+Error: "User not found"
+Pass
+LOG004
+Logout from system
+Click logout
+Session terminated, redirect to login page
+Pass
+Table 22Unit Testing – Upload Medical Image
+Test Case ID
+Test Case
+ Description
+Test Data
+Expected
+ Outcome
+Pass/Fail Criteria
+IMG001
+Upload valid X-ray image
+File: chest_xray.jpg
+File stored successfully
+Pass
+IMG002
+Upload unsupported file type
+File: report.docx
+Error: "Invalid file type"
+Pass
+IMG003
+Upload image exceeding size limit
+File: 20MB.png
+Error: "File too large"
+Pass
+IMG004
+Upload without selecting file
+Empty input
+Error: "No file selected"
+Pass
+Table 23Unit Testing – Enter Lab Results
+Test Case ID
+Test Case Description
+Test Data
+Expected 
+Outcome
+Pass/Fail Criteria
+LAB001
+Submit valid lab results
+Patient ID: P001, Test: CBC, Value: Normal
+Lab results stored
+Pass
+LAB002
+Submit incomplete form
+Missing test name
+Error: "Test name required"
+Pass
+LAB003
+Invalid numeric entry
+Value: “abc”
+Error: "Invalid input format"
+Pass
+LAB004
+Duplicate lab result entry
+Same test twice
+Error: "Record already exists"
+Pass
+Table 24Unit Testing – Voice Input
+Test Case ID
+Test Case 
+Description
+Test Data
+Expected Outcome
+Pass/Fail Criteria
+VOI001
+Provide valid voice input
+Audio: “Patient has fever”
+Correct text transcription shown
+Pass
+VOI002
+Provide unclear/noisy audio
+Audio: Background noise
+Error: "Voice not recognized"
+Pass
+VOI003
+Submit empty voice recording
+No input
+Error: "No voice detected"
+Pass
+Table 25Unit Testing – Prediction   
+Test Case ID
+Test Case
+ Description
+Test Data
+Expected Outcome
+Pass/Fail Criteria
+PRE001
+Prediction with complete data
+Image + Lab results
+Disease prediction with confidence score
+Pass
+PRE002
+Prediction with missing lab results
+Only image uploaded
+Error: "Insufficient data"
+Pass
+PRE003
+Prediction with corrupted image
+File unreadable
+Error: "Invalid file format"
+Pass
+PRE004
+Re-run prediction on same patient
+Patient ID: P001
+System updates result without error
+Pass
+Table 26Unit Testing - Record Access
+Test
+Case ID
+Test Case Description
+Test Data
+Expected Outcome
+Pass/Fail Criteria
+REC001
+Access valid patient record
+Patient ID: P001
+Display all data linked to patient
+Pass
+REC002
+Access non-existent patient record
+Patient ID: P999
+Error: "Record not found"
+Pass
+REC003
+Unauthorized access attempt
+User role mismatch
+Error: "Access denied"
+Pass
+Table 27Unit Testing - Text-to-Speech Output
+Test Case ID
+Test Case Description
+Test Data
+Expected Outcome
+Pass/Fail Criteria
+TTS001
+Convert valid prediction to audio
+“Pneumonia detected with 92% confidence”
+Audio output generated
+Pass
+TTS002
+Empty prediction text
+No prediction available
+Error: "No text to convert"
+Pass
+TTS003
+Test multiple outputs
+Multiple predictions selected
+Audio generated sequentially
+Pass
+User Acceptance Testing (UAT)
+UAT is carried out to test whether an information system satisfies actual usability and usability requirements/demands of its target user population. In the case of this AI powered multimodal medical data fusion system, UAT was done with healthcare professionals, who used the system to upload patient information, perform prediction reviews, and test functionality like text-to-speech, prediction confidence levels (Priyatna, 2020). The aim was to validate that the system is user- friendly, intuitive, and practical to use clinically. The suggestions of UAT were also useful to evaluate the importance of interface usability, the clarity of the prediction results, and workflow efficacy. These were prioritized to resolve during the UAT and documented so when the system is developed, we can improve the functionality of the system to enhance the user experience and ensure the system functions within the operational requirements of other medical practitioners in real medical facilities (Zulkarnaini, 2023).
+Table 28UAT – Registration & Login/Logout
+UAT ID
+UAT Description
+Test Scenario / Steps
+Expected Outcome
+Pass/Fail Criteria
+UAT001
+Registration of new healthcare professional
+Open registration form → Enter valid details → Click Submit
+Account created successfully, confirmation message shown
+Pass if account created & confirmation shown
+UAT002
+Registration with invalid data
+Leave mandatory fields empty / Weak password → Submit
+Proper error message displayed
+Pass if errors prevent invalid entry
+UAT003
+Login with valid credentials
+Enter registered email & password → Click Login
+Redirected to dashboard/home page
+Pass if dashboard loads correctly
+UAT004
+Login with invalid credentials
+Enter wrong password / unregistered email → Click Login
+Error message displayed
+Pass if meaningful error shown
+UAT005
+Logout from system
+Click Logout button
+Session terminated & redirected to login page
+Pass if logout works correctly
+Table 29UAT – Upload Medical Image & Enter Lab Results
+UAT ID
+UAT Description
+Test Scenario / Steps
+Expected Outcome
+Pass/Fail Criteria
+UAT006
+Upload valid medical image
+Navigate to image upload → Select valid file → Submit
+Image uploaded successfully, confirmation shown
+Pass if file uploaded
+UAT007
+Upload invalid file
+Select unsupported file type / large file / no file → Submit
+Error message displayed
+Pass if system handles invalid input
+UAT008
+Enter valid lab results
+Select patient → Fill lab results → Submit
+Lab results stored & visible in patient record
+Pass if results saved correctly
+UAT009
+Enter invalid lab results
+Leave mandatory fields empty / Invalid numeric values → Submit
+Error message displayed
+Pass if invalid input prevented
+UAT010
+Duplicate lab result entry
+Submit same test twice
+Error message: "Record already exists"
+Pass if duplicates not allowed
+Table 30UAT – Voice Input & Prediction
+UAT ID
+UAT Description
+Test Scenario / Steps
+Expected Outcome
+Pass/Fail Criteria
+UAT011
+Provide valid voice input
+Record patient notes → System converts to text → Submit
+Accurate transcription displayed
+Pass if transcription matches audio
+UAT012
+Voice input failure
+Record unclear/noisy audio or leave empty → Submit
+Error message displayed
+Pass if system handles errors
+UAT013
+Disease prediction with complete data
+Upload image + lab results → Run prediction
+Prediction result with confidence score displayed
+Pass if correct prediction generated
+UAT014
+Disease prediction with incomplete/invalid data
+Upload only partial data or corrupted file → Run prediction
+Error message: “Insufficient/Invalid data”
+Pass if system prevents prediction
+Table 31UAT – Record Access & Text-to-Speech
+UAT ID
+UAT Description
+Test Scenario / Steps
+Expected Outcome
+Pass/Fail Criteria
+UAT015
+Access valid patient record
+Search & view patient record
+All patient data displayed correctly
+Pass if correct data visible
+UAT016
+Unauthorized record access
+Attempt to access restricted patient record
+Access denied message shown
+Pass if security restrictions enforced
+UAT017
+Convert prediction to audio
+Select prediction → Convert to audio
+Audio output generated & understandable
+Pass if audio matches text
+UAT018
+Multi-output text-to-speech
+Select multiple predictions → Convert to audio
+All audio outputs generated sequentially
+Pass if multiple audios play without error
+Summary 
+Summarizing the results about the AI powered multimodal medical data fusion system, there was a technical evaluation and a user experience evaluation. The quality will be tested with the Unit Testing to test the functional independence of each system component and with the User Acceptance Testing to determine the usability and practicability by healthcare professionals. These results qualified the accuracy of the system in handling the multimodal inputs, reliability of the AI Inference Engine and the efficacy of the Fusion Layer and Output Module. Also, end-user feedback showed that the interface is easy to understand, predictions are easily interpreted, and features designed to improve accessibility of the application have worked well so far. Generally, the chapter points out the operational efficiency, resilience, and the possibility of the system to assist clinical decision-making based on multimodal integrated disease prediction.
+ CONCLUSION
+Critical Evaluation
+The project has been able to reach its main goal of devising an integrated framework that is able to read multimodal information on medical data to predict diseases. The ability of the system to integrate medical images(X-rays and MRI scans), lab report findings and voice-based patient inputs meant that it could develop the disease predictions, with a good degree of accuracy. The modular architecture, consisting of the AI Inference Engine, Fusion Layer, and Output Module performed well both on the unit and the user acceptance testing. All the components were tested to work together, which left a stable and scalable solution. Another major accomplishment of the project is its capability of integrating heterogeneous sources of data in addition to providing results capable of being understood and interpreted. The system offers confidence-level visualization and text to speech analytics that allow health practitioners to make quicker and informed clinical choices. Moreover, the interface developed on Gradio was web-based and easy to use which makes it user-friendly and allows healthcare providers to easily communicate with the system without having expert technical knowledge. The impact of this project to healthcare community as well as the industry in general is great. The contribution that the system offers to multimodal data integration increases the diagnostic precision, allows human beings to interfere with repetitive data processing duties to the minimum, and allows detecting the disease in its early stages, all of which directly and positively affect patient outcomes and lower healthcare expenditures. The present work can potentially help medical professionals in developing resource-poor settings by providing an affordable AI-based system that complements professional knowledge and expertise. The robustness of the system can be described across numerous areas. To begin with, the fact that the predictive success is very high when testing the models confirms that the selected AI frameworks and integration approaches are correct. Two, the scalability of architecture means that the system can be grown to handle larger datasets and to incorporate novel disease categories in future. Thirdly, the user-centered design improves usability and accessibility, and also allows medical professionals to incorporate the use of the technology without any high learning curves. Last, the feature-rich database management functionality offers safe storage and retrieval of patient records, security, and data integrity.
+Overall, the project is not only technically successful but also of practical value, benefiting both healthcare professionals and patients. It shows the power of modern AI when applied carefully into medical processes and sets a good precedence in terms of further research and industrial-scale implementation.
+Limitation
+Although very strong idea , the system also has limitations. Prediction accuracy is highly correlated with the quality and lack of availability in the input data; absence of adequate quality and availability of medical images, laboratory reports, or voice recordings can improve reliability. The system has been tested mainly in a controlled environment and not in various real world clinical settings; therefore its capabilities might be different. The AI models might also need steady updates and re-training to deal with new diseases or changing patterns in medical data. The text-to-speech capability is valuable, but it requires some improvements to better pronounce words such as medical terminologies or orient to different accents of voice inputs.
+Recommendation
+Connect the system to hospital information systems (HIS) and electronic health records (EHR) to make workflow and data handling efficient
+Implement explanatory AI methods to make transparent to the professionals how the system is making predictions in health care.
+Improve mobile and cross platform usability so it can be easily accessed using a smart phone, a tablet device and on desktop.
+Scale-up the data set with more types of medical images, lab results, and patient records, as well as voice samples, to increase predictive performance.
+Provide consistent updates and retraining of the AI models with the new medical data to ensure continuity with reliability and relevance.
+Gather and review feedback of both healthcare professionals and patients to direct the improvements on the system iteratively.
+Review data privacy and security policies to strengthen safe data processing of sensitive patient information. 
+Design the system in a way that it can work with large volumes of data, multiple users and accommodate new medical situations effectively.
+Focus on detection of critical diseases like heart diseases, cancer, and diabetes and continue to cover other conditions in a reasonably extended time.
+Connect the system to hospital information systems (HIS) and electronic health records (EHR) to make workflow and data handling efficient
+References
+al., K. e. (2021). What Makes Agile Software Development Agile? https://doi.org/https://arxiv.org/abs/2109.11435
+Ali, A. K. (2021). An Empirical study on adoption of Agile Project Management Methodology and its effect on Project Success with moderating role of Organizational Culture. https://doi.org/https://doi.org/10.13135/2704-9906/5158
+Ansari, A., Ansari, N., Khalid, U., & al., e. (2025). The Role of Artificial Intelligence in the Diagnosis and Management of Diabetic Retinopathy. https://doi.org/https://doi.org/10.3390/jcm14145150
+Arif, M. &. (2022). The evaluation of web-based and android face-to-face tutorial applications quality using the user acceptance testing (UAT) method. . https://doi.org/ https://doi.org/10.58344/jws.v1i8.76
+Avgeriou, P. O. (2024). Technical Debt Management: The Road Ahead for Successful Software Delivery. Retrieved from https://arxiv.org/abs/2403.06484
+Bass, L. C. (2021). Software Architecture in Practice. Addison-Wesley Professional. Retrieved from https://www.pearson.com/en-us/subject-catalog/p/software-architecture-in-practice/P200000003576
+Beck, K. (2022). Test-Driven Development: By Example. Addison-Wesley Professional. Retrieved from https://www.pearson.com/en-us/subject-catalog/p/test-driven-development-by-example/P200000006370
+Bhuvan Unhelker, H. M. (2022). Applications of Artificial Intelligence and Machine Learning: Select Proceedings of ICAAAIML 2021. Retrieved from https://books.google.com/books/about/Applications_of_Artificial_Intelligence.html?id=60qJEAAAQBAJ
+Browser, S. o. (2023). Assessing Browser Security: A Detailed Study Based on CVE Metrics.
+Code, V. S. (2021). Introducing Visual Studio Code.
+Douglas, K. D. (202). PostgreSQL: Up and Running . O’Reilly Media. Retrieved from https://www.oreilly.com/library/view/postgresql-up-and/9781491963401/
+Ecosystem, V. C. (2024). A Comprehensive Analysis of The VS Code Extension Ecosystem. arXiv preprint. Retrieved from https://arxiv.org/pdf/2411.07479
+Felius, C. C. (2022). Assessing the Performance of Distributed PostgreSQL.
+Freeman, E. &. (2021). Head First Design Patterns. O’Reilly Media. Retrieved from https://www.oreilly.com/library/view/head-first-design/9781492077992/
+Gains, P. (2025). PostgreSQL 18 Delivers Significant Performance Gains for OLTP and Analytics.
+Group, P. G. (2025). PostgreSQL: The world's most advanced open source database.
+Han, J. &. (2024). Analyzing Performance Characteristics of PostgreSQL and MariaDB on NVMeVirt. arXiv. Retrieved from https://arxiv.org/abs/2411.10005
+Hananto, L. &. (2020). Application of UAT (User Acceptance Test) evaluation model in Minggon e-meeting software development. Retrieved from https://journal.unsika.ac.id/index.php/systematics/article/view/4947
+Holvitie, J. L. (2021). Technical debt and agile software development practices and processes: An industry practitioner survey. Retrieved from https://arxiv.org/abs/2104.14761
+Jeyaraj, M. N. (2022). Cognitive Visual-learning Environment for PostgreSQL. Retrieved from https://arxiv.org/abs/2205.04834
+Krittanawong, C., Virk, H. U., Bangalore, S., Wang, Z., Johnson, K. W., & al., e. (2020). Machine learning prediction in cardiovascular diseases: a meta-analysis. https://doi.org/https://doi.org/10.1038/s41598-020-72685-1
+Li, X. E. (2024). The Dual-Edged Sword of Technical Debt: Benefits and Issues Analyzed Through Developer Discussions. Retrieved from https://arxiv.org/abs/2407.21007
+Licorish, S. A. (2024). Agile software development projects–Unveiling the human-related critical success factors.
+Licorish, S. A. (2024). Understanding the Effect of Agile Practice Quality on Software Product Quality. Retrieved from https://arxiv.org/abs/2412.15761
+Lukasczyk, S. &. (2022). Pynguin: Automated Unit Test Generation for Python. arXiv preprint. Retrieved from https://arxiv.org/abs/2202.05218
+Lukasczyk, S. K. (2023). An Empirical Study of Automated Unit Test Generation for Python. https://doi.org/https://doi.org/10.1007/s10664-022-10248-w
+M. Dakhel, A. N. (2023). Effective test generation using pre-trained large language models and mutation testing. Retrieved from https://arxiv.org/abs/2308.16557
+Martin, R. C. (2021). Clean Code: A Handbook of Agile Software Craftsmanship (latest reprint edition). Prentice Hall / Pearson. Retrieved from https://www.pearson.com/en-us/subject-catalog/p/clean-code/P200000003047
+McKinney, S. M. (2020). International Evaluation of an AI System for Breast Cancer Screening. https://doi.org/https://doi.org/10.1038/s41586-019-1799-6
+McKinney, W. (2022). Python for Data Analysis. O’Reilly Media. Retrieved from https://www.oreilly.com/library/view/python-for-data/9781098104030/
+Mo, Y., Huang, H., Liang, B., & Ma, W. (2025). Advancements in Artificial Intelligence Applications for Cardiovascular Disease Research. Retrieved from https://arxiv.org/abs/2506.03698
+Neves, L. C. (2024). Elevating software quality in agile environments: The role of testing professionals in unit testing. Retrieved from https://arxiv.org/abs/2403.13220
+Priyatna, R. H. (2020). Application of UAT (User Acceptance Test) evaluation model in Minggon e-meeting software development. . Retrieved from https://journal.unsika.ac.id/index.php/systematics/article/view/4947
+Quality, D. P. (2023). Data pipeline quality: Influencing factors, root causes of data-related issues.
+Ramler, R. S. (2025). Unit testing past vs. present: Examining LLMs' impact on defect detection and efficiency. Retrieved from https://arxiv.org/abs/2502.09801
+Raschka, S. P. (2020). Machine Learning in Python: Main developments and technology trends in data science, machine learning, and artificial intelligence. Retrieved from https://arxiv.org/abs/2002.04803
+Saabith, A. L. (2021). A Review on Python Libraries and IDEs for Data Science.
+Salunke, S. V. (2024). A Performance Benchmark for the PostgreSQL and MySQL Databases. https://doi.org/https://doi.org/10.3390/fi16100382
+Salunke, S. V. (2024). A Performance Benchmark for the PostgreSQL and MySQL Databases. https://doi.org/https://doi.org/10.3390/fi16100382
+Server, A. W. (2024). Performance Analysis of Python Server Page and Apache Web Server.
+Smytzek, M. E. (2023). Tests4Py: A Benchmark for System Testing. arXiv preprint. Retrieved from https://arxiv.org/abs/2307.05147
+Sobieraj, M. &. (2024). Docker Performance Evaluation across Operating Systems. https://doi.org/https://doi.org/10.3390/app14156672
+System), I.-D. (. (2025). Diagnostic Accuracy of IDX-DR for Detecting Diabetic Retinopathy: A Systematic Review and Meta-Analysis. Retrieved from https://pubmed.ncbi.nlm.nih.gov/39986640/
+Wieruch, R. (2025). Mac Setup for Web Development. Retrieved from https://www.robinwieruch.de/mac-setup-web-development/
+Wiradarma, P. A. (2025). Implementation of user acceptance tests in capstone project information systems. Retrieved from https://ojs.unud.ac.id/index.php/jeei/article/view/118428
+Yun, J. K. (2021). Adequacy and Effectiveness of Watson for Oncology in the Treatment of Thyroid Carcinoma. https://doi.org/https://pubmed.ncbi.nlm.nih.gov/33746898/
+Zaveri, A. J. (2024). Evolution of Requirements Engineering in Agile Methodology – Literature Review. Retrieved from https://doi.org/10.33093/jetap.2024.6.2
+Zhang, Q. F. (2025). Large Language Models for Unit Testing: A Systematic Literature Review. . Retrieved from https://arxiv.org/abs/2506.15227 
+Zhang, X., da Silva, V. R., & Aquino, P. T. (2025). Critical Success Factors for Agile Software Development Projects.
+Zulkarnaini, F. R. (2023). User acceptance testing through black-box evaluation for corn distribution information system. . https://doi.org/https://doi.org/10.32877/bt.v6i2.1065 
+APPENDICES
+Appendix A: PPF (Proposal Form)
+Figure 36PPF
+Appendix B: Ethic Form (Fast Track)
+Figure 37Ethic Form
+Appendix C: Log Sheets
+Figure 38Meeting Log Sheets
+Appendix D: Poster
+Figure 39Poster
+Appendix E: Gantt Chart
+Figure 40Gantt Chart IR
+Figure 41Gantt Chart FYP
+Appendix F: Sample Code Implementation
+Figure 42Environment & Library Imports
+Figure 43Analytics Generation Function
+Figure 44Speech-to-Text Module
+Figure 45Database Configuration and ORM Models
+Figure 46Signup & Login Implementation
+Appendix G: Respondents Demographic Profile
+Figure 47Respondents Profile
+Appendix H: Survey Response Charts
+Figure 48Survey Charts Response

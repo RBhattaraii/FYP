@@ -1,113 +1,132 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { colors, typography, spacing, dimensions } from '../constants/theme';
 
 interface HeaderProps {
-  firstName?: string;
-  title?: string;
-  showBackBtn?: boolean;
-  onBackPress?: () => void;
   hasUnreadNotifications?: boolean;
   onNotificationPress?: () => void;
+  onProfilePress?: () => void;
+  balance?: number;
 }
 
 export default function Header({ 
-  firstName, 
-  title,
-  showBackBtn = false,
-  onBackPress,
-  hasUnreadNotifications = false,
-  onNotificationPress 
+  hasUnreadNotifications = true,
+  onNotificationPress,
+  onProfilePress,
+  balance
 }: HeaderProps) {
   const router = useRouter();
 
+  const handleProfilePress = () => {
+    if (onProfilePress) {
+      onProfilePress();
+    } else {
+      router.push('/(tabs)/profile');
+    }
+  };
+
   return (
     <View style={styles.container}>
-      {/* Left Icon */}
-      {showBackBtn ? (
-        <TouchableOpacity style={styles.iconButton} onPress={onBackPress}>
-          <Ionicons name="arrow-back-outline" size={20} color={colors.gray900} />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="grid-outline" size={20} color={colors.gray900} />
-        </TouchableOpacity>
-      )}
-      
-      {/* Greeting / Title */}
-      <View style={styles.greetingContainer}>
-        {title ? (
-          <Text style={styles.title}>{title}</Text>
-        ) : firstName ? (
-          <Text style={styles.greeting}>Hello {firstName}!</Text>
-        ) : null}
-      </View>
-      
-      {/* Right Action Icons */}
-      <View style={styles.rightActions}>
-        <TouchableOpacity onPress={() => router.push('/wishlist')} style={styles.wishlistHeaderBtn}>
-          <Ionicons name="heart-outline" size={24} color={colors.gray900} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Profile clicked')}>
-          <Image 
-            source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop' }} 
-            style={styles.profilePic} 
-          />
-        </TouchableOpacity>
-      </View>
+      {/* Points Balance Widget */}
+      <TouchableOpacity 
+        style={styles.balanceContainer} 
+        onPress={handleProfilePress} 
+        activeOpacity={0.8}
+      >
+        <View style={styles.walletIconWrapper}>
+          <Ionicons name="wallet" size={20} color="#704F38" />
+        </View>
+        <View style={styles.balanceTextWrapper}>
+          <Text style={styles.balanceLabel}>Your balance</Text>
+          <Text style={styles.balanceValue}>{balance !== undefined ? `${balance.toLocaleString()} pts` : 'Loading...'}</Text>
+        </View>
+      </TouchableOpacity>
+
+      {/* Notification Bell */}
+      <TouchableOpacity 
+        style={styles.bellButton} 
+        onPress={onNotificationPress} 
+        activeOpacity={0.7}
+      >
+        <Ionicons name="notifications-outline" size={22} color="#111111" />
+        {hasUnreadNotifications && <View style={styles.notificationDot} />}
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: dimensions.header.height + 10,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 8,
     backgroundColor: 'transparent',
   },
-  iconButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.gray100,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  greetingContainer: {
-    flex: 1,
-    marginLeft: spacing.md,
-  },
-  greeting: {
-    fontSize: typography.fontSize.h2,
-    fontWeight: typography.fontWeight.semibold,
-    color: colors.gray900,
-  },
-  title: {
-    fontSize: typography.fontSize.h2,
-    fontWeight: typography.fontWeight.bold,
-    color: colors.gray900,
-  },
-  rightActions: {
+  balanceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
-  wishlistHeaderBtn: {
-    marginRight: spacing.md,
+  walletIconWrapper: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.gray100,
+    backgroundColor: '#F5EBE1', // Light brown theme
     justifyContent: 'center',
     alignItems: 'center',
   },
-  profilePic: {
+  balanceTextWrapper: {
+    justifyContent: 'center',
+  },
+  balanceLabel: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 11,
+    color: '#757575',
+    marginBottom: -2,
+  },
+  balanceValue: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 16,
+    color: '#111111',
+  },
+  locationLabel: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 12,
+    color: '#9E9E9E',
+    marginBottom: 2,
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  locationText: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 16,
+    color: '#111111',
+  },
+  bellButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  notificationDot: {
+    position: 'absolute',
+    top: 10,
+    right: 12,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#EF4444', // Red dot for unread
+    borderWidth: 1,
+    borderColor: '#F5F5F5',
   },
 });
